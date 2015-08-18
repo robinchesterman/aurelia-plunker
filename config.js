@@ -3,7 +3,7 @@ System.config({
   transpiler: "babel",
   babelOptions: {
     "stage": 0,
-    "optional": [      
+    "optional": [
       "runtime"
     ]
   },
@@ -14,14 +14,18 @@ System.config({
 
   map: {
     "aurelia-animator-css": "github:aurelia/animator-css@0.15.0",
+    "aurelia-async": "github:jdanyow/aurelia-async@0.3.0",
     "aurelia-binding": "github:aurelia/binding@0.8.6",
     "aurelia-bootstrapper": "github:aurelia/bootstrapper@0.16.0",
+    "aurelia-breeze": "github:jdanyow/aurelia-breeze@0.8.0",
+    "aurelia-computed": "github:jdanyow/aurelia-computed@0.5.0",
     "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
     "aurelia-event-aggregator": "github:aurelia/event-aggregator@0.7.0",
     "aurelia-fetch-client": "github:aurelia/fetch-client@0.1.2",
     "aurelia-framework": "github:aurelia/framework@0.15.0",
     "aurelia-history": "github:aurelia/history@0.6.1",
     "aurelia-history-browser": "github:aurelia/history-browser@0.7.0",
+    "aurelia-http-client": "github:aurelia/http-client@0.10.3",
     "aurelia-loader": "github:aurelia/loader@0.8.7",
     "aurelia-loader-default": "github:aurelia/loader-default@0.9.5",
     "aurelia-logging": "github:aurelia/logging@0.6.4",
@@ -90,6 +94,10 @@ System.config({
       "aurelia-history": "github:aurelia/history@0.6.1",
       "core-js": "npm:core-js@0.9.18"
     },
+    "github:aurelia/http-client@0.10.3": {
+      "aurelia-path": "github:aurelia/path@0.8.1",
+      "core-js": "npm:core-js@0.9.18"
+    },
     "github:aurelia/loader-default@0.9.5": {
       "aurelia-loader": "github:aurelia/loader@0.8.7",
       "aurelia-metadata": "github:aurelia/metadata@0.7.3"
@@ -148,6 +156,19 @@ System.config({
       "aurelia-metadata": "github:aurelia/metadata@0.7.3",
       "aurelia-path": "github:aurelia/path@0.8.1",
       "aurelia-task-queue": "github:aurelia/task-queue@0.6.2",
+      "core-js": "npm:core-js@0.9.18"
+    },
+    "github:jdanyow/aurelia-async@0.3.0": {
+      "aurelia-binding": "github:aurelia/binding@0.8.6"
+    },
+    "github:jdanyow/aurelia-breeze@0.8.0": {
+      "aurelia-binding": "github:aurelia/binding@0.8.6",
+      "aurelia-http-client": "github:aurelia/http-client@0.10.3",
+      "breeze": "npm:breeze-client@1.5.5"
+    },
+    "github:jdanyow/aurelia-computed@0.5.0": {
+      "aurelia-binding": "github:aurelia/binding@0.8.6",
+      "aurelia-logging": "github:aurelia/logging@0.6.4",
       "core-js": "npm:core-js@0.9.18"
     },
     "github:jspm/nodelibs-assert@0.1.0": {
