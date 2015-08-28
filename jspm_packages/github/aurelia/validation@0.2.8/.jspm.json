@@ -1,0 +1,84 @@
+{
+  "name": "aurelia-validation",
+  "version": "0.2.8",
+  "description": "A validation plugin for Aurelia.",
+  "keywords": [
+    "aurelia",
+    "validation",
+    "plugin"
+  ],
+  "homepage": "http://aurelia.io",
+  "bugs": {
+    "url": "https://github.com/aurelia/validation/issues"
+  },
+  "license": "MIT",
+  "author": "Rob Eisenberg <rob@bluespire.com> (http://robeisenberg.com/)",
+  "main": "index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aurelia/validation"
+  },
+  "jspm": {
+    "main": "index",
+    "format": "amd",
+    "directories": {
+      "lib": "dist/amd"
+    },
+    "dependencies": {
+      "aurelia-binding": "github:aurelia/binding@^0.8.6",
+      "aurelia-dependency-injection": "github:aurelia/dependency-injection@^0.9.2",
+      "aurelia-logging": "github:aurelia/logging@^0.6.4",
+      "aurelia-templating": "github:aurelia/templating@^0.14.4"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.22",
+      "babel-runtime": "npm:babel-runtime@^5.8.20",
+      "core-js": "npm:core-js@^1.1.0",
+      "traceur": "github:jmcriffey/bower-traceur@0.0.91",
+      "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.91"
+    }
+  },
+  "devDependencies": {
+    "babel": "npm:babel-core@^5.8.22",
+    "babel-runtime": "npm:babel-runtime@^5.8.20",
+    "core-js": "npm:core-js@^1.1.0",
+    "traceur": "github:jmcriffey/bower-traceur@0.0.91",
+    "traceur-runtime": "github:jmcriffey/bower-traceur-runtime@0.0.91"
+  },
+  "aurelia": {
+    "usedBy": [],
+    "documentation": {
+      "links": [
+        {
+          "rel": "license",
+          "mediaType": "text/plain",
+          "title": "The MIT License (MIT)",
+          "href": "LICENSE"
+        },
+        {
+          "rel": "describedby",
+          "mediaType": "application/aurelia-doc+json",
+          "title": "API",
+          "href": "doc/api.json"
+        },
+        {
+          "rel": "version-history",
+          "mediaType": "text/markdown",
+          "title": "Change Log",
+          "href": "doc/CHANGELOG.md"
+        }
+      ]
+    }
+  },
+  "format": "amd",
+  "directories": {
+    "lib": "dist/amd"
+  },
+  "registry": "github",
+  "dependencies": {
+    "aurelia-binding": "github:aurelia/binding@^0.8.6",
+    "aurelia-dependency-injection": "github:aurelia/dependency-injection@^0.9.2",
+    "aurelia-logging": "github:aurelia/logging@^0.6.4",
+    "aurelia-templating": "github:aurelia/templating@^0.14.4"
+  }
+}

@@ -3,9 +3,7 @@ System.config({
   transpiler: "babel",
   babelOptions: {
     "stage": 0,
-    "optional": [
-      "runtime"
-    ]
+    "optional": []
   },
   paths: {
     "github:*": "jspm_packages/github/*",
@@ -20,6 +18,7 @@ System.config({
     "aurelia-breeze": "github:jdanyow/aurelia-breeze@0.8.0",
     "aurelia-computed": "github:jdanyow/aurelia-computed@0.5.0",
     "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
+    "aurelia-dialog": "github:aurelia/dialog@0.1.1",
     "aurelia-event-aggregator": "github:aurelia/event-aggregator@0.7.0",
     "aurelia-fetch-client": "github:aurelia/fetch-client@0.1.2",
     "aurelia-framework": "github:aurelia/framework@0.15.0",
@@ -38,6 +37,7 @@ System.config({
     "aurelia-templating-binding": "github:aurelia/templating-binding@0.14.0",
     "aurelia-templating-resources": "github:aurelia/templating-resources@0.14.0",
     "aurelia-templating-router": "github:aurelia/templating-router@0.15.0",
+    "aurelia-validation": "github:aurelia/validation@0.2.8",
     "babel": "npm:babel-core@5.8.22",
     "babel-runtime": "npm:babel-runtime@5.8.20",
     "clean-css": "npm:clean-css@3.3.9",
@@ -72,6 +72,12 @@ System.config({
       "aurelia-logging": "github:aurelia/logging@0.6.4",
       "aurelia-metadata": "github:aurelia/metadata@0.7.3",
       "core-js": "npm:core-js@0.9.18"
+    },
+    "github:aurelia/dialog@0.1.1": {
+      "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
+      "aurelia-framework": "github:aurelia/framework@0.15.0",
+      "aurelia-metadata": "github:aurelia/metadata@0.7.3",
+      "aurelia-templating": "github:aurelia/templating@0.14.4"
     },
     "github:aurelia/event-aggregator@0.7.0": {
       "aurelia-logging": "github:aurelia/logging@0.6.4"
@@ -157,6 +163,12 @@ System.config({
       "aurelia-path": "github:aurelia/path@0.8.1",
       "aurelia-task-queue": "github:aurelia/task-queue@0.6.2",
       "core-js": "npm:core-js@0.9.18"
+    },
+    "github:aurelia/validation@0.2.8": {
+      "aurelia-binding": "github:aurelia/binding@0.8.6",
+      "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.9.2",
+      "aurelia-logging": "github:aurelia/logging@0.6.4",
+      "aurelia-templating": "github:aurelia/templating@0.14.4"
     },
     "github:jdanyow/aurelia-async@0.3.0": {
       "aurelia-binding": "github:aurelia/binding@0.8.6"
