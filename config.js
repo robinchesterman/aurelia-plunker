@@ -14,7 +14,7 @@ System.config({
     "aurelia-animator-css": "github:aurelia/animator-css@0.17.0",
     "aurelia-binding": "github:aurelia/binding@0.10.2",
     "aurelia-bootstrapper": "github:aurelia/bootstrapper@0.18.0",
-    "aurelia-breeze": "github:jdanyow/aurelia-breeze@0.11.0",
+    "aurelia-breeze": "github:jdanyow/aurelia-breeze@0.11.3",
     "aurelia-computed": "github:jdanyow/aurelia-computed@0.7.0",
     "aurelia-dependency-injection": "github:aurelia/dependency-injection@0.11.2",
     "aurelia-dialog": "github:aurelia/dialog@0.4.1",
@@ -191,7 +191,7 @@ System.config({
       "aurelia-metadata": "github:aurelia/metadata@0.9.0",
       "aurelia-templating": "github:aurelia/templating@0.16.0"
     },
-    "github:jdanyow/aurelia-breeze@0.11.0": {
+    "github:jdanyow/aurelia-breeze@0.11.3": {
       "aurelia-binding": "github:aurelia/binding@0.10.2",
       "aurelia-http-client": "github:aurelia/http-client@0.12.0",
       "aurelia-pal": "github:aurelia/pal@0.2.0",
