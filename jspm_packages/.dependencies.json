@@ -118,18 +118,6 @@
     "aurelia-pal": "npm:aurelia-pal@^1.0.0-beta.1",
     "core-js": "npm:core-js@^1.2.6"
   },
-  "npm:aurelia-framework@1.0.0-beta.1.0.1": {
-    "aurelia-binding": "npm:aurelia-binding@^1.0.0-beta.1.0.1",
-    "aurelia-dependency-injection": "npm:aurelia-dependency-injection@^1.0.0-beta.1",
-    "aurelia-loader": "npm:aurelia-loader@^1.0.0-beta.1",
-    "aurelia-logging": "npm:aurelia-logging@^1.0.0-beta.1",
-    "aurelia-metadata": "npm:aurelia-metadata@^1.0.0-beta.1",
-    "aurelia-pal": "npm:aurelia-pal@^1.0.0-beta.1",
-    "aurelia-path": "npm:aurelia-path@^1.0.0-beta.1",
-    "aurelia-task-queue": "npm:aurelia-task-queue@^1.0.0-beta.1",
-    "aurelia-templating": "npm:aurelia-templating@^1.0.0-beta.1",
-    "core-js": "npm:core-js@^1.2.6"
-  },
   "npm:aurelia-loader-default@1.0.0-beta.1.0.1": {
     "aurelia-loader": "npm:aurelia-loader@^1.0.0-beta.1",
     "aurelia-metadata": "npm:aurelia-metadata@^1.0.0-beta.1",
@@ -149,9 +137,6 @@
   },
   "npm:aurelia-pal@1.0.0-beta.1": {},
   "github:github/fetch@0.10.1": {},
-  "github:twbs/bootstrap@3.3.5": {
-    "jquery": "github:components/jquery"
-  },
   "npm:numeral@1.5.3": {
     "fs": "github:jspm/nodelibs-fs@^0.1.0"
   },
@@ -337,5 +322,25 @@
     "i18next": "github:i18next/i18next@^1.9.0"
   },
   "github:i18next/i18next@1.11.1": {},
-  "github:andyearnshaw/Intl.js@0.1.4": {}
+  "github:andyearnshaw/Intl.js@0.1.4": {},
+  "npm:aurelia-framework@1.0.0-beta.1.0.2": {
+    "aurelia-binding": "npm:aurelia-binding@^1.0.0-beta.1.0.1",
+    "aurelia-dependency-injection": "npm:aurelia-dependency-injection@^1.0.0-beta.1",
+    "aurelia-loader": "npm:aurelia-loader@^1.0.0-beta.1",
+    "aurelia-logging": "npm:aurelia-logging@^1.0.0-beta.1",
+    "aurelia-metadata": "npm:aurelia-metadata@^1.0.0-beta.1",
+    "aurelia-pal": "npm:aurelia-pal@^1.0.0-beta.1",
+    "aurelia-path": "npm:aurelia-path@^1.0.0-beta.1",
+    "aurelia-task-queue": "npm:aurelia-task-queue@^1.0.0-beta.1",
+    "aurelia-templating": "npm:aurelia-templating@^1.0.0-beta.1",
+    "core-js": "npm:core-js@^1.2.6"
+  },
+  "github:twbs/bootstrap@3.3.6": {
+    "jquery": "github:components/jquery"
+  },
+  "npm:core-js@0.9.18": {
+    "systemjs-json": "github:systemjs/plugin-json@^0.1.0",
+    "process": "github:jspm/nodelibs-process@^0.1.0",
+    "fs": "github:jspm/nodelibs-fs@^0.1.0"
+  }
 }
