@@ -326,5 +326,16 @@
     "ieee754": "npm:ieee754@^1.1.4",
     "is-array": "npm:is-array@^1.0.1"
   },
-  "npm:isarray@0.0.1": {}
+  "npm:isarray@0.0.1": {},
+  "npm:aurelia-i18n@0.4.1": {
+    "Intl.js": "github:andyearnshaw/Intl.js@^0.1.4",
+    "aurelia-dependency-injection": "npm:aurelia-dependency-injection@^1.0.0-beta.1",
+    "aurelia-event-aggregator": "npm:aurelia-event-aggregator@^1.0.0-beta.1",
+    "aurelia-loader-default": "npm:aurelia-loader-default@^1.0.0-beta.1",
+    "aurelia-pal": "npm:aurelia-pal@^1.0.0-beta.1",
+    "aurelia-templating": "npm:aurelia-templating@^1.0.0-beta.1",
+    "i18next": "github:i18next/i18next@^1.9.0"
+  },
+  "github:i18next/i18next@1.11.1": {},
+  "github:andyearnshaw/Intl.js@0.1.4": {}
 }

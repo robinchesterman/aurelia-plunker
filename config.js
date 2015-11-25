@@ -24,6 +24,7 @@ System.config({
     "aurelia-history": "npm:aurelia-history@1.0.0-beta.1",
     "aurelia-history-browser": "npm:aurelia-history-browser@1.0.0-beta.1",
     "aurelia-http-client": "npm:aurelia-http-client@1.0.0-beta.1",
+    "aurelia-i18n": "npm:aurelia-i18n@0.4.1",
     "aurelia-loader": "npm:aurelia-loader@1.0.0-beta.1",
     "aurelia-loader-default": "npm:aurelia-loader-default@1.0.0-beta.1.0.1",
     "aurelia-logging": "npm:aurelia-logging@1.0.0-beta.1",
@@ -177,6 +178,15 @@ System.config({
       "aurelia-pal": "npm:aurelia-pal@1.0.0-beta.1",
       "aurelia-path": "npm:aurelia-path@1.0.0-beta.1",
       "core-js": "npm:core-js@1.2.6"
+    },
+    "npm:aurelia-i18n@0.4.1": {
+      "Intl.js": "github:andyearnshaw/Intl.js@0.1.4",
+      "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.0.0-beta.1",
+      "aurelia-event-aggregator": "npm:aurelia-event-aggregator@1.0.0-beta.1",
+      "aurelia-loader-default": "npm:aurelia-loader-default@1.0.0-beta.1.0.1",
+      "aurelia-pal": "npm:aurelia-pal@1.0.0-beta.1",
+      "aurelia-templating": "npm:aurelia-templating@1.0.0-beta.1",
+      "i18next": "github:i18next/i18next@1.11.1"
     },
     "npm:aurelia-loader-default@1.0.0-beta.1.0.1": {
       "aurelia-loader": "npm:aurelia-loader@1.0.0-beta.1",
