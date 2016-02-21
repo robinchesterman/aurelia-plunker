@@ -7,9 +7,9 @@ System.config({
     "optional": []
   },
   paths: {
-    "github:*": "https://cdn.rawgit.com/jdanyow/aurelia-plunker/v0.11.3/jspm_packages/github/*",
-    "npm:*": "https://cdn.rawgit.com/jdanyow/aurelia-plunker/v0.11.3/jspm_packages/npm/*",
-    "aurelia-bundle": "https://cdn.rawgit.com/jdanyow/aurelia-plunker/v0.11.3/dist/aurelia-bundle"
+    "github:*": "https://cdn.rawgit.com/jdanyow/aurelia-plunker/v0.11.4/jspm_packages/github/*",
+    "npm:*": "https://cdn.rawgit.com/jdanyow/aurelia-plunker/v0.11.4/jspm_packages/npm/*",
+    "aurelia-bundle": "https://cdn.rawgit.com/jdanyow/aurelia-plunker/v0.11.4/dist/aurelia-bundle"
   },
   bundles: {
     "aurelia-bundle": [
