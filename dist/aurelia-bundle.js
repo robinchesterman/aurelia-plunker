@@ -19951,28 +19951,6 @@ define("npm:aurelia-templating-router@1.0.0-beta.1.1.1", ["npm:aurelia-templatin
 
 _removeDefine();
 })();
-System.registerDynamic("npm:core-js@2.1.0/modules/_global", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var global = module.exports = typeof window != 'undefined' && window.Math == Math ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
-  if (typeof __g == 'number')
-    __g = global;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_path", ["npm:core-js@2.1.0/modules/_global"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = require("npm:core-js@2.1.0/modules/_global");
-  global.define = __define;
-  return module.exports;
-});
-
 System.registerDynamic("npm:core-js@2.1.0/modules/_core", [], true, function(require, exports, module) {
   ;
   var global = this,
@@ -19981,6 +19959,32 @@ System.registerDynamic("npm:core-js@2.1.0/modules/_core", [], true, function(req
   var core = module.exports = {version: '2.1.0'};
   if (typeof __e == 'number')
     __e = core;
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/_entry-virtual", ["npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var core = require("npm:core-js@2.1.0/modules/_core");
+  module.exports = function(CONSTRUCTOR) {
+    var C = core[CONSTRUCTOR];
+    return (C.virtual || C.prototype);
+  };
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/_global", [], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var global = module.exports = typeof window != 'undefined' && window.Math == Math ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
+  if (typeof __g == 'number')
+    __g = global;
   global.define = __define;
   return module.exports;
 });
@@ -20323,6 +20327,16 @@ System.registerDynamic("npm:core-js@2.1.0/modules/_export", ["npm:core-js@2.1.0/
   return module.exports;
 });
 
+System.registerDynamic("npm:core-js@2.1.0/modules/_path", ["npm:core-js@2.1.0/modules/_global"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  module.exports = require("npm:core-js@2.1.0/modules/_global");
+  global.define = __define;
+  return module.exports;
+});
+
 System.registerDynamic("npm:core-js@2.1.0/modules/_invoke", [], true, function(require, exports, module) {
   ;
   var global = this,
@@ -20389,30 +20403,6 @@ System.registerDynamic("npm:core-js@2.1.0/modules/_partial", ["npm:core-js@2.1.0
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/core.function.part", ["npm:core-js@2.1.0/modules/_path", "npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_core", "npm:core-js@2.1.0/modules/_partial"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var path = require("npm:core-js@2.1.0/modules/_path"),
-      $export = require("npm:core-js@2.1.0/modules/_export");
-  require("npm:core-js@2.1.0/modules/_core")._ = path._ = path._ || {};
-  $export($export.P + $export.F, 'Function', {part: require("npm:core-js@2.1.0/modules/_partial")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/core/_", ["npm:core-js@2.1.0/modules/core.function.part", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/core.function.part");
-  module.exports = require("npm:core-js@2.1.0/modules/_core")._;
-  global.define = __define;
-  return module.exports;
-});
-
 System.registerDynamic("npm:core-js@2.1.0/modules/core.delay", ["npm:core-js@2.1.0/modules/_global", "npm:core-js@2.1.0/modules/_core", "npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_partial"], true, function(require, exports, module) {
   ;
   var global = this,
@@ -20427,17 +20417,6 @@ System.registerDynamic("npm:core-js@2.1.0/modules/core.delay", ["npm:core-js@2.1
         setTimeout(partial.call(resolve, true), time);
       });
     }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/core/delay", ["npm:core-js@2.1.0/modules/core.delay", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/core.delay");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").delay;
   global.define = __define;
   return module.exports;
 });
@@ -21220,24 +21199,15 @@ System.registerDynamic("npm:core-js@2.1.0/modules/core.dict", ["npm:core-js@2.1.
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/core/dict", ["npm:core-js@2.1.0/modules/core.dict", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/core.function.part", ["npm:core-js@2.1.0/modules/_path", "npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_core", "npm:core-js@2.1.0/modules/_partial"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  require("npm:core-js@2.1.0/modules/core.dict");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Dict;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/core/function", ["npm:core-js@2.1.0/modules/core.function.part", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/core.function.part");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Function;
+  var path = require("npm:core-js@2.1.0/modules/_path"),
+      $export = require("npm:core-js@2.1.0/modules/_export");
+  require("npm:core-js@2.1.0/modules/_core")._ = path._ = path._ || {};
+  $export($export.P + $export.F, 'Function', {part: require("npm:core-js@2.1.0/modules/_partial")});
   global.define = __define;
   return module.exports;
 });
@@ -21255,135 +21225,6 @@ System.registerDynamic("npm:core-js@2.1.0/modules/core.get-iterator", ["npm:core
       throw TypeError(it + ' is not iterable!');
     return anObject(iterFn.call(it));
   };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/core.object.is-object", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_is-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S + $export.F, 'Object', {isObject: require("npm:core-js@2.1.0/modules/_is-object")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/core.object.classof", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_classof"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S + $export.F, 'Object', {classof: require("npm:core-js@2.1.0/modules/_classof")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_object-gopd", ["npm:core-js@2.1.0/modules/_object-pie", "npm:core-js@2.1.0/modules/_property-desc", "npm:core-js@2.1.0/modules/_to-iobject", "npm:core-js@2.1.0/modules/_to-primitive", "npm:core-js@2.1.0/modules/_has", "npm:core-js@2.1.0/modules/_ie8-dom-define", "npm:core-js@2.1.0/modules/_descriptors"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var pIE = require("npm:core-js@2.1.0/modules/_object-pie"),
-      createDesc = require("npm:core-js@2.1.0/modules/_property-desc"),
-      toIObject = require("npm:core-js@2.1.0/modules/_to-iobject"),
-      toPrimitive = require("npm:core-js@2.1.0/modules/_to-primitive"),
-      has = require("npm:core-js@2.1.0/modules/_has"),
-      IE8_DOM_DEFINE = require("npm:core-js@2.1.0/modules/_ie8-dom-define"),
-      gOPD = Object.getOwnPropertyDescriptor;
-  exports.f = require("npm:core-js@2.1.0/modules/_descriptors") ? gOPD : function getOwnPropertyDescriptor(O, P) {
-    O = toIObject(O);
-    P = toPrimitive(P, true);
-    if (IE8_DOM_DEFINE)
-      try {
-        return gOPD(O, P);
-      } catch (e) {}
-    if (has(O, P))
-      return createDesc(!pIE.f.call(O, P), O[P]);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_object-gopn", ["npm:core-js@2.1.0/modules/_object-keys-internal", "npm:core-js@2.1.0/modules/_enum-bug-keys"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $keys = require("npm:core-js@2.1.0/modules/_object-keys-internal"),
-      hiddenKeys = require("npm:core-js@2.1.0/modules/_enum-bug-keys").concat('length', 'prototype');
-  exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
-    return $keys(O, hiddenKeys);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_own-keys", ["npm:core-js@2.1.0/modules/_object-gopn", "npm:core-js@2.1.0/modules/_object-gops", "npm:core-js@2.1.0/modules/_an-object", "npm:core-js@2.1.0/modules/_global"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var gOPN = require("npm:core-js@2.1.0/modules/_object-gopn"),
-      gOPS = require("npm:core-js@2.1.0/modules/_object-gops"),
-      anObject = require("npm:core-js@2.1.0/modules/_an-object"),
-      Reflect = require("npm:core-js@2.1.0/modules/_global").Reflect;
-  module.exports = Reflect && Reflect.ownKeys || function ownKeys(it) {
-    var keys = gOPN.f(anObject(it)),
-        getSymbols = gOPS.f;
-    return getSymbols ? keys.concat(getSymbols(it)) : keys;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_object-define", ["npm:core-js@2.1.0/modules/_object-dp", "npm:core-js@2.1.0/modules/_object-gopd", "npm:core-js@2.1.0/modules/_own-keys", "npm:core-js@2.1.0/modules/_to-iobject"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var dP = require("npm:core-js@2.1.0/modules/_object-dp"),
-      gOPD = require("npm:core-js@2.1.0/modules/_object-gopd"),
-      ownKeys = require("npm:core-js@2.1.0/modules/_own-keys"),
-      toIObject = require("npm:core-js@2.1.0/modules/_to-iobject");
-  module.exports = function define(target, mixin) {
-    var keys = ownKeys(toIObject(mixin)),
-        length = keys.length,
-        i = 0,
-        key;
-    while (length > i)
-      dP.f(target, key = keys[i++], gOPD.f(mixin, key));
-    return target;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/core.object.define", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_object-define"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      define = require("npm:core-js@2.1.0/modules/_object-define");
-  $export($export.S + $export.F, 'Object', {define: define});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/core.object.make", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_object-define", "npm:core-js@2.1.0/modules/_object-create"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      define = require("npm:core-js@2.1.0/modules/_object-define"),
-      create = require("npm:core-js@2.1.0/modules/_object-create");
-  $export($export.S + $export.F, 'Object', {make: function(proto, mixin) {
-      return define(create(proto), mixin);
-    }});
   global.define = __define;
   return module.exports;
 });
@@ -21511,6 +21352,135 @@ System.registerDynamic("npm:core-js@2.1.0/modules/core.number.iterator", ["npm:c
   return module.exports;
 });
 
+System.registerDynamic("npm:core-js@2.1.0/modules/core.object.classof", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_classof"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.S + $export.F, 'Object', {classof: require("npm:core-js@2.1.0/modules/_classof")});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/_object-gopd", ["npm:core-js@2.1.0/modules/_object-pie", "npm:core-js@2.1.0/modules/_property-desc", "npm:core-js@2.1.0/modules/_to-iobject", "npm:core-js@2.1.0/modules/_to-primitive", "npm:core-js@2.1.0/modules/_has", "npm:core-js@2.1.0/modules/_ie8-dom-define", "npm:core-js@2.1.0/modules/_descriptors"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var pIE = require("npm:core-js@2.1.0/modules/_object-pie"),
+      createDesc = require("npm:core-js@2.1.0/modules/_property-desc"),
+      toIObject = require("npm:core-js@2.1.0/modules/_to-iobject"),
+      toPrimitive = require("npm:core-js@2.1.0/modules/_to-primitive"),
+      has = require("npm:core-js@2.1.0/modules/_has"),
+      IE8_DOM_DEFINE = require("npm:core-js@2.1.0/modules/_ie8-dom-define"),
+      gOPD = Object.getOwnPropertyDescriptor;
+  exports.f = require("npm:core-js@2.1.0/modules/_descriptors") ? gOPD : function getOwnPropertyDescriptor(O, P) {
+    O = toIObject(O);
+    P = toPrimitive(P, true);
+    if (IE8_DOM_DEFINE)
+      try {
+        return gOPD(O, P);
+      } catch (e) {}
+    if (has(O, P))
+      return createDesc(!pIE.f.call(O, P), O[P]);
+  };
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/_object-gopn", ["npm:core-js@2.1.0/modules/_object-keys-internal", "npm:core-js@2.1.0/modules/_enum-bug-keys"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $keys = require("npm:core-js@2.1.0/modules/_object-keys-internal"),
+      hiddenKeys = require("npm:core-js@2.1.0/modules/_enum-bug-keys").concat('length', 'prototype');
+  exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
+    return $keys(O, hiddenKeys);
+  };
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/_own-keys", ["npm:core-js@2.1.0/modules/_object-gopn", "npm:core-js@2.1.0/modules/_object-gops", "npm:core-js@2.1.0/modules/_an-object", "npm:core-js@2.1.0/modules/_global"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var gOPN = require("npm:core-js@2.1.0/modules/_object-gopn"),
+      gOPS = require("npm:core-js@2.1.0/modules/_object-gops"),
+      anObject = require("npm:core-js@2.1.0/modules/_an-object"),
+      Reflect = require("npm:core-js@2.1.0/modules/_global").Reflect;
+  module.exports = Reflect && Reflect.ownKeys || function ownKeys(it) {
+    var keys = gOPN.f(anObject(it)),
+        getSymbols = gOPS.f;
+    return getSymbols ? keys.concat(getSymbols(it)) : keys;
+  };
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/_object-define", ["npm:core-js@2.1.0/modules/_object-dp", "npm:core-js@2.1.0/modules/_object-gopd", "npm:core-js@2.1.0/modules/_own-keys", "npm:core-js@2.1.0/modules/_to-iobject"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var dP = require("npm:core-js@2.1.0/modules/_object-dp"),
+      gOPD = require("npm:core-js@2.1.0/modules/_object-gopd"),
+      ownKeys = require("npm:core-js@2.1.0/modules/_own-keys"),
+      toIObject = require("npm:core-js@2.1.0/modules/_to-iobject");
+  module.exports = function define(target, mixin) {
+    var keys = ownKeys(toIObject(mixin)),
+        length = keys.length,
+        i = 0,
+        key;
+    while (length > i)
+      dP.f(target, key = keys[i++], gOPD.f(mixin, key));
+    return target;
+  };
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/core.object.define", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_object-define"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      define = require("npm:core-js@2.1.0/modules/_object-define");
+  $export($export.S + $export.F, 'Object', {define: define});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/core.object.is-object", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_is-object"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.S + $export.F, 'Object', {isObject: require("npm:core-js@2.1.0/modules/_is-object")});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/core.object.make", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_object-define", "npm:core-js@2.1.0/modules/_object-create"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      define = require("npm:core-js@2.1.0/modules/_object-define"),
+      create = require("npm:core-js@2.1.0/modules/_object-create");
+  $export($export.S + $export.F, 'Object', {make: function(proto, mixin) {
+      return define(create(proto), mixin);
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
 System.registerDynamic("npm:core-js@2.1.0/modules/_replacer", [], true, function(require, exports, module) {
   ;
   var global = this,
@@ -21580,78 +21550,6 @@ System.registerDynamic("npm:core-js@2.1.0/modules/core.string.unescape-html", ["
   $export($export.P + $export.F, 'String', {unescapeHTML: function unescapeHTML() {
       return $re(this);
     }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/core/index", ["npm:core-js@2.1.0/modules/core.dict", "npm:core-js@2.1.0/modules/core.get-iterator-method", "npm:core-js@2.1.0/modules/core.get-iterator", "npm:core-js@2.1.0/modules/core.is-iterable", "npm:core-js@2.1.0/modules/core.delay", "npm:core-js@2.1.0/modules/core.function.part", "npm:core-js@2.1.0/modules/core.object.is-object", "npm:core-js@2.1.0/modules/core.object.classof", "npm:core-js@2.1.0/modules/core.object.define", "npm:core-js@2.1.0/modules/core.object.make", "npm:core-js@2.1.0/modules/core.number.iterator", "npm:core-js@2.1.0/modules/core.regexp.escape", "npm:core-js@2.1.0/modules/core.string.escape-html", "npm:core-js@2.1.0/modules/core.string.unescape-html", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/core.dict");
-  require("npm:core-js@2.1.0/modules/core.get-iterator-method");
-  require("npm:core-js@2.1.0/modules/core.get-iterator");
-  require("npm:core-js@2.1.0/modules/core.is-iterable");
-  require("npm:core-js@2.1.0/modules/core.delay");
-  require("npm:core-js@2.1.0/modules/core.function.part");
-  require("npm:core-js@2.1.0/modules/core.object.is-object");
-  require("npm:core-js@2.1.0/modules/core.object.classof");
-  require("npm:core-js@2.1.0/modules/core.object.define");
-  require("npm:core-js@2.1.0/modules/core.object.make");
-  require("npm:core-js@2.1.0/modules/core.number.iterator");
-  require("npm:core-js@2.1.0/modules/core.regexp.escape");
-  require("npm:core-js@2.1.0/modules/core.string.escape-html");
-  require("npm:core-js@2.1.0/modules/core.string.unescape-html");
-  module.exports = require("npm:core-js@2.1.0/modules/_core");
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/core/number", ["npm:core-js@2.1.0/modules/core.number.iterator", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/core.number.iterator");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Number;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/core/object", ["npm:core-js@2.1.0/modules/core.object.is-object", "npm:core-js@2.1.0/modules/core.object.classof", "npm:core-js@2.1.0/modules/core.object.define", "npm:core-js@2.1.0/modules/core.object.make", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/core.object.is-object");
-  require("npm:core-js@2.1.0/modules/core.object.classof");
-  require("npm:core-js@2.1.0/modules/core.object.define");
-  require("npm:core-js@2.1.0/modules/core.object.make");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Object;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/core/regexp", ["npm:core-js@2.1.0/modules/core.regexp.escape", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/core.regexp.escape");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").RegExp;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/core/string", ["npm:core-js@2.1.0/modules/core.string.escape-html", "npm:core-js@2.1.0/modules/core.string.unescape-html", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/core.string.escape-html");
-  require("npm:core-js@2.1.0/modules/core.string.unescape-html");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").String;
   global.define = __define;
   return module.exports;
 });
@@ -22372,203 +22270,6 @@ System.registerDynamic("npm:core-js@2.1.0/modules/es6.array.last-index-of", ["np
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/_an-instance", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = function(it, Constructor, name, forbiddenField) {
-    if (!(it instanceof Constructor) || (forbiddenField !== undefined && forbiddenField in it)) {
-      throw TypeError(name + ': incorrect invocation!');
-    }
-    return it;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_a-number-value", ["npm:core-js@2.1.0/modules/_cof"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var cof = require("npm:core-js@2.1.0/modules/_cof");
-  module.exports = function(it, msg) {
-    if (typeof it != 'number' && cof(it) != 'Number')
-      throw TypeError(msg);
-    return +it;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_string-repeat", ["npm:core-js@2.1.0/modules/_to-integer", "npm:core-js@2.1.0/modules/_defined"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var toInteger = require("npm:core-js@2.1.0/modules/_to-integer"),
-      defined = require("npm:core-js@2.1.0/modules/_defined");
-  module.exports = function repeat(count) {
-    var str = String(defined(this)),
-        res = '',
-        n = toInteger(count);
-    if (n < 0 || n == Infinity)
-      throw RangeError("Count can't be negative");
-    for (; n > 0; (n >>>= 1) && (str += str))
-      if (n & 1)
-        res += str;
-    return res;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.to-fixed", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_an-instance", "npm:core-js@2.1.0/modules/_to-integer", "npm:core-js@2.1.0/modules/_a-number-value", "npm:core-js@2.1.0/modules/_string-repeat", "npm:core-js@2.1.0/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      anInstance = require("npm:core-js@2.1.0/modules/_an-instance"),
-      toInteger = require("npm:core-js@2.1.0/modules/_to-integer"),
-      aNumberValue = require("npm:core-js@2.1.0/modules/_a-number-value"),
-      repeat = require("npm:core-js@2.1.0/modules/_string-repeat"),
-      $toFixed = 1..toFixed,
-      floor = Math.floor,
-      data = [0, 0, 0, 0, 0, 0],
-      ERROR = 'Number.toFixed: incorrect invocation!',
-      ZERO = '0';
-  var multiply = function(n, c) {
-    var i = -1,
-        c2 = c;
-    while (++i < 6) {
-      c2 += n * data[i];
-      data[i] = c2 % 1e7;
-      c2 = floor(c2 / 1e7);
-    }
-  };
-  var divide = function(n) {
-    var i = 6,
-        c = 0;
-    while (--i >= 0) {
-      c += data[i];
-      data[i] = floor(c / n);
-      c = (c % n) * 1e7;
-    }
-  };
-  var numToString = function() {
-    var i = 6,
-        s = '';
-    while (--i >= 0) {
-      if (s !== '' || i === 0 || data[i] !== 0) {
-        var t = String(data[i]);
-        s = s === '' ? t : s + repeat.call(ZERO, 7 - t.length) + t;
-      }
-    }
-    return s;
-  };
-  var pow = function(x, n, acc) {
-    return n === 0 ? acc : n % 2 === 1 ? pow(x, n - 1, acc * x) : pow(x * x, n / 2, acc);
-  };
-  var log = function(x) {
-    var n = 0,
-        x2 = x;
-    while (x2 >= 4096) {
-      n += 12;
-      x2 /= 4096;
-    }
-    while (x2 >= 2) {
-      n += 1;
-      x2 /= 2;
-    }
-    return n;
-  };
-  $export($export.P + $export.F * (!!$toFixed && (0.00008.toFixed(3) !== '0.000' || 0.9.toFixed(0) !== '1' || 1.255.toFixed(2) !== '1.25' || 1000000000000000128..toFixed(0) !== '1000000000000000128') || !require("npm:core-js@2.1.0/modules/_fails")(function() {
-    $toFixed.call({});
-  })), 'Number', {toFixed: function toFixed(fractionDigits) {
-      var x = aNumberValue(this, ERROR),
-          f = toInteger(fractionDigits),
-          s = '',
-          m = ZERO,
-          e,
-          z,
-          j,
-          k;
-      if (f < 0 || f > 20)
-        throw RangeError(ERROR);
-      if (x != x)
-        return 'NaN';
-      if (x <= -1e21 || x >= 1e21)
-        return String(x);
-      if (x < 0) {
-        s = '-';
-        x = -x;
-      }
-      if (x > 1e-21) {
-        e = log(x * pow(2, 69, 1)) - 69;
-        z = e < 0 ? x * pow(2, -e, 1) : x / pow(2, e, 1);
-        z *= 0x10000000000000;
-        e = 52 - e;
-        if (e > 0) {
-          multiply(0, z);
-          j = f;
-          while (j >= 7) {
-            multiply(1e7, 0);
-            j -= 7;
-          }
-          multiply(pow(10, j, 1), 0);
-          j = e - 1;
-          while (j >= 23) {
-            divide(1 << 23);
-            j -= 23;
-          }
-          divide(1 << j);
-          multiply(1, 1);
-          divide(2);
-          m = numToString();
-        } else {
-          multiply(0, z);
-          multiply(1 << -e, 0);
-          m = numToString() + repeat.call(ZERO, f);
-        }
-      }
-      if (f > 0) {
-        k = m.length;
-        m = s + (k <= f ? '0.' + repeat.call(ZERO, f - k) + m : m.slice(0, k - f) + '.' + m.slice(k - f));
-      } else {
-        m = s + m;
-      }
-      return m;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.to-precision", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_fails", "npm:core-js@2.1.0/modules/_a-number-value"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      $fails = require("npm:core-js@2.1.0/modules/_fails"),
-      aNumberValue = require("npm:core-js@2.1.0/modules/_a-number-value"),
-      $toPrecision = 1..toPrecision;
-  $export($export.P + $export.F * ($fails(function() {
-    return $toPrecision.call(1, undefined) !== '1';
-  }) || !$fails(function() {
-    $toPrecision.call({});
-  })), 'Number', {toPrecision: function toPrecision(precision) {
-      var that = aNumberValue(this, 'Number#toPrecision: incorrect invocation!');
-      return precision === undefined ? $toPrecision.call(that) : $toPrecision.call(that, precision);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
 System.registerDynamic("npm:core-js@2.1.0/modules/es6.date.now", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
   ;
   var global = this,
@@ -22825,7 +22526,7 @@ System.registerDynamic("npm:core-js@2.1.0/modules/es6.regexp.to-string", ["npm:c
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/es5/index", ["npm:core-js@2.1.0/modules/es6.object.create", "npm:core-js@2.1.0/modules/es6.object.define-property", "npm:core-js@2.1.0/modules/es6.object.define-properties", "npm:core-js@2.1.0/modules/es6.object.get-own-property-descriptor", "npm:core-js@2.1.0/modules/es6.object.get-prototype-of", "npm:core-js@2.1.0/modules/es6.object.keys", "npm:core-js@2.1.0/modules/es6.object.get-own-property-names", "npm:core-js@2.1.0/modules/es6.object.freeze", "npm:core-js@2.1.0/modules/es6.object.seal", "npm:core-js@2.1.0/modules/es6.object.prevent-extensions", "npm:core-js@2.1.0/modules/es6.object.is-frozen", "npm:core-js@2.1.0/modules/es6.object.is-sealed", "npm:core-js@2.1.0/modules/es6.object.is-extensible", "npm:core-js@2.1.0/modules/es6.function.bind", "npm:core-js@2.1.0/modules/es6.array.is-array", "npm:core-js@2.1.0/modules/es6.array.join", "npm:core-js@2.1.0/modules/es6.array.slice", "npm:core-js@2.1.0/modules/es6.array.sort", "npm:core-js@2.1.0/modules/es6.array.for-each", "npm:core-js@2.1.0/modules/es6.array.map", "npm:core-js@2.1.0/modules/es6.array.filter", "npm:core-js@2.1.0/modules/es6.array.some", "npm:core-js@2.1.0/modules/es6.array.every", "npm:core-js@2.1.0/modules/es6.array.reduce", "npm:core-js@2.1.0/modules/es6.array.reduce-right", "npm:core-js@2.1.0/modules/es6.array.index-of", "npm:core-js@2.1.0/modules/es6.array.last-index-of", "npm:core-js@2.1.0/modules/es6.number.to-fixed", "npm:core-js@2.1.0/modules/es6.number.to-precision", "npm:core-js@2.1.0/modules/es6.date.now", "npm:core-js@2.1.0/modules/es6.date.to-iso-string", "npm:core-js@2.1.0/modules/es6.date.to-json", "npm:core-js@2.1.0/modules/es6.parse-int", "npm:core-js@2.1.0/modules/es6.parse-float", "npm:core-js@2.1.0/modules/es6.string.trim", "npm:core-js@2.1.0/modules/es6.regexp.to-string", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es5", ["npm:core-js@2.1.0/modules/es6.object.create", "npm:core-js@2.1.0/modules/es6.object.define-property", "npm:core-js@2.1.0/modules/es6.object.define-properties", "npm:core-js@2.1.0/modules/es6.object.get-own-property-descriptor", "npm:core-js@2.1.0/modules/es6.object.get-prototype-of", "npm:core-js@2.1.0/modules/es6.object.keys", "npm:core-js@2.1.0/modules/es6.object.get-own-property-names", "npm:core-js@2.1.0/modules/es6.object.freeze", "npm:core-js@2.1.0/modules/es6.object.seal", "npm:core-js@2.1.0/modules/es6.object.prevent-extensions", "npm:core-js@2.1.0/modules/es6.object.is-frozen", "npm:core-js@2.1.0/modules/es6.object.is-sealed", "npm:core-js@2.1.0/modules/es6.object.is-extensible", "npm:core-js@2.1.0/modules/es6.function.bind", "npm:core-js@2.1.0/modules/es6.array.is-array", "npm:core-js@2.1.0/modules/es6.array.join", "npm:core-js@2.1.0/modules/es6.array.slice", "npm:core-js@2.1.0/modules/es6.array.sort", "npm:core-js@2.1.0/modules/es6.array.for-each", "npm:core-js@2.1.0/modules/es6.array.map", "npm:core-js@2.1.0/modules/es6.array.filter", "npm:core-js@2.1.0/modules/es6.array.some", "npm:core-js@2.1.0/modules/es6.array.every", "npm:core-js@2.1.0/modules/es6.array.reduce", "npm:core-js@2.1.0/modules/es6.array.reduce-right", "npm:core-js@2.1.0/modules/es6.array.index-of", "npm:core-js@2.1.0/modules/es6.array.last-index-of", "npm:core-js@2.1.0/modules/es6.date.now", "npm:core-js@2.1.0/modules/es6.date.to-iso-string", "npm:core-js@2.1.0/modules/es6.date.to-json", "npm:core-js@2.1.0/modules/es6.parse-int", "npm:core-js@2.1.0/modules/es6.parse-float", "npm:core-js@2.1.0/modules/es6.string.trim", "npm:core-js@2.1.0/modules/es6.regexp.to-string"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
@@ -22857,8 +22558,6 @@ System.registerDynamic("npm:core-js@2.1.0/es5/index", ["npm:core-js@2.1.0/module
   require("npm:core-js@2.1.0/modules/es6.array.reduce-right");
   require("npm:core-js@2.1.0/modules/es6.array.index-of");
   require("npm:core-js@2.1.0/modules/es6.array.last-index-of");
-  require("npm:core-js@2.1.0/modules/es6.number.to-fixed");
-  require("npm:core-js@2.1.0/modules/es6.number.to-precision");
   require("npm:core-js@2.1.0/modules/es6.date.now");
   require("npm:core-js@2.1.0/modules/es6.date.to-iso-string");
   require("npm:core-js@2.1.0/modules/es6.date.to-json");
@@ -22866,167 +22565,6 @@ System.registerDynamic("npm:core-js@2.1.0/es5/index", ["npm:core-js@2.1.0/module
   require("npm:core-js@2.1.0/modules/es6.parse-float");
   require("npm:core-js@2.1.0/modules/es6.string.trim");
   require("npm:core-js@2.1.0/modules/es6.regexp.to-string");
-  module.exports = require("npm:core-js@2.1.0/modules/_core");
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_string-at", ["npm:core-js@2.1.0/modules/_to-integer", "npm:core-js@2.1.0/modules/_defined"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var toInteger = require("npm:core-js@2.1.0/modules/_to-integer"),
-      defined = require("npm:core-js@2.1.0/modules/_defined");
-  module.exports = function(TO_STRING) {
-    return function(that, pos) {
-      var s = String(defined(that)),
-          i = toInteger(pos),
-          l = s.length,
-          a,
-          b;
-      if (i < 0 || i >= l)
-        return TO_STRING ? '' : undefined;
-      a = s.charCodeAt(i);
-      return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff ? TO_STRING ? s.charAt(i) : a : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
-    };
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.iterator", ["npm:core-js@2.1.0/modules/_string-at", "npm:core-js@2.1.0/modules/_iter-define"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $at = require("npm:core-js@2.1.0/modules/_string-at")(true);
-  require("npm:core-js@2.1.0/modules/_iter-define")(String, 'String', function(iterated) {
-    this._t = String(iterated);
-    this._i = 0;
-  }, function() {
-    var O = this._t,
-        index = this._i,
-        point;
-    if (index >= O.length)
-      return {
-        value: undefined,
-        done: true
-      };
-    point = $at(O, index);
-    this._i += point.length;
-    return {
-      value: point,
-      done: false
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_iter-detect", ["npm:core-js@2.1.0/modules/_wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var ITERATOR = require("npm:core-js@2.1.0/modules/_wks")('iterator'),
-      SAFE_CLOSING = false;
-  try {
-    var riter = [7][ITERATOR]();
-    riter['return'] = function() {
-      SAFE_CLOSING = true;
-    };
-    Array.from(riter, function() {
-      throw 2;
-    });
-  } catch (e) {}
-  module.exports = function(exec, skipClosing) {
-    if (!skipClosing && !SAFE_CLOSING)
-      return false;
-    var safe = false;
-    try {
-      var arr = [7],
-          iter = arr[ITERATOR]();
-      iter.next = function() {
-        safe = true;
-      };
-      arr[ITERATOR] = function() {
-        return iter;
-      };
-      exec(arr);
-    } catch (e) {}
-    return safe;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.array.from", ["npm:core-js@2.1.0/modules/_ctx", "npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_to-object", "npm:core-js@2.1.0/modules/_iter-call", "npm:core-js@2.1.0/modules/_is-array-iter", "npm:core-js@2.1.0/modules/_to-length", "npm:core-js@2.1.0/modules/core.get-iterator-method", "npm:core-js@2.1.0/modules/_iter-detect"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var ctx = require("npm:core-js@2.1.0/modules/_ctx"),
-      $export = require("npm:core-js@2.1.0/modules/_export"),
-      toObject = require("npm:core-js@2.1.0/modules/_to-object"),
-      call = require("npm:core-js@2.1.0/modules/_iter-call"),
-      isArrayIter = require("npm:core-js@2.1.0/modules/_is-array-iter"),
-      toLength = require("npm:core-js@2.1.0/modules/_to-length"),
-      getIterFn = require("npm:core-js@2.1.0/modules/core.get-iterator-method");
-  $export($export.S + $export.F * !require("npm:core-js@2.1.0/modules/_iter-detect")(function(iter) {
-    Array.from(iter);
-  }), 'Array', {from: function from(arrayLike) {
-      var O = toObject(arrayLike),
-          C = typeof this == 'function' ? this : Array,
-          aLen = arguments.length,
-          mapfn = aLen > 1 ? arguments[1] : undefined,
-          mapping = mapfn !== undefined,
-          index = 0,
-          iterFn = getIterFn(O),
-          length,
-          result,
-          step,
-          iterator;
-      if (mapping)
-        mapfn = ctx(mapfn, aLen > 2 ? arguments[2] : undefined, 2);
-      if (iterFn != undefined && !(C == Array && isArrayIter(iterFn))) {
-        for (iterator = iterFn.call(O), result = new C; !(step = iterator.next()).done; index++) {
-          result[index] = mapping ? call(iterator, mapfn, [step.value, index], true) : step.value;
-        }
-      } else {
-        length = toLength(O.length);
-        for (result = new C(length); length > index; index++) {
-          result[index] = mapping ? mapfn(O[index], index) : O[index];
-        }
-      }
-      result.length = index;
-      return result;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.array.of", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S + $export.F * require("npm:core-js@2.1.0/modules/_fails")(function() {
-    function F() {}
-    return !(Array.of.call(F) instanceof F);
-  }), 'Array', {of: function of() {
-      var index = 0,
-          aLen = arguments.length,
-          result = new (typeof this == 'function' ? this : Array)(aLen);
-      while (aLen > index)
-        result[index] = arguments[index++];
-      result.length = aLen;
-      return result;
-    }});
   global.define = __define;
   return module.exports;
 });
@@ -23175,6 +22713,112 @@ System.registerDynamic("npm:core-js@2.1.0/modules/es6.array.find-index", ["npm:c
   return module.exports;
 });
 
+System.registerDynamic("npm:core-js@2.1.0/modules/_iter-detect", ["npm:core-js@2.1.0/modules/_wks"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var ITERATOR = require("npm:core-js@2.1.0/modules/_wks")('iterator'),
+      SAFE_CLOSING = false;
+  try {
+    var riter = [7][ITERATOR]();
+    riter['return'] = function() {
+      SAFE_CLOSING = true;
+    };
+    Array.from(riter, function() {
+      throw 2;
+    });
+  } catch (e) {}
+  module.exports = function(exec, skipClosing) {
+    if (!skipClosing && !SAFE_CLOSING)
+      return false;
+    var safe = false;
+    try {
+      var arr = [7],
+          iter = arr[ITERATOR]();
+      iter.next = function() {
+        safe = true;
+      };
+      arr[ITERATOR] = function() {
+        return iter;
+      };
+      exec(arr);
+    } catch (e) {}
+    return safe;
+  };
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.array.from", ["npm:core-js@2.1.0/modules/_ctx", "npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_to-object", "npm:core-js@2.1.0/modules/_iter-call", "npm:core-js@2.1.0/modules/_is-array-iter", "npm:core-js@2.1.0/modules/_to-length", "npm:core-js@2.1.0/modules/core.get-iterator-method", "npm:core-js@2.1.0/modules/_iter-detect"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  var ctx = require("npm:core-js@2.1.0/modules/_ctx"),
+      $export = require("npm:core-js@2.1.0/modules/_export"),
+      toObject = require("npm:core-js@2.1.0/modules/_to-object"),
+      call = require("npm:core-js@2.1.0/modules/_iter-call"),
+      isArrayIter = require("npm:core-js@2.1.0/modules/_is-array-iter"),
+      toLength = require("npm:core-js@2.1.0/modules/_to-length"),
+      getIterFn = require("npm:core-js@2.1.0/modules/core.get-iterator-method");
+  $export($export.S + $export.F * !require("npm:core-js@2.1.0/modules/_iter-detect")(function(iter) {
+    Array.from(iter);
+  }), 'Array', {from: function from(arrayLike) {
+      var O = toObject(arrayLike),
+          C = typeof this == 'function' ? this : Array,
+          aLen = arguments.length,
+          mapfn = aLen > 1 ? arguments[1] : undefined,
+          mapping = mapfn !== undefined,
+          index = 0,
+          iterFn = getIterFn(O),
+          length,
+          result,
+          step,
+          iterator;
+      if (mapping)
+        mapfn = ctx(mapfn, aLen > 2 ? arguments[2] : undefined, 2);
+      if (iterFn != undefined && !(C == Array && isArrayIter(iterFn))) {
+        for (iterator = iterFn.call(O), result = new C; !(step = iterator.next()).done; index++) {
+          result[index] = mapping ? call(iterator, mapfn, [step.value, index], true) : step.value;
+        }
+      } else {
+        length = toLength(O.length);
+        for (result = new C(length); length > index; index++) {
+          result[index] = mapping ? mapfn(O[index], index) : O[index];
+        }
+      }
+      result.length = index;
+      return result;
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.array.of", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_fails"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.S + $export.F * require("npm:core-js@2.1.0/modules/_fails")(function() {
+    function F() {}
+    return !(Array.of.call(F) instanceof F);
+  }), 'Array', {of: function of() {
+      var index = 0,
+          aLen = arguments.length,
+          result = new (typeof this == 'function' ? this : Array)(aLen);
+      while (aLen > index)
+        result[index] = arguments[index++];
+      result.length = aLen;
+      return result;
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
 System.registerDynamic("npm:core-js@2.1.0/modules/_set-species", ["npm:core-js@2.1.0/modules/_global", "npm:core-js@2.1.0/modules/_object-dp", "npm:core-js@2.1.0/modules/_descriptors", "npm:core-js@2.1.0/modules/_wks"], true, function(require, exports, module) {
   ;
   var global = this,
@@ -23209,74 +22853,6 @@ System.registerDynamic("npm:core-js@2.1.0/modules/es6.array.species", ["npm:core
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.array.iterator", ["npm:core-js@2.1.0/modules/_add-to-unscopables", "npm:core-js@2.1.0/modules/_iter-step", "npm:core-js@2.1.0/modules/_iterators", "npm:core-js@2.1.0/modules/_to-iobject", "npm:core-js@2.1.0/modules/_iter-define"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var addToUnscopables = require("npm:core-js@2.1.0/modules/_add-to-unscopables"),
-      step = require("npm:core-js@2.1.0/modules/_iter-step"),
-      Iterators = require("npm:core-js@2.1.0/modules/_iterators"),
-      toIObject = require("npm:core-js@2.1.0/modules/_to-iobject");
-  module.exports = require("npm:core-js@2.1.0/modules/_iter-define")(Array, 'Array', function(iterated, kind) {
-    this._t = toIObject(iterated);
-    this._i = 0;
-    this._k = kind;
-  }, function() {
-    var O = this._t,
-        kind = this._k,
-        index = this._i++;
-    if (!O || index >= O.length) {
-      this._t = undefined;
-      return step(1);
-    }
-    if (kind == 'keys')
-      return step(0, index);
-    if (kind == 'values')
-      return step(0, O[index]);
-    return step(0, [index, O[index]]);
-  }, 'values');
-  Iterators.Arguments = Iterators.Array;
-  addToUnscopables('keys');
-  addToUnscopables('values');
-  addToUnscopables('entries');
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/es6/array", ["npm:core-js@2.1.0/modules/es6.string.iterator", "npm:core-js@2.1.0/modules/es6.array.is-array", "npm:core-js@2.1.0/modules/es6.array.from", "npm:core-js@2.1.0/modules/es6.array.of", "npm:core-js@2.1.0/modules/es6.array.join", "npm:core-js@2.1.0/modules/es6.array.slice", "npm:core-js@2.1.0/modules/es6.array.sort", "npm:core-js@2.1.0/modules/es6.array.for-each", "npm:core-js@2.1.0/modules/es6.array.map", "npm:core-js@2.1.0/modules/es6.array.filter", "npm:core-js@2.1.0/modules/es6.array.some", "npm:core-js@2.1.0/modules/es6.array.every", "npm:core-js@2.1.0/modules/es6.array.reduce", "npm:core-js@2.1.0/modules/es6.array.reduce-right", "npm:core-js@2.1.0/modules/es6.array.index-of", "npm:core-js@2.1.0/modules/es6.array.last-index-of", "npm:core-js@2.1.0/modules/es6.array.copy-within", "npm:core-js@2.1.0/modules/es6.array.fill", "npm:core-js@2.1.0/modules/es6.array.find", "npm:core-js@2.1.0/modules/es6.array.find-index", "npm:core-js@2.1.0/modules/es6.array.species", "npm:core-js@2.1.0/modules/es6.array.iterator", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.string.iterator");
-  require("npm:core-js@2.1.0/modules/es6.array.is-array");
-  require("npm:core-js@2.1.0/modules/es6.array.from");
-  require("npm:core-js@2.1.0/modules/es6.array.of");
-  require("npm:core-js@2.1.0/modules/es6.array.join");
-  require("npm:core-js@2.1.0/modules/es6.array.slice");
-  require("npm:core-js@2.1.0/modules/es6.array.sort");
-  require("npm:core-js@2.1.0/modules/es6.array.for-each");
-  require("npm:core-js@2.1.0/modules/es6.array.map");
-  require("npm:core-js@2.1.0/modules/es6.array.filter");
-  require("npm:core-js@2.1.0/modules/es6.array.some");
-  require("npm:core-js@2.1.0/modules/es6.array.every");
-  require("npm:core-js@2.1.0/modules/es6.array.reduce");
-  require("npm:core-js@2.1.0/modules/es6.array.reduce-right");
-  require("npm:core-js@2.1.0/modules/es6.array.index-of");
-  require("npm:core-js@2.1.0/modules/es6.array.last-index-of");
-  require("npm:core-js@2.1.0/modules/es6.array.copy-within");
-  require("npm:core-js@2.1.0/modules/es6.array.fill");
-  require("npm:core-js@2.1.0/modules/es6.array.find");
-  require("npm:core-js@2.1.0/modules/es6.array.find-index");
-  require("npm:core-js@2.1.0/modules/es6.array.species");
-  require("npm:core-js@2.1.0/modules/es6.array.iterator");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Array;
-  global.define = __define;
-  return module.exports;
-});
-
 System.registerDynamic("npm:core-js@2.1.0/modules/es6.date.to-string", ["npm:core-js@2.1.0/modules/_redefine"], true, function(require, exports, module) {
   ;
   var global = this,
@@ -23292,44 +22868,6 @@ System.registerDynamic("npm:core-js@2.1.0/modules/es6.date.to-string", ["npm:cor
       return value === value ? $toString.call(this) : INVALID_DATE;
     });
   }
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/es6/date", ["npm:core-js@2.1.0/modules/es6.date.now", "npm:core-js@2.1.0/modules/es6.date.to-string", "npm:core-js@2.1.0/modules/es6.date.to-iso-string", "npm:core-js@2.1.0/modules/es6.date.to-json"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.date.now");
-  require("npm:core-js@2.1.0/modules/es6.date.to-string");
-  require("npm:core-js@2.1.0/modules/es6.date.to-iso-string");
-  require("npm:core-js@2.1.0/modules/es6.date.to-json");
-  module.exports = Date;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.function.name", ["npm:core-js@2.1.0/modules/_object-dp", "npm:core-js@2.1.0/modules/_property-desc", "npm:core-js@2.1.0/modules/_has", "npm:core-js@2.1.0/modules/_descriptors"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var dP = require("npm:core-js@2.1.0/modules/_object-dp").f,
-      createDesc = require("npm:core-js@2.1.0/modules/_property-desc"),
-      has = require("npm:core-js@2.1.0/modules/_has"),
-      FProto = Function.prototype,
-      nameRE = /^\s*function ([^ (]*)/,
-      NAME = 'name';
-  NAME in FProto || require("npm:core-js@2.1.0/modules/_descriptors") && dP(FProto, NAME, {
-    configurable: true,
-    get: function() {
-      var match = ('' + this).match(nameRE),
-          name = match ? match[1] : '';
-      has(this, NAME) || dP(this, NAME, createDesc(5, name));
-      return name;
-    }
-  });
   global.define = __define;
   return module.exports;
 });
@@ -23359,587 +22897,26 @@ System.registerDynamic("npm:core-js@2.1.0/modules/es6.function.has-instance", ["
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/es6/function", ["npm:core-js@2.1.0/modules/es6.function.bind", "npm:core-js@2.1.0/modules/es6.function.name", "npm:core-js@2.1.0/modules/es6.function.has-instance", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.function.name", ["npm:core-js@2.1.0/modules/_object-dp", "npm:core-js@2.1.0/modules/_property-desc", "npm:core-js@2.1.0/modules/_has", "npm:core-js@2.1.0/modules/_descriptors"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.function.bind");
-  require("npm:core-js@2.1.0/modules/es6.function.name");
-  require("npm:core-js@2.1.0/modules/es6.function.has-instance");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Function;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_enum-keys", ["npm:core-js@2.1.0/modules/_object-keys", "npm:core-js@2.1.0/modules/_object-gops", "npm:core-js@2.1.0/modules/_object-pie"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var getKeys = require("npm:core-js@2.1.0/modules/_object-keys"),
-      gOPS = require("npm:core-js@2.1.0/modules/_object-gops"),
-      pIE = require("npm:core-js@2.1.0/modules/_object-pie");
-  module.exports = function(it) {
-    var result = getKeys(it),
-        getSymbols = gOPS.f;
-    if (getSymbols) {
-      var symbols = getSymbols(it),
-          isEnum = pIE.f,
-          i = 0,
-          key;
-      while (symbols.length > i)
-        if (isEnum.call(it, key = symbols[i++]))
-          result.push(key);
-    }
-    return result;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.symbol", ["npm:core-js@2.1.0/modules/_global", "npm:core-js@2.1.0/modules/_core", "npm:core-js@2.1.0/modules/_has", "npm:core-js@2.1.0/modules/_descriptors", "npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_redefine", "npm:core-js@2.1.0/modules/_meta", "npm:core-js@2.1.0/modules/_fails", "npm:core-js@2.1.0/modules/_shared", "npm:core-js@2.1.0/modules/_set-to-string-tag", "npm:core-js@2.1.0/modules/_uid", "npm:core-js@2.1.0/modules/_wks", "npm:core-js@2.1.0/modules/_keyof", "npm:core-js@2.1.0/modules/_enum-keys", "npm:core-js@2.1.0/modules/_is-array", "npm:core-js@2.1.0/modules/_an-object", "npm:core-js@2.1.0/modules/_to-iobject", "npm:core-js@2.1.0/modules/_to-primitive", "npm:core-js@2.1.0/modules/_property-desc", "npm:core-js@2.1.0/modules/_object-create", "npm:core-js@2.1.0/modules/_object-gopn-ext", "npm:core-js@2.1.0/modules/_object-gopd", "npm:core-js@2.1.0/modules/_object-dp", "npm:core-js@2.1.0/modules/_object-gopn", "npm:core-js@2.1.0/modules/_object-pie", "npm:core-js@2.1.0/modules/_object-gops", "npm:core-js@2.1.0/modules/_library"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var global = require("npm:core-js@2.1.0/modules/_global"),
-      core = require("npm:core-js@2.1.0/modules/_core"),
-      has = require("npm:core-js@2.1.0/modules/_has"),
-      DESCRIPTORS = require("npm:core-js@2.1.0/modules/_descriptors"),
-      $export = require("npm:core-js@2.1.0/modules/_export"),
-      redefine = require("npm:core-js@2.1.0/modules/_redefine"),
-      META = require("npm:core-js@2.1.0/modules/_meta").KEY,
-      $fails = require("npm:core-js@2.1.0/modules/_fails"),
-      shared = require("npm:core-js@2.1.0/modules/_shared"),
-      setToStringTag = require("npm:core-js@2.1.0/modules/_set-to-string-tag"),
-      uid = require("npm:core-js@2.1.0/modules/_uid"),
-      wks = require("npm:core-js@2.1.0/modules/_wks"),
-      keyOf = require("npm:core-js@2.1.0/modules/_keyof"),
-      enumKeys = require("npm:core-js@2.1.0/modules/_enum-keys"),
-      isArray = require("npm:core-js@2.1.0/modules/_is-array"),
-      anObject = require("npm:core-js@2.1.0/modules/_an-object"),
-      toIObject = require("npm:core-js@2.1.0/modules/_to-iobject"),
-      toPrimitive = require("npm:core-js@2.1.0/modules/_to-primitive"),
+  var dP = require("npm:core-js@2.1.0/modules/_object-dp").f,
       createDesc = require("npm:core-js@2.1.0/modules/_property-desc"),
-      _create = require("npm:core-js@2.1.0/modules/_object-create"),
-      gOPNExt = require("npm:core-js@2.1.0/modules/_object-gopn-ext"),
-      $GOPD = require("npm:core-js@2.1.0/modules/_object-gopd"),
-      $DP = require("npm:core-js@2.1.0/modules/_object-dp"),
-      gOPD = $GOPD.f,
-      dP = $DP.f,
-      gOPN = gOPNExt.f,
-      $Symbol = global.Symbol,
-      $JSON = global.JSON,
-      _stringify = $JSON && $JSON.stringify,
-      setter = false,
-      HIDDEN = wks('_hidden'),
-      isEnum = {}.propertyIsEnumerable,
-      SymbolRegistry = shared('symbol-registry'),
-      AllSymbols = shared('symbols'),
-      ObjectProto = Object.prototype,
-      USE_NATIVE = typeof $Symbol == 'function';
-  var setSymbolDesc = DESCRIPTORS && $fails(function() {
-    return _create(dP({}, 'a', {get: function() {
-        return dP(this, 'a', {value: 7}).a;
-      }})).a != 7;
-  }) ? function(it, key, D) {
-    var protoDesc = gOPD(ObjectProto, key);
-    if (protoDesc)
-      delete ObjectProto[key];
-    dP(it, key, D);
-    if (protoDesc && it !== ObjectProto)
-      dP(ObjectProto, key, protoDesc);
-  } : dP;
-  var wrap = function(tag) {
-    var sym = AllSymbols[tag] = _create($Symbol.prototype);
-    sym._k = tag;
-    DESCRIPTORS && setter && setSymbolDesc(ObjectProto, tag, {
-      configurable: true,
-      set: function(value) {
-        if (has(this, HIDDEN) && has(this[HIDDEN], tag))
-          this[HIDDEN][tag] = false;
-        setSymbolDesc(this, tag, createDesc(1, value));
-      }
-    });
-    return sym;
-  };
-  var isSymbol = function(it) {
-    return typeof it == 'symbol';
-  };
-  var $defineProperty = function defineProperty(it, key, D) {
-    anObject(it);
-    key = toPrimitive(key, true);
-    anObject(D);
-    if (has(AllSymbols, key)) {
-      if (!D.enumerable) {
-        if (!has(it, HIDDEN))
-          dP(it, HIDDEN, createDesc(1, {}));
-        it[HIDDEN][key] = true;
-      } else {
-        if (has(it, HIDDEN) && it[HIDDEN][key])
-          it[HIDDEN][key] = false;
-        D = _create(D, {enumerable: createDesc(0, false)});
-      }
-      return setSymbolDesc(it, key, D);
-    }
-    return dP(it, key, D);
-  };
-  var $defineProperties = function defineProperties(it, P) {
-    anObject(it);
-    var keys = enumKeys(P = toIObject(P)),
-        i = 0,
-        l = keys.length,
-        key;
-    while (l > i)
-      $defineProperty(it, key = keys[i++], P[key]);
-    return it;
-  };
-  var $create = function create(it, P) {
-    return P === undefined ? _create(it) : $defineProperties(_create(it), P);
-  };
-  var $propertyIsEnumerable = function propertyIsEnumerable(key) {
-    var E = isEnum.call(this, key = toPrimitive(key, true));
-    return E || !has(this, key) || !has(AllSymbols, key) || has(this, HIDDEN) && this[HIDDEN][key] ? E : true;
-  };
-  var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(it, key) {
-    var D = gOPD(it = toIObject(it), key = toPrimitive(key, true));
-    if (D && has(AllSymbols, key) && !(has(it, HIDDEN) && it[HIDDEN][key]))
-      D.enumerable = true;
-    return D;
-  };
-  var $getOwnPropertyNames = function getOwnPropertyNames(it) {
-    var names = gOPN(toIObject(it)),
-        result = [],
-        i = 0,
-        key;
-    while (names.length > i)
-      if (!has(AllSymbols, key = names[i++]) && key != HIDDEN && key != META)
-        result.push(key);
-    return result;
-  };
-  var $getOwnPropertySymbols = function getOwnPropertySymbols(it) {
-    var names = gOPN(toIObject(it)),
-        result = [],
-        i = 0,
-        key;
-    while (names.length > i)
-      if (has(AllSymbols, key = names[i++]))
-        result.push(AllSymbols[key]);
-    return result;
-  };
-  var $stringify = function stringify(it) {
-    if (it === undefined || isSymbol(it))
-      return;
-    var args = [it],
-        i = 1,
-        replacer,
-        $replacer;
-    while (arguments.length > i)
-      args.push(arguments[i++]);
-    replacer = args[1];
-    if (typeof replacer == 'function')
-      $replacer = replacer;
-    if ($replacer || !isArray(replacer))
-      replacer = function(key, value) {
-        if ($replacer)
-          value = $replacer.call(this, key, value);
-        if (!isSymbol(value))
-          return value;
-      };
-    args[1] = replacer;
-    return _stringify.apply($JSON, args);
-  };
-  var BUGGY_JSON = $fails(function() {
-    var S = $Symbol();
-    return _stringify([S]) != '[null]' || _stringify({a: S}) != '{}' || _stringify(Object(S)) != '{}';
-  });
-  if (!USE_NATIVE) {
-    $Symbol = function Symbol() {
-      if (isSymbol(this))
-        throw TypeError('Symbol is not a constructor');
-      return wrap(uid(arguments.length > 0 ? arguments[0] : undefined));
-    };
-    redefine($Symbol.prototype, 'toString', function toString() {
-      return this._k;
-    });
-    isSymbol = function(it) {
-      return it instanceof $Symbol;
-    };
-    $GOPD.f = $getOwnPropertyDescriptor;
-    $DP.f = $defineProperty;
-    require("npm:core-js@2.1.0/modules/_object-gopn").f = gOPNExt.f = $getOwnPropertyNames;
-    require("npm:core-js@2.1.0/modules/_object-pie").f = $propertyIsEnumerable;
-    require("npm:core-js@2.1.0/modules/_object-gops").f = $getOwnPropertySymbols;
-    if (DESCRIPTORS && !require("npm:core-js@2.1.0/modules/_library")) {
-      redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
-    }
-  }
-  $export($export.G + $export.W + $export.F * !USE_NATIVE, {Symbol: $Symbol});
-  for (var symbols = ('hasInstance,isConcatSpreadable,iterator,match,replace,search,species,split,toPrimitive,toStringTag,unscopables').split(','),
-      i = 0; symbols.length > i; ) {
-    var key = symbols[i++],
-        Wrapper = core.Symbol,
-        sym = wks(key);
-    if (!(key in Wrapper))
-      dP(Wrapper, key, {value: USE_NATIVE ? sym : wrap(sym)});
-  }
-  ;
-  setter = true;
-  $export($export.S + $export.F * !USE_NATIVE, 'Symbol', {
-    'for': function(key) {
-      return has(SymbolRegistry, key += '') ? SymbolRegistry[key] : SymbolRegistry[key] = $Symbol(key);
-    },
-    keyFor: function keyFor(key) {
-      return keyOf(SymbolRegistry, key);
-    },
-    useSetter: function() {
-      setter = true;
-    },
-    useSimple: function() {
-      setter = false;
-    }
-  });
-  $export($export.S + $export.F * !USE_NATIVE, 'Object', {
-    create: $create,
-    defineProperty: $defineProperty,
-    defineProperties: $defineProperties,
-    getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
-    getOwnPropertyNames: $getOwnPropertyNames,
-    getOwnPropertySymbols: $getOwnPropertySymbols
-  });
-  $JSON && $export($export.S + $export.F * (!USE_NATIVE || BUGGY_JSON), 'JSON', {stringify: $stringify});
-  setToStringTag($Symbol, 'Symbol');
-  setToStringTag(Math, 'Math', true);
-  setToStringTag(global.JSON, 'JSON', true);
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.object.assign", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_object-assign"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S + $export.F, 'Object', {assign: require("npm:core-js@2.1.0/modules/_object-assign")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_same-value", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = Object.is || function is(x, y) {
-    return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.object.is", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_same-value"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S, 'Object', {is: require("npm:core-js@2.1.0/modules/_same-value")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_set-proto", ["npm:core-js@2.1.0/modules/_is-object", "npm:core-js@2.1.0/modules/_an-object", "npm:core-js@2.1.0/modules/_ctx", "npm:core-js@2.1.0/modules/_object-gopd"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isObject = require("npm:core-js@2.1.0/modules/_is-object"),
-      anObject = require("npm:core-js@2.1.0/modules/_an-object");
-  var check = function(O, proto) {
-    anObject(O);
-    if (!isObject(proto) && proto !== null)
-      throw TypeError(proto + ": can't set as prototype!");
-  };
-  module.exports = {
-    set: Object.setPrototypeOf || ('__proto__' in {} ? function(test, buggy, set) {
-      try {
-        set = require("npm:core-js@2.1.0/modules/_ctx")(Function.call, require("npm:core-js@2.1.0/modules/_object-gopd").f(Object.prototype, '__proto__').set, 2);
-        set(test, []);
-        buggy = !(test instanceof Array);
-      } catch (e) {
-        buggy = true;
-      }
-      return function setPrototypeOf(O, proto) {
-        check(O, proto);
-        if (buggy)
-          O.__proto__ = proto;
-        else
-          set(O, proto);
-        return O;
-      };
-    }({}, false) : undefined),
-    check: check
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.object.set-prototype-of", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_set-proto"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S, 'Object', {setPrototypeOf: require("npm:core-js@2.1.0/modules/_set-proto").set});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.object.to-string", ["npm:core-js@2.1.0/modules/_classof", "npm:core-js@2.1.0/modules/_wks", "npm:core-js@2.1.0/modules/_redefine"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var classof = require("npm:core-js@2.1.0/modules/_classof"),
-      test = {};
-  test[require("npm:core-js@2.1.0/modules/_wks")('toStringTag')] = 'z';
-  if (test + '' != '[object z]') {
-    require("npm:core-js@2.1.0/modules/_redefine")(Object.prototype, 'toString', function toString() {
-      return '[object ' + classof(this) + ']';
-    }, true);
-  }
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_inherit-if-required", ["npm:core-js@2.1.0/modules/_is-object", "npm:core-js@2.1.0/modules/_set-proto"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isObject = require("npm:core-js@2.1.0/modules/_is-object"),
-      setPrototypeOf = require("npm:core-js@2.1.0/modules/_set-proto").set;
-  module.exports = function(that, target, C) {
-    var P,
-        S = target.constructor;
-    if (S !== C && typeof S == 'function' && (P = S.prototype) !== C.prototype && isObject(P) && setPrototypeOf) {
-      setPrototypeOf(that, P);
-    }
-    return that;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.constructor", ["npm:core-js@2.1.0/modules/_global", "npm:core-js@2.1.0/modules/_has", "npm:core-js@2.1.0/modules/_cof", "npm:core-js@2.1.0/modules/_inherit-if-required", "npm:core-js@2.1.0/modules/_to-primitive", "npm:core-js@2.1.0/modules/_fails", "npm:core-js@2.1.0/modules/_object-gopn", "npm:core-js@2.1.0/modules/_object-gopd", "npm:core-js@2.1.0/modules/_object-dp", "npm:core-js@2.1.0/modules/_string-trim", "npm:core-js@2.1.0/modules/_object-create", "npm:core-js@2.1.0/modules/_descriptors", "npm:core-js@2.1.0/modules/_redefine"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var global = require("npm:core-js@2.1.0/modules/_global"),
       has = require("npm:core-js@2.1.0/modules/_has"),
-      cof = require("npm:core-js@2.1.0/modules/_cof"),
-      inheritIfRequired = require("npm:core-js@2.1.0/modules/_inherit-if-required"),
-      toPrimitive = require("npm:core-js@2.1.0/modules/_to-primitive"),
-      fails = require("npm:core-js@2.1.0/modules/_fails"),
-      gOPN = require("npm:core-js@2.1.0/modules/_object-gopn").f,
-      gOPD = require("npm:core-js@2.1.0/modules/_object-gopd").f,
-      dP = require("npm:core-js@2.1.0/modules/_object-dp").f,
-      $trim = require("npm:core-js@2.1.0/modules/_string-trim").trim,
-      NUMBER = 'Number',
-      $Number = global[NUMBER],
-      Base = $Number,
-      proto = $Number.prototype,
-      BROKEN_COF = cof(require("npm:core-js@2.1.0/modules/_object-create")(proto)) == NUMBER,
-      TRIM = 'trim' in String.prototype;
-  var toNumber = function(argument) {
-    var it = toPrimitive(argument, false);
-    if (typeof it == 'string' && it.length > 2) {
-      it = TRIM ? it.trim() : $trim(it, 3);
-      var first = it.charCodeAt(0),
-          third,
-          radix,
-          maxCode;
-      if (first === 43 || first === 45) {
-        third = it.charCodeAt(2);
-        if (third === 88 || third === 120)
-          return NaN;
-      } else if (first === 48) {
-        switch (it.charCodeAt(1)) {
-          case 66:
-          case 98:
-            radix = 2;
-            maxCode = 49;
-            break;
-          case 79:
-          case 111:
-            radix = 8;
-            maxCode = 55;
-            break;
-          default:
-            return +it;
-        }
-        for (var digits = it.slice(2),
-            i = 0,
-            l = digits.length,
-            code; i < l; i++) {
-          code = digits.charCodeAt(i);
-          if (code < 48 || code > maxCode)
-            return NaN;
-        }
-        return parseInt(digits, radix);
-      }
+      FProto = Function.prototype,
+      nameRE = /^\s*function ([^ (]*)/,
+      NAME = 'name';
+  NAME in FProto || require("npm:core-js@2.1.0/modules/_descriptors") && dP(FProto, NAME, {
+    configurable: true,
+    get: function() {
+      var match = ('' + this).match(nameRE),
+          name = match ? match[1] : '';
+      has(this, NAME) || dP(this, NAME, createDesc(5, name));
+      return name;
     }
-    return +it;
-  };
-  if (!$Number(' 0o1') || !$Number('0b1') || $Number('+0x1')) {
-    $Number = function Number(value) {
-      var it = arguments.length < 1 ? 0 : value,
-          that = this;
-      return that instanceof $Number && (BROKEN_COF ? fails(function() {
-        proto.valueOf.call(that);
-      }) : cof(that) != NUMBER) ? inheritIfRequired(new Base(toNumber(it)), that, $Number) : toNumber(it);
-    };
-    for (var keys = require("npm:core-js@2.1.0/modules/_descriptors") ? gOPN(Base) : ('MAX_VALUE,MIN_VALUE,NaN,NEGATIVE_INFINITY,POSITIVE_INFINITY,' + 'EPSILON,isFinite,isInteger,isNaN,isSafeInteger,MAX_SAFE_INTEGER,' + 'MIN_SAFE_INTEGER,parseFloat,parseInt,isInteger').split(','),
-        j = 0,
-        key; keys.length > j; j++) {
-      if (has(Base, key = keys[j]) && !has($Number, key)) {
-        dP($Number, key, gOPD(Base, key));
-      }
-    }
-    $Number.prototype = proto;
-    proto.constructor = $Number;
-    require("npm:core-js@2.1.0/modules/_redefine")(global, NUMBER, $Number);
-  }
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.epsilon", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S, 'Number', {EPSILON: Math.pow(2, -52)});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.is-finite", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_global"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      _isFinite = require("npm:core-js@2.1.0/modules/_global").isFinite;
-  $export($export.S, 'Number', {isFinite: function isFinite(it) {
-      return typeof it == 'number' && _isFinite(it);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_is-integer", ["npm:core-js@2.1.0/modules/_is-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isObject = require("npm:core-js@2.1.0/modules/_is-object"),
-      floor = Math.floor;
-  module.exports = function isInteger(it) {
-    return !isObject(it) && isFinite(it) && floor(it) === it;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.is-integer", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_is-integer"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S, 'Number', {isInteger: require("npm:core-js@2.1.0/modules/_is-integer")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.is-nan", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S, 'Number', {isNaN: function isNaN(number) {
-      return number != number;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.is-safe-integer", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_is-integer"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      isInteger = require("npm:core-js@2.1.0/modules/_is-integer"),
-      abs = Math.abs;
-  $export($export.S, 'Number', {isSafeInteger: function isSafeInteger(number) {
-      return isInteger(number) && abs(number) <= 0x1fffffffffffff;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.max-safe-integer", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S, 'Number', {MAX_SAFE_INTEGER: 0x1fffffffffffff});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.min-safe-integer", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S, 'Number', {MIN_SAFE_INTEGER: -0x1fffffffffffff});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.parse-float", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_parse-float"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      $parseFloat = require("npm:core-js@2.1.0/modules/_parse-float");
-  $export($export.S + $export.F * (Number.parseFloat != $parseFloat), 'Number', {parseFloat: $parseFloat});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.parse-int", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_parse-int"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      $parseInt = require("npm:core-js@2.1.0/modules/_parse-int");
-  $export($export.S + $export.F * (Number.parseInt != $parseInt), 'Number', {parseInt: $parseInt});
+  });
   global.define = __define;
   return module.exports;
 });
@@ -24255,627 +23232,526 @@ System.registerDynamic("npm:core-js@2.1.0/modules/es6.math.trunc", ["npm:core-js
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.from-code-point", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_to-index"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      toIndex = require("npm:core-js@2.1.0/modules/_to-index"),
-      fromCharCode = String.fromCharCode,
-      $fromCodePoint = String.fromCodePoint;
-  $export($export.S + $export.F * (!!$fromCodePoint && $fromCodePoint.length != 1), 'String', {fromCodePoint: function fromCodePoint(x) {
-      var res = [],
-          aLen = arguments.length,
-          i = 0,
-          code;
-      while (aLen > i) {
-        code = +arguments[i++];
-        if (toIndex(code, 0x10ffff) !== code)
-          throw RangeError(code + ' is not a valid code point');
-        res.push(code < 0x10000 ? fromCharCode(code) : fromCharCode(((code -= 0x10000) >> 10) + 0xd800, code % 0x400 + 0xdc00));
-      }
-      return res.join('');
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.raw", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_to-iobject", "npm:core-js@2.1.0/modules/_to-length"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      toIObject = require("npm:core-js@2.1.0/modules/_to-iobject"),
-      toLength = require("npm:core-js@2.1.0/modules/_to-length");
-  $export($export.S, 'String', {raw: function raw(callSite) {
-      var tpl = toIObject(callSite.raw),
-          len = toLength(tpl.length),
-          aLen = arguments.length,
-          res = [],
-          i = 0;
-      while (len > i) {
-        res.push(String(tpl[i++]));
-        if (i < aLen)
-          res.push(String(arguments[i]));
-      }
-      return res.join('');
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.code-point-at", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_string-at"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      $at = require("npm:core-js@2.1.0/modules/_string-at")(false);
-  $export($export.P, 'String', {codePointAt: function codePointAt(pos) {
-      return $at(this, pos);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_is-regexp", ["npm:core-js@2.1.0/modules/_is-object", "npm:core-js@2.1.0/modules/_cof", "npm:core-js@2.1.0/modules/_wks"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/_set-proto", ["npm:core-js@2.1.0/modules/_is-object", "npm:core-js@2.1.0/modules/_an-object", "npm:core-js@2.1.0/modules/_ctx", "npm:core-js@2.1.0/modules/_object-gopd"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
   var isObject = require("npm:core-js@2.1.0/modules/_is-object"),
-      cof = require("npm:core-js@2.1.0/modules/_cof"),
-      MATCH = require("npm:core-js@2.1.0/modules/_wks")('match');
-  module.exports = function(it) {
-    var isRegExp;
-    return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : cof(it) == 'RegExp');
+      anObject = require("npm:core-js@2.1.0/modules/_an-object");
+  var check = function(O, proto) {
+    anObject(O);
+    if (!isObject(proto) && proto !== null)
+      throw TypeError(proto + ": can't set as prototype!");
   };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_string-context", ["npm:core-js@2.1.0/modules/_is-regexp", "npm:core-js@2.1.0/modules/_defined"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isRegExp = require("npm:core-js@2.1.0/modules/_is-regexp"),
-      defined = require("npm:core-js@2.1.0/modules/_defined");
-  module.exports = function(that, searchString, NAME) {
-    if (isRegExp(searchString))
-      throw TypeError('String#' + NAME + " doesn't accept regex!");
-    return String(defined(that));
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_fails-is-regexp", ["npm:core-js@2.1.0/modules/_wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var MATCH = require("npm:core-js@2.1.0/modules/_wks")('match');
-  module.exports = function(KEY) {
-    var re = /./;
-    try {
-      '/./'[KEY](re);
-    } catch (e) {
+  module.exports = {
+    set: Object.setPrototypeOf || ('__proto__' in {} ? function(test, buggy, set) {
       try {
-        re[MATCH] = false;
-        return !'/./'[KEY](re);
-      } catch (f) {}
-    }
-    return true;
+        set = require("npm:core-js@2.1.0/modules/_ctx")(Function.call, require("npm:core-js@2.1.0/modules/_object-gopd").f(Object.prototype, '__proto__').set, 2);
+        set(test, []);
+        buggy = !(test instanceof Array);
+      } catch (e) {
+        buggy = true;
+      }
+      return function setPrototypeOf(O, proto) {
+        check(O, proto);
+        if (buggy)
+          O.__proto__ = proto;
+        else
+          set(O, proto);
+        return O;
+      };
+    }({}, false) : undefined),
+    check: check
   };
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.ends-with", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_to-length", "npm:core-js@2.1.0/modules/_string-context", "npm:core-js@2.1.0/modules/_fails-is-regexp"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/_inherit-if-required", ["npm:core-js@2.1.0/modules/_is-object", "npm:core-js@2.1.0/modules/_set-proto"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var isObject = require("npm:core-js@2.1.0/modules/_is-object"),
+      setPrototypeOf = require("npm:core-js@2.1.0/modules/_set-proto").set;
+  module.exports = function(that, target, C) {
+    var P,
+        S = target.constructor;
+    if (S !== C && typeof S == 'function' && (P = S.prototype) !== C.prototype && isObject(P) && setPrototypeOf) {
+      setPrototypeOf(that, P);
+    }
+    return that;
+  };
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.constructor", ["npm:core-js@2.1.0/modules/_global", "npm:core-js@2.1.0/modules/_has", "npm:core-js@2.1.0/modules/_cof", "npm:core-js@2.1.0/modules/_inherit-if-required", "npm:core-js@2.1.0/modules/_to-primitive", "npm:core-js@2.1.0/modules/_fails", "npm:core-js@2.1.0/modules/_object-gopn", "npm:core-js@2.1.0/modules/_object-gopd", "npm:core-js@2.1.0/modules/_object-dp", "npm:core-js@2.1.0/modules/_string-trim", "npm:core-js@2.1.0/modules/_object-create", "npm:core-js@2.1.0/modules/_descriptors", "npm:core-js@2.1.0/modules/_redefine"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
   'use strict';
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      toLength = require("npm:core-js@2.1.0/modules/_to-length"),
-      context = require("npm:core-js@2.1.0/modules/_string-context"),
-      ENDS_WITH = 'endsWith',
-      $endsWith = ''[ENDS_WITH];
-  $export($export.P + $export.F * require("npm:core-js@2.1.0/modules/_fails-is-regexp")(ENDS_WITH), 'String', {endsWith: function endsWith(searchString) {
-      var that = context(this, searchString, ENDS_WITH),
-          endPosition = arguments.length > 1 ? arguments[1] : undefined,
-          len = toLength(that.length),
-          end = endPosition === undefined ? len : Math.min(toLength(endPosition), len),
-          search = String(searchString);
-      return $endsWith ? $endsWith.call(that, search, end) : that.slice(end - search.length, end) === search;
-    }});
+  var global = require("npm:core-js@2.1.0/modules/_global"),
+      has = require("npm:core-js@2.1.0/modules/_has"),
+      cof = require("npm:core-js@2.1.0/modules/_cof"),
+      inheritIfRequired = require("npm:core-js@2.1.0/modules/_inherit-if-required"),
+      toPrimitive = require("npm:core-js@2.1.0/modules/_to-primitive"),
+      fails = require("npm:core-js@2.1.0/modules/_fails"),
+      gOPN = require("npm:core-js@2.1.0/modules/_object-gopn").f,
+      gOPD = require("npm:core-js@2.1.0/modules/_object-gopd").f,
+      dP = require("npm:core-js@2.1.0/modules/_object-dp").f,
+      $trim = require("npm:core-js@2.1.0/modules/_string-trim").trim,
+      NUMBER = 'Number',
+      $Number = global[NUMBER],
+      Base = $Number,
+      proto = $Number.prototype,
+      BROKEN_COF = cof(require("npm:core-js@2.1.0/modules/_object-create")(proto)) == NUMBER,
+      TRIM = 'trim' in String.prototype;
+  var toNumber = function(argument) {
+    var it = toPrimitive(argument, false);
+    if (typeof it == 'string' && it.length > 2) {
+      it = TRIM ? it.trim() : $trim(it, 3);
+      var first = it.charCodeAt(0),
+          third,
+          radix,
+          maxCode;
+      if (first === 43 || first === 45) {
+        third = it.charCodeAt(2);
+        if (third === 88 || third === 120)
+          return NaN;
+      } else if (first === 48) {
+        switch (it.charCodeAt(1)) {
+          case 66:
+          case 98:
+            radix = 2;
+            maxCode = 49;
+            break;
+          case 79:
+          case 111:
+            radix = 8;
+            maxCode = 55;
+            break;
+          default:
+            return +it;
+        }
+        for (var digits = it.slice(2),
+            i = 0,
+            l = digits.length,
+            code; i < l; i++) {
+          code = digits.charCodeAt(i);
+          if (code < 48 || code > maxCode)
+            return NaN;
+        }
+        return parseInt(digits, radix);
+      }
+    }
+    return +it;
+  };
+  if (!$Number(' 0o1') || !$Number('0b1') || $Number('+0x1')) {
+    $Number = function Number(value) {
+      var it = arguments.length < 1 ? 0 : value,
+          that = this;
+      return that instanceof $Number && (BROKEN_COF ? fails(function() {
+        proto.valueOf.call(that);
+      }) : cof(that) != NUMBER) ? inheritIfRequired(new Base(toNumber(it)), that, $Number) : toNumber(it);
+    };
+    for (var keys = require("npm:core-js@2.1.0/modules/_descriptors") ? gOPN(Base) : ('MAX_VALUE,MIN_VALUE,NaN,NEGATIVE_INFINITY,POSITIVE_INFINITY,' + 'EPSILON,isFinite,isInteger,isNaN,isSafeInteger,MAX_SAFE_INTEGER,' + 'MIN_SAFE_INTEGER,parseFloat,parseInt,isInteger').split(','),
+        j = 0,
+        key; keys.length > j; j++) {
+      if (has(Base, key = keys[j]) && !has($Number, key)) {
+        dP($Number, key, gOPD(Base, key));
+      }
+    }
+    $Number.prototype = proto;
+    proto.constructor = $Number;
+    require("npm:core-js@2.1.0/modules/_redefine")(global, NUMBER, $Number);
+  }
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.includes", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_string-context", "npm:core-js@2.1.0/modules/_fails-is-regexp"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      context = require("npm:core-js@2.1.0/modules/_string-context"),
-      INCLUDES = 'includes';
-  $export($export.P + $export.F * require("npm:core-js@2.1.0/modules/_fails-is-regexp")(INCLUDES), 'String', {includes: function includes(searchString) {
-      return !!~context(this, searchString, INCLUDES).indexOf(searchString, arguments.length > 1 ? arguments[1] : undefined);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.repeat", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_string-repeat"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.epsilon", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
   var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.P, 'String', {repeat: require("npm:core-js@2.1.0/modules/_string-repeat")});
+  $export($export.S, 'Number', {EPSILON: Math.pow(2, -52)});
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.starts-with", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_to-length", "npm:core-js@2.1.0/modules/_string-context", "npm:core-js@2.1.0/modules/_fails-is-regexp"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.is-finite", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_global"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  'use strict';
   var $export = require("npm:core-js@2.1.0/modules/_export"),
-      toLength = require("npm:core-js@2.1.0/modules/_to-length"),
-      context = require("npm:core-js@2.1.0/modules/_string-context"),
-      STARTS_WITH = 'startsWith',
-      $startsWith = ''[STARTS_WITH];
-  $export($export.P + $export.F * require("npm:core-js@2.1.0/modules/_fails-is-regexp")(STARTS_WITH), 'String', {startsWith: function startsWith(searchString) {
-      var that = context(this, searchString, STARTS_WITH),
-          index = toLength(Math.min(arguments.length > 1 ? arguments[1] : undefined, that.length)),
-          search = String(searchString);
-      return $startsWith ? $startsWith.call(that, search, index) : that.slice(index, index + search.length) === search;
+      _isFinite = require("npm:core-js@2.1.0/modules/_global").isFinite;
+  $export($export.S, 'Number', {isFinite: function isFinite(it) {
+      return typeof it == 'number' && _isFinite(it);
     }});
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/_string-html", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_fails", "npm:core-js@2.1.0/modules/_defined"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/_is-integer", ["npm:core-js@2.1.0/modules/_is-object"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var isObject = require("npm:core-js@2.1.0/modules/_is-object"),
+      floor = Math.floor;
+  module.exports = function isInteger(it) {
+    return !isObject(it) && isFinite(it) && floor(it) === it;
+  };
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.is-integer", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_is-integer"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.S, 'Number', {isInteger: require("npm:core-js@2.1.0/modules/_is-integer")});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.is-nan", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.S, 'Number', {isNaN: function isNaN(number) {
+      return number != number;
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.is-safe-integer", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_is-integer"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
   var $export = require("npm:core-js@2.1.0/modules/_export"),
-      fails = require("npm:core-js@2.1.0/modules/_fails"),
-      defined = require("npm:core-js@2.1.0/modules/_defined"),
-      quot = /"/g;
-  var createHTML = function(string, tag, attribute, value) {
-    var S = String(defined(string)),
-        p1 = '<' + tag;
-    if (attribute !== '')
-      p1 += ' ' + attribute + '="' + String(value).replace(quot, '&quot;') + '"';
-    return p1 + '>' + S + '</' + tag + '>';
+      isInteger = require("npm:core-js@2.1.0/modules/_is-integer"),
+      abs = Math.abs;
+  $export($export.S, 'Number', {isSafeInteger: function isSafeInteger(number) {
+      return isInteger(number) && abs(number) <= 0x1fffffffffffff;
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.max-safe-integer", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.S, 'Number', {MAX_SAFE_INTEGER: 0x1fffffffffffff});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.min-safe-integer", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.S, 'Number', {MIN_SAFE_INTEGER: -0x1fffffffffffff});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.parse-float", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_parse-float"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      $parseFloat = require("npm:core-js@2.1.0/modules/_parse-float");
+  $export($export.S + $export.F * (Number.parseFloat != $parseFloat), 'Number', {parseFloat: $parseFloat});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.parse-int", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_parse-int"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      $parseInt = require("npm:core-js@2.1.0/modules/_parse-int");
+  $export($export.S + $export.F * (Number.parseInt != $parseInt), 'Number', {parseInt: $parseInt});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/_an-instance", [], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  module.exports = function(it, Constructor, name, forbiddenField) {
+    if (!(it instanceof Constructor) || (forbiddenField !== undefined && forbiddenField in it)) {
+      throw TypeError(name + ': incorrect invocation!');
+    }
+    return it;
   };
-  module.exports = function(NAME, exec) {
-    var O = {};
-    O[NAME] = exec(createHTML);
-    $export($export.P + $export.F * fails(function() {
-      var test = ''[NAME]('"');
-      return test !== test.toLowerCase() || test.split('"').length > 3;
-    }), 'String', O);
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/_a-number-value", ["npm:core-js@2.1.0/modules/_cof"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var cof = require("npm:core-js@2.1.0/modules/_cof");
+  module.exports = function(it, msg) {
+    if (typeof it != 'number' && cof(it) != 'Number')
+      throw TypeError(msg);
+    return +it;
   };
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.anchor", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/_string-repeat", ["npm:core-js@2.1.0/modules/_to-integer", "npm:core-js@2.1.0/modules/_defined"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
   'use strict';
-  require("npm:core-js@2.1.0/modules/_string-html")('anchor', function(createHTML) {
-    return function anchor(name) {
-      return createHTML(this, 'a', 'name', name);
-    };
-  });
+  var toInteger = require("npm:core-js@2.1.0/modules/_to-integer"),
+      defined = require("npm:core-js@2.1.0/modules/_defined");
+  module.exports = function repeat(count) {
+    var str = String(defined(this)),
+        res = '',
+        n = toInteger(count);
+    if (n < 0 || n == Infinity)
+      throw RangeError("Count can't be negative");
+    for (; n > 0; (n >>>= 1) && (str += str))
+      if (n & 1)
+        res += str;
+    return res;
+  };
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.big", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.to-fixed", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_an-instance", "npm:core-js@2.1.0/modules/_to-integer", "npm:core-js@2.1.0/modules/_a-number-value", "npm:core-js@2.1.0/modules/_string-repeat", "npm:core-js@2.1.0/modules/_fails"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
   'use strict';
-  require("npm:core-js@2.1.0/modules/_string-html")('big', function(createHTML) {
-    return function big() {
-      return createHTML(this, 'big', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.blink", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/modules/_string-html")('blink', function(createHTML) {
-    return function blink() {
-      return createHTML(this, 'blink', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.bold", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/modules/_string-html")('bold', function(createHTML) {
-    return function bold() {
-      return createHTML(this, 'b', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.fixed", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/modules/_string-html")('fixed', function(createHTML) {
-    return function fixed() {
-      return createHTML(this, 'tt', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.fontcolor", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/modules/_string-html")('fontcolor', function(createHTML) {
-    return function fontcolor(color) {
-      return createHTML(this, 'font', 'color', color);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.fontsize", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/modules/_string-html")('fontsize', function(createHTML) {
-    return function fontsize(size) {
-      return createHTML(this, 'font', 'size', size);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.italics", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/modules/_string-html")('italics', function(createHTML) {
-    return function italics() {
-      return createHTML(this, 'i', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.link", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/modules/_string-html")('link', function(createHTML) {
-    return function link(url) {
-      return createHTML(this, 'a', 'href', url);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.small", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/modules/_string-html")('small', function(createHTML) {
-    return function small() {
-      return createHTML(this, 'small', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.strike", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/modules/_string-html")('strike', function(createHTML) {
-    return function strike() {
-      return createHTML(this, 'strike', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.sub", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/modules/_string-html")('sub', function(createHTML) {
-    return function sub() {
-      return createHTML(this, 'sub', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.sup", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/modules/_string-html")('sup', function(createHTML) {
-    return function sup() {
-      return createHTML(this, 'sup', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.regexp.constructor", ["npm:core-js@2.1.0/modules/_global", "npm:core-js@2.1.0/modules/_inherit-if-required", "npm:core-js@2.1.0/modules/_object-dp", "npm:core-js@2.1.0/modules/_object-gopn", "npm:core-js@2.1.0/modules/_is-regexp", "npm:core-js@2.1.0/modules/_flags", "npm:core-js@2.1.0/modules/_descriptors", "npm:core-js@2.1.0/modules/_fails", "npm:core-js@2.1.0/modules/_wks", "npm:core-js@2.1.0/modules/_redefine", "npm:core-js@2.1.0/modules/_set-species"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var global = require("npm:core-js@2.1.0/modules/_global"),
-      inheritIfRequired = require("npm:core-js@2.1.0/modules/_inherit-if-required"),
-      dP = require("npm:core-js@2.1.0/modules/_object-dp").f,
-      gOPN = require("npm:core-js@2.1.0/modules/_object-gopn").f,
-      isRegExp = require("npm:core-js@2.1.0/modules/_is-regexp"),
-      $flags = require("npm:core-js@2.1.0/modules/_flags"),
-      $RegExp = global.RegExp,
-      Base = $RegExp,
-      proto = $RegExp.prototype,
-      re1 = /a/g,
-      re2 = /a/g,
-      CORRECT_NEW = new $RegExp(re1) !== re1;
-  if (require("npm:core-js@2.1.0/modules/_descriptors") && (!CORRECT_NEW || require("npm:core-js@2.1.0/modules/_fails")(function() {
-    re2[require("npm:core-js@2.1.0/modules/_wks")('match')] = false;
-    return $RegExp(re1) != re1 || $RegExp(re2) == re2 || $RegExp(re1, 'i') != '/a/i';
-  }))) {
-    $RegExp = function RegExp(p, f) {
-      var tiRE = this instanceof $RegExp,
-          piRE = isRegExp(p),
-          fiU = f === undefined;
-      return !tiRE && piRE && p.constructor === $RegExp && fiU ? p : inheritIfRequired(CORRECT_NEW ? new Base(piRE && !fiU ? p.source : p, f) : Base((piRE = p instanceof $RegExp) ? p.source : p, piRE && fiU ? $flags.call(p) : f), tiRE ? this : proto, $RegExp);
-    };
-    var proxy = function(key) {
-      key in $RegExp || dP($RegExp, key, {
-        configurable: true,
-        get: function() {
-          return Base[key];
-        },
-        set: function(it) {
-          Base[key] = it;
-        }
-      });
-    };
-    for (var keys = gOPN(Base),
-        i = 0; keys.length > i; )
-      proxy(keys[i++]);
-    proto.constructor = $RegExp;
-    $RegExp.prototype = proto;
-    require("npm:core-js@2.1.0/modules/_redefine")(global, 'RegExp', $RegExp);
-  }
-  require("npm:core-js@2.1.0/modules/_set-species")('RegExp');
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_fix-re-wks", ["npm:core-js@2.1.0/modules/_hide", "npm:core-js@2.1.0/modules/_redefine", "npm:core-js@2.1.0/modules/_fails", "npm:core-js@2.1.0/modules/_defined", "npm:core-js@2.1.0/modules/_wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var hide = require("npm:core-js@2.1.0/modules/_hide"),
-      redefine = require("npm:core-js@2.1.0/modules/_redefine"),
-      fails = require("npm:core-js@2.1.0/modules/_fails"),
-      defined = require("npm:core-js@2.1.0/modules/_defined"),
-      wks = require("npm:core-js@2.1.0/modules/_wks");
-  module.exports = function(KEY, length, exec) {
-    var SYMBOL = wks(KEY),
-        fns = exec(defined, SYMBOL, ''[KEY]),
-        strfn = fns[0],
-        rxfn = fns[1];
-    if (fails(function() {
-      var O = {};
-      O[SYMBOL] = function() {
-        return 7;
-      };
-      return ''[KEY](O) != 7;
-    })) {
-      redefine(String.prototype, KEY, strfn);
-      hide(RegExp.prototype, SYMBOL, length == 2 ? function(string, arg) {
-        return rxfn.call(string, this, arg);
-      } : function(string) {
-        return rxfn.call(string, this);
-      });
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      anInstance = require("npm:core-js@2.1.0/modules/_an-instance"),
+      toInteger = require("npm:core-js@2.1.0/modules/_to-integer"),
+      aNumberValue = require("npm:core-js@2.1.0/modules/_a-number-value"),
+      repeat = require("npm:core-js@2.1.0/modules/_string-repeat"),
+      $toFixed = 1..toFixed,
+      floor = Math.floor,
+      data = [0, 0, 0, 0, 0, 0],
+      ERROR = 'Number.toFixed: incorrect invocation!',
+      ZERO = '0';
+  var multiply = function(n, c) {
+    var i = -1,
+        c2 = c;
+    while (++i < 6) {
+      c2 += n * data[i];
+      data[i] = c2 % 1e7;
+      c2 = floor(c2 / 1e7);
     }
   };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.regexp.match", ["npm:core-js@2.1.0/modules/_fix-re-wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/_fix-re-wks")('match', 1, function(defined, MATCH, $match) {
-    return [function match(regexp) {
-      'use strict';
-      var O = defined(this),
-          fn = regexp == undefined ? undefined : regexp[MATCH];
-      return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[MATCH](String(O));
-    }, $match];
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.regexp.replace", ["npm:core-js@2.1.0/modules/_fix-re-wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/_fix-re-wks")('replace', 2, function(defined, REPLACE, $replace) {
-    return [function replace(searchValue, replaceValue) {
-      'use strict';
-      var O = defined(this),
-          fn = searchValue == undefined ? undefined : searchValue[REPLACE];
-      return fn !== undefined ? fn.call(searchValue, O, replaceValue) : $replace.call(String(O), searchValue, replaceValue);
-    }, $replace];
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.regexp.search", ["npm:core-js@2.1.0/modules/_fix-re-wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/_fix-re-wks")('search', 1, function(defined, SEARCH, $search) {
-    return [function search(regexp) {
-      'use strict';
-      var O = defined(this),
-          fn = regexp == undefined ? undefined : regexp[SEARCH];
-      return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[SEARCH](String(O));
-    }, $search];
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.regexp.split", ["npm:core-js@2.1.0/modules/_fix-re-wks", "npm:core-js@2.1.0/modules/_is-regexp"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/_fix-re-wks")('split', 2, function(defined, SPLIT, $split) {
-    'use strict';
-    var isRegExp = require("npm:core-js@2.1.0/modules/_is-regexp"),
-        _split = $split,
-        $push = [].push,
-        $SPLIT = 'split',
-        LENGTH = 'length',
-        LAST_INDEX = 'lastIndex';
-    if ('abbc'[$SPLIT](/(b)*/)[1] == 'c' || 'test'[$SPLIT](/(?:)/, -1)[LENGTH] != 4 || 'ab'[$SPLIT](/(?:ab)*/)[LENGTH] != 2 || '.'[$SPLIT](/(.?)(.?)/)[LENGTH] != 4 || '.'[$SPLIT](/()()/)[LENGTH] > 1 || ''[$SPLIT](/.?/)[LENGTH]) {
-      var NPCG = /()??/.exec('')[1] === undefined;
-      $split = function(separator, limit) {
-        var string = String(this);
-        if (separator === undefined && limit === 0)
-          return [];
-        if (!isRegExp(separator))
-          return _split.call(string, separator, limit);
-        var output = [];
-        var flags = (separator.ignoreCase ? 'i' : '') + (separator.multiline ? 'm' : '') + (separator.unicode ? 'u' : '') + (separator.sticky ? 'y' : '');
-        var lastLastIndex = 0;
-        var splitLimit = limit === undefined ? 4294967295 : limit >>> 0;
-        var separatorCopy = new RegExp(separator.source, flags + 'g');
-        var separator2,
-            match,
-            lastIndex,
-            lastLength,
-            i;
-        if (!NPCG)
-          separator2 = new RegExp('^' + separatorCopy.source + '$(?!\\s)', flags);
-        while (match = separatorCopy.exec(string)) {
-          lastIndex = match.index + match[0][LENGTH];
-          if (lastIndex > lastLastIndex) {
-            output.push(string.slice(lastLastIndex, match.index));
-            if (!NPCG && match[LENGTH] > 1)
-              match[0].replace(separator2, function() {
-                for (i = 1; i < arguments[LENGTH] - 2; i++)
-                  if (arguments[i] === undefined)
-                    match[i] = undefined;
-              });
-            if (match[LENGTH] > 1 && match.index < string[LENGTH])
-              $push.apply(output, match.slice(1));
-            lastLength = match[0][LENGTH];
-            lastLastIndex = lastIndex;
-            if (output[LENGTH] >= splitLimit)
-              break;
+  var divide = function(n) {
+    var i = 6,
+        c = 0;
+    while (--i >= 0) {
+      c += data[i];
+      data[i] = floor(c / n);
+      c = (c % n) * 1e7;
+    }
+  };
+  var numToString = function() {
+    var i = 6,
+        s = '';
+    while (--i >= 0) {
+      if (s !== '' || i === 0 || data[i] !== 0) {
+        var t = String(data[i]);
+        s = s === '' ? t : s + repeat.call(ZERO, 7 - t.length) + t;
+      }
+    }
+    return s;
+  };
+  var pow = function(x, n, acc) {
+    return n === 0 ? acc : n % 2 === 1 ? pow(x, n - 1, acc * x) : pow(x * x, n / 2, acc);
+  };
+  var log = function(x) {
+    var n = 0,
+        x2 = x;
+    while (x2 >= 4096) {
+      n += 12;
+      x2 /= 4096;
+    }
+    while (x2 >= 2) {
+      n += 1;
+      x2 /= 2;
+    }
+    return n;
+  };
+  $export($export.P + $export.F * (!!$toFixed && (0.00008.toFixed(3) !== '0.000' || 0.9.toFixed(0) !== '1' || 1.255.toFixed(2) !== '1.25' || 1000000000000000128..toFixed(0) !== '1000000000000000128') || !require("npm:core-js@2.1.0/modules/_fails")(function() {
+    $toFixed.call({});
+  })), 'Number', {toFixed: function toFixed(fractionDigits) {
+      var x = aNumberValue(this, ERROR),
+          f = toInteger(fractionDigits),
+          s = '',
+          m = ZERO,
+          e,
+          z,
+          j,
+          k;
+      if (f < 0 || f > 20)
+        throw RangeError(ERROR);
+      if (x != x)
+        return 'NaN';
+      if (x <= -1e21 || x >= 1e21)
+        return String(x);
+      if (x < 0) {
+        s = '-';
+        x = -x;
+      }
+      if (x > 1e-21) {
+        e = log(x * pow(2, 69, 1)) - 69;
+        z = e < 0 ? x * pow(2, -e, 1) : x / pow(2, e, 1);
+        z *= 0x10000000000000;
+        e = 52 - e;
+        if (e > 0) {
+          multiply(0, z);
+          j = f;
+          while (j >= 7) {
+            multiply(1e7, 0);
+            j -= 7;
           }
-          if (separatorCopy[LAST_INDEX] === match.index)
-            separatorCopy[LAST_INDEX]++;
+          multiply(pow(10, j, 1), 0);
+          j = e - 1;
+          while (j >= 23) {
+            divide(1 << 23);
+            j -= 23;
+          }
+          divide(1 << j);
+          multiply(1, 1);
+          divide(2);
+          m = numToString();
+        } else {
+          multiply(0, z);
+          multiply(1 << -e, 0);
+          m = numToString() + repeat.call(ZERO, f);
         }
-        if (lastLastIndex === string[LENGTH]) {
-          if (lastLength || !separatorCopy.test(''))
-            output.push('');
-        } else
-          output.push(string.slice(lastLastIndex));
-        return output[LENGTH] > splitLimit ? output.slice(0, splitLimit) : output;
-      };
-    } else if ('0'[$SPLIT](undefined, 0)[LENGTH]) {
-      $split = function(separator, limit) {
-        return separator === undefined && limit === 0 ? [] : _split.call(this, separator, limit);
-      };
-    }
-    return [function split(separator, limit) {
-      var O = defined(this),
-          fn = separator == undefined ? undefined : separator[SPLIT];
-      return fn !== undefined ? fn.call(separator, O, limit) : $split.call(String(O), separator, limit);
-    }, $split];
-  });
+      }
+      if (f > 0) {
+        k = m.length;
+        m = s + (k <= f ? '0.' + repeat.call(ZERO, f - k) + m : m.slice(0, k - f) + '.' + m.slice(k - f));
+      } else {
+        m = s + m;
+      }
+      return m;
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.number.to-precision", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_fails", "npm:core-js@2.1.0/modules/_a-number-value"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      $fails = require("npm:core-js@2.1.0/modules/_fails"),
+      aNumberValue = require("npm:core-js@2.1.0/modules/_a-number-value"),
+      $toPrecision = 1..toPrecision;
+  $export($export.P + $export.F * ($fails(function() {
+    return $toPrecision.call(1, undefined) !== '1';
+  }) || !$fails(function() {
+    $toPrecision.call({});
+  })), 'Number', {toPrecision: function toPrecision(precision) {
+      var that = aNumberValue(this, 'Number#toPrecision: incorrect invocation!');
+      return precision === undefined ? $toPrecision.call(that) : $toPrecision.call(that, precision);
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.object.assign", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_object-assign"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.S + $export.F, 'Object', {assign: require("npm:core-js@2.1.0/modules/_object-assign")});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/_same-value", [], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  module.exports = Object.is || function is(x, y) {
+    return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
+  };
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.object.is", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_same-value"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.S, 'Object', {is: require("npm:core-js@2.1.0/modules/_same-value")});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.object.set-prototype-of", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_set-proto"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.S, 'Object', {setPrototypeOf: require("npm:core-js@2.1.0/modules/_set-proto").set});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.object.to-string", ["npm:core-js@2.1.0/modules/_classof", "npm:core-js@2.1.0/modules/_wks", "npm:core-js@2.1.0/modules/_redefine"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  var classof = require("npm:core-js@2.1.0/modules/_classof"),
+      test = {};
+  test[require("npm:core-js@2.1.0/modules/_wks")('toStringTag')] = 'z';
+  if (test + '' != '[object z]') {
+    require("npm:core-js@2.1.0/modules/_redefine")(Object.prototype, 'toString', function toString() {
+      return '[object ' + classof(this) + ']';
+    }, true);
+  }
   global.define = __define;
   return module.exports;
 });
@@ -25431,459 +24307,1244 @@ System.registerDynamic("npm:core-js@2.1.0/modules/es6.promise", ["npm:core-js@2.
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/_collection-strong", ["npm:core-js@2.1.0/modules/_object-dp", "npm:core-js@2.1.0/modules/_object-create", "npm:core-js@2.1.0/modules/_hide", "npm:core-js@2.1.0/modules/_redefine-all", "npm:core-js@2.1.0/modules/_ctx", "npm:core-js@2.1.0/modules/_an-instance", "npm:core-js@2.1.0/modules/_defined", "npm:core-js@2.1.0/modules/_for-of", "npm:core-js@2.1.0/modules/_iter-define", "npm:core-js@2.1.0/modules/_iter-step", "npm:core-js@2.1.0/modules/_set-species", "npm:core-js@2.1.0/modules/_descriptors", "npm:core-js@2.1.0/modules/_meta"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.apply", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      _apply = Function.apply;
+  $export($export.S, 'Reflect', {apply: function apply(target, thisArgument, argumentsList) {
+      return _apply.call(target, thisArgument, argumentsList);
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.construct", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_object-create", "npm:core-js@2.1.0/modules/_a-function", "npm:core-js@2.1.0/modules/_an-object", "npm:core-js@2.1.0/modules/_is-object", "npm:core-js@2.1.0/modules/_bind", "npm:core-js@2.1.0/modules/_fails"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      create = require("npm:core-js@2.1.0/modules/_object-create"),
+      aFunction = require("npm:core-js@2.1.0/modules/_a-function"),
+      anObject = require("npm:core-js@2.1.0/modules/_an-object"),
+      isObject = require("npm:core-js@2.1.0/modules/_is-object"),
+      bind = require("npm:core-js@2.1.0/modules/_bind");
+  $export($export.S + $export.F * require("npm:core-js@2.1.0/modules/_fails")(function() {
+    function F() {}
+    return !(Reflect.construct(function() {}, [], F) instanceof F);
+  }), 'Reflect', {construct: function construct(Target, args) {
+      aFunction(Target);
+      var newTarget = arguments.length < 3 ? Target : aFunction(arguments[2]);
+      if (Target == newTarget) {
+        if (args != undefined)
+          switch (anObject(args).length) {
+            case 0:
+              return new Target;
+            case 1:
+              return new Target(args[0]);
+            case 2:
+              return new Target(args[0], args[1]);
+            case 3:
+              return new Target(args[0], args[1], args[2]);
+            case 4:
+              return new Target(args[0], args[1], args[2], args[3]);
+          }
+        var $args = [null];
+        $args.push.apply($args, args);
+        return new (bind.apply(Target, $args));
+      }
+      var proto = newTarget.prototype,
+          instance = create(isObject(proto) ? proto : Object.prototype),
+          result = Function.apply.call(Target, instance, args);
+      return isObject(result) ? result : instance;
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.define-property", ["npm:core-js@2.1.0/modules/_object-dp", "npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_an-object", "npm:core-js@2.1.0/modules/_to-primitive", "npm:core-js@2.1.0/modules/_fails"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var dP = require("npm:core-js@2.1.0/modules/_object-dp"),
+      $export = require("npm:core-js@2.1.0/modules/_export"),
+      anObject = require("npm:core-js@2.1.0/modules/_an-object"),
+      toPrimitive = require("npm:core-js@2.1.0/modules/_to-primitive");
+  $export($export.S + $export.F * require("npm:core-js@2.1.0/modules/_fails")(function() {
+    Reflect.defineProperty(dP.f({}, 1, {value: 1}), 1, {value: 2});
+  }), 'Reflect', {defineProperty: function defineProperty(target, propertyKey, attributes) {
+      anObject(target);
+      propertyKey = toPrimitive(propertyKey, true);
+      anObject(attributes);
+      try {
+        dP.f(target, propertyKey, attributes);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.delete-property", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_object-gopd", "npm:core-js@2.1.0/modules/_an-object"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      gOPD = require("npm:core-js@2.1.0/modules/_object-gopd").f,
+      anObject = require("npm:core-js@2.1.0/modules/_an-object");
+  $export($export.S, 'Reflect', {deleteProperty: function deleteProperty(target, propertyKey) {
+      var desc = gOPD(anObject(target), propertyKey);
+      return desc && !desc.configurable ? false : delete target[propertyKey];
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.enumerate", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_an-object", "npm:core-js@2.1.0/modules/_iter-create"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
   'use strict';
-  var dP = require("npm:core-js@2.1.0/modules/_object-dp").f,
-      create = require("npm:core-js@2.1.0/modules/_object-create"),
-      hide = require("npm:core-js@2.1.0/modules/_hide"),
-      redefineAll = require("npm:core-js@2.1.0/modules/_redefine-all"),
-      ctx = require("npm:core-js@2.1.0/modules/_ctx"),
-      anInstance = require("npm:core-js@2.1.0/modules/_an-instance"),
-      defined = require("npm:core-js@2.1.0/modules/_defined"),
-      forOf = require("npm:core-js@2.1.0/modules/_for-of"),
-      $iterDefine = require("npm:core-js@2.1.0/modules/_iter-define"),
-      step = require("npm:core-js@2.1.0/modules/_iter-step"),
-      setSpecies = require("npm:core-js@2.1.0/modules/_set-species"),
-      DESCRIPTORS = require("npm:core-js@2.1.0/modules/_descriptors"),
-      fastKey = require("npm:core-js@2.1.0/modules/_meta").fastKey,
-      SIZE = DESCRIPTORS ? '_s' : 'size';
-  var getEntry = function(that, key) {
-    var index = fastKey(key),
-        entry;
-    if (index !== 'F')
-      return that._i[index];
-    for (entry = that._f; entry; entry = entry.n) {
-      if (entry.k == key)
-        return entry;
-    }
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      anObject = require("npm:core-js@2.1.0/modules/_an-object");
+  var Enumerate = function(iterated) {
+    this._t = anObject(iterated);
+    this._i = 0;
+    var keys = this._k = [],
+        key;
+    for (key in iterated)
+      keys.push(key);
   };
-  module.exports = {
-    getConstructor: function(wrapper, NAME, IS_MAP, ADDER) {
-      var C = wrapper(function(that, iterable) {
-        anInstance(that, C, NAME, '_i');
-        that._i = create(null);
-        that._f = undefined;
-        that._l = undefined;
-        that[SIZE] = 0;
-        if (iterable != undefined)
-          forOf(iterable, IS_MAP, that[ADDER], that);
-      });
-      redefineAll(C.prototype, {
-        clear: function clear() {
-          for (var that = this,
-              data = that._i,
-              entry = that._f; entry; entry = entry.n) {
-            entry.r = true;
-            if (entry.p)
-              entry.p = entry.p.n = undefined;
-            delete data[entry.i];
-          }
-          that._f = that._l = undefined;
-          that[SIZE] = 0;
-        },
-        'delete': function(key) {
-          var that = this,
-              entry = getEntry(that, key);
-          if (entry) {
-            var next = entry.n,
-                prev = entry.p;
-            delete that._i[entry.i];
-            entry.r = true;
-            if (prev)
-              prev.n = next;
-            if (next)
-              next.p = prev;
-            if (that._f == entry)
-              that._f = next;
-            if (that._l == entry)
-              that._l = prev;
-            that[SIZE]--;
-          }
-          return !!entry;
-        },
-        forEach: function forEach(callbackfn) {
-          anInstance(this, C, 'forEach');
-          var f = ctx(callbackfn, arguments.length > 1 ? arguments[1] : undefined, 3),
-              entry;
-          while (entry = entry ? entry.n : this._f) {
-            f(entry.v, entry.k, this);
-            while (entry && entry.r)
-              entry = entry.p;
-          }
-        },
-        has: function has(key) {
-          return !!getEntry(this, key);
-        }
-      });
-      if (DESCRIPTORS)
-        dP(C.prototype, 'size', {get: function() {
-            return defined(this[SIZE]);
-          }});
-      return C;
-    },
-    def: function(that, key, value) {
-      var entry = getEntry(that, key),
-          prev,
-          index;
-      if (entry) {
-        entry.v = value;
-      } else {
-        that._l = entry = {
-          i: index = fastKey(key, true),
-          k: key,
-          v: value,
-          p: prev = that._l,
-          n: undefined,
-          r: false
+  require("npm:core-js@2.1.0/modules/_iter-create")(Enumerate, 'Object', function() {
+    var that = this,
+        keys = that._k,
+        key;
+    do {
+      if (that._i >= keys.length)
+        return {
+          value: undefined,
+          done: true
         };
-        if (!that._f)
-          that._f = entry;
-        if (prev)
-          prev.n = entry;
-        that[SIZE]++;
-        if (index !== 'F')
-          that._i[index] = entry;
+    } while (!((key = keys[that._i++]) in that._t));
+    return {
+      value: key,
+      done: false
+    };
+  });
+  $export($export.S, 'Reflect', {enumerate: function enumerate(target) {
+      return new Enumerate(target);
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.get", ["npm:core-js@2.1.0/modules/_object-gopd", "npm:core-js@2.1.0/modules/_object-gpo", "npm:core-js@2.1.0/modules/_has", "npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_is-object", "npm:core-js@2.1.0/modules/_an-object"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var gOPD = require("npm:core-js@2.1.0/modules/_object-gopd"),
+      getPrototypeOf = require("npm:core-js@2.1.0/modules/_object-gpo"),
+      has = require("npm:core-js@2.1.0/modules/_has"),
+      $export = require("npm:core-js@2.1.0/modules/_export"),
+      isObject = require("npm:core-js@2.1.0/modules/_is-object"),
+      anObject = require("npm:core-js@2.1.0/modules/_an-object");
+  function get(target, propertyKey) {
+    var receiver = arguments.length < 3 ? target : arguments[2],
+        desc,
+        proto;
+    if (anObject(target) === receiver)
+      return target[propertyKey];
+    if (desc = gOPD.f(target, propertyKey))
+      return has(desc, 'value') ? desc.value : desc.get !== undefined ? desc.get.call(receiver) : undefined;
+    if (isObject(proto = getPrototypeOf(target)))
+      return get(proto, propertyKey, receiver);
+  }
+  $export($export.S, 'Reflect', {get: get});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.get-own-property-descriptor", ["npm:core-js@2.1.0/modules/_object-gopd", "npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_an-object"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var gOPD = require("npm:core-js@2.1.0/modules/_object-gopd"),
+      $export = require("npm:core-js@2.1.0/modules/_export"),
+      anObject = require("npm:core-js@2.1.0/modules/_an-object");
+  $export($export.S, 'Reflect', {getOwnPropertyDescriptor: function getOwnPropertyDescriptor(target, propertyKey) {
+      return gOPD.f(anObject(target), propertyKey);
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.get-prototype-of", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_object-gpo", "npm:core-js@2.1.0/modules/_an-object"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      getProto = require("npm:core-js@2.1.0/modules/_object-gpo"),
+      anObject = require("npm:core-js@2.1.0/modules/_an-object");
+  $export($export.S, 'Reflect', {getPrototypeOf: function getPrototypeOf(target) {
+      return getProto(anObject(target));
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.has", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.S, 'Reflect', {has: function has(target, propertyKey) {
+      return propertyKey in target;
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.is-extensible", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_an-object"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      anObject = require("npm:core-js@2.1.0/modules/_an-object"),
+      $isExtensible = Object.isExtensible;
+  $export($export.S, 'Reflect', {isExtensible: function isExtensible(target) {
+      anObject(target);
+      return $isExtensible ? $isExtensible(target) : true;
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.own-keys", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_own-keys"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.S, 'Reflect', {ownKeys: require("npm:core-js@2.1.0/modules/_own-keys")});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.prevent-extensions", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_an-object"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      anObject = require("npm:core-js@2.1.0/modules/_an-object"),
+      $preventExtensions = Object.preventExtensions;
+  $export($export.S, 'Reflect', {preventExtensions: function preventExtensions(target) {
+      anObject(target);
+      try {
+        if ($preventExtensions)
+          $preventExtensions(target);
+        return true;
+      } catch (e) {
+        return false;
       }
-      return that;
-    },
-    getEntry: getEntry,
-    setStrong: function(C, NAME, IS_MAP) {
-      $iterDefine(C, NAME, function(iterated, kind) {
-        this._t = iterated;
-        this._k = kind;
-        this._l = undefined;
-      }, function() {
-        var that = this,
-            kind = that._k,
-            entry = that._l;
-        while (entry && entry.r)
-          entry = entry.p;
-        if (!that._t || !(that._l = entry = entry ? entry.n : that._t._f)) {
-          that._t = undefined;
-          return step(1);
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.set", ["npm:core-js@2.1.0/modules/_object-dp", "npm:core-js@2.1.0/modules/_object-gopd", "npm:core-js@2.1.0/modules/_object-gpo", "npm:core-js@2.1.0/modules/_has", "npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_property-desc", "npm:core-js@2.1.0/modules/_an-object", "npm:core-js@2.1.0/modules/_is-object"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var dP = require("npm:core-js@2.1.0/modules/_object-dp"),
+      gOPD = require("npm:core-js@2.1.0/modules/_object-gopd"),
+      getPrototypeOf = require("npm:core-js@2.1.0/modules/_object-gpo"),
+      has = require("npm:core-js@2.1.0/modules/_has"),
+      $export = require("npm:core-js@2.1.0/modules/_export"),
+      createDesc = require("npm:core-js@2.1.0/modules/_property-desc"),
+      anObject = require("npm:core-js@2.1.0/modules/_an-object"),
+      isObject = require("npm:core-js@2.1.0/modules/_is-object");
+  function set(target, propertyKey, V) {
+    var receiver = arguments.length < 4 ? target : arguments[3],
+        ownDesc = gOPD.f(anObject(target), propertyKey),
+        existingDescriptor,
+        proto;
+    if (!ownDesc) {
+      if (isObject(proto = getPrototypeOf(target))) {
+        return set(proto, propertyKey, V, receiver);
+      }
+      ownDesc = createDesc(0);
+    }
+    if (has(ownDesc, 'value')) {
+      if (ownDesc.writable === false || !isObject(receiver))
+        return false;
+      existingDescriptor = gOPD.f(receiver, propertyKey) || createDesc(0);
+      existingDescriptor.value = V;
+      dP.f(receiver, propertyKey, existingDescriptor);
+      return true;
+    }
+    return ownDesc.set === undefined ? false : (ownDesc.set.call(receiver, V), true);
+  }
+  $export($export.S, 'Reflect', {set: set});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.set-prototype-of", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_set-proto"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      setProto = require("npm:core-js@2.1.0/modules/_set-proto");
+  if (setProto)
+    $export($export.S, 'Reflect', {setPrototypeOf: function setPrototypeOf(target, proto) {
+        setProto.check(target, proto);
+        try {
+          setProto.set(target, proto);
+          return true;
+        } catch (e) {
+          return false;
         }
-        if (kind == 'keys')
-          return step(0, entry.k);
-        if (kind == 'values')
-          return step(0, entry.v);
-        return step(0, [entry.k, entry.v]);
-      }, IS_MAP ? 'entries' : 'values', !IS_MAP, true);
-      setSpecies(NAME);
+      }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/_is-regexp", ["npm:core-js@2.1.0/modules/_is-object", "npm:core-js@2.1.0/modules/_cof", "npm:core-js@2.1.0/modules/_wks"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var isObject = require("npm:core-js@2.1.0/modules/_is-object"),
+      cof = require("npm:core-js@2.1.0/modules/_cof"),
+      MATCH = require("npm:core-js@2.1.0/modules/_wks")('match');
+  module.exports = function(it) {
+    var isRegExp;
+    return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : cof(it) == 'RegExp');
+  };
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.regexp.constructor", ["npm:core-js@2.1.0/modules/_global", "npm:core-js@2.1.0/modules/_inherit-if-required", "npm:core-js@2.1.0/modules/_object-dp", "npm:core-js@2.1.0/modules/_object-gopn", "npm:core-js@2.1.0/modules/_is-regexp", "npm:core-js@2.1.0/modules/_flags", "npm:core-js@2.1.0/modules/_descriptors", "npm:core-js@2.1.0/modules/_fails", "npm:core-js@2.1.0/modules/_wks", "npm:core-js@2.1.0/modules/_redefine", "npm:core-js@2.1.0/modules/_set-species"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var global = require("npm:core-js@2.1.0/modules/_global"),
+      inheritIfRequired = require("npm:core-js@2.1.0/modules/_inherit-if-required"),
+      dP = require("npm:core-js@2.1.0/modules/_object-dp").f,
+      gOPN = require("npm:core-js@2.1.0/modules/_object-gopn").f,
+      isRegExp = require("npm:core-js@2.1.0/modules/_is-regexp"),
+      $flags = require("npm:core-js@2.1.0/modules/_flags"),
+      $RegExp = global.RegExp,
+      Base = $RegExp,
+      proto = $RegExp.prototype,
+      re1 = /a/g,
+      re2 = /a/g,
+      CORRECT_NEW = new $RegExp(re1) !== re1;
+  if (require("npm:core-js@2.1.0/modules/_descriptors") && (!CORRECT_NEW || require("npm:core-js@2.1.0/modules/_fails")(function() {
+    re2[require("npm:core-js@2.1.0/modules/_wks")('match')] = false;
+    return $RegExp(re1) != re1 || $RegExp(re2) == re2 || $RegExp(re1, 'i') != '/a/i';
+  }))) {
+    $RegExp = function RegExp(p, f) {
+      var tiRE = this instanceof $RegExp,
+          piRE = isRegExp(p),
+          fiU = f === undefined;
+      return !tiRE && piRE && p.constructor === $RegExp && fiU ? p : inheritIfRequired(CORRECT_NEW ? new Base(piRE && !fiU ? p.source : p, f) : Base((piRE = p instanceof $RegExp) ? p.source : p, piRE && fiU ? $flags.call(p) : f), tiRE ? this : proto, $RegExp);
+    };
+    var proxy = function(key) {
+      key in $RegExp || dP($RegExp, key, {
+        configurable: true,
+        get: function() {
+          return Base[key];
+        },
+        set: function(it) {
+          Base[key] = it;
+        }
+      });
+    };
+    for (var keys = gOPN(Base),
+        i = 0; keys.length > i; )
+      proxy(keys[i++]);
+    proto.constructor = $RegExp;
+    $RegExp.prototype = proto;
+    require("npm:core-js@2.1.0/modules/_redefine")(global, 'RegExp', $RegExp);
+  }
+  require("npm:core-js@2.1.0/modules/_set-species")('RegExp');
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/_fix-re-wks", ["npm:core-js@2.1.0/modules/_hide", "npm:core-js@2.1.0/modules/_redefine", "npm:core-js@2.1.0/modules/_fails", "npm:core-js@2.1.0/modules/_defined", "npm:core-js@2.1.0/modules/_wks"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  var hide = require("npm:core-js@2.1.0/modules/_hide"),
+      redefine = require("npm:core-js@2.1.0/modules/_redefine"),
+      fails = require("npm:core-js@2.1.0/modules/_fails"),
+      defined = require("npm:core-js@2.1.0/modules/_defined"),
+      wks = require("npm:core-js@2.1.0/modules/_wks");
+  module.exports = function(KEY, length, exec) {
+    var SYMBOL = wks(KEY),
+        fns = exec(defined, SYMBOL, ''[KEY]),
+        strfn = fns[0],
+        rxfn = fns[1];
+    if (fails(function() {
+      var O = {};
+      O[SYMBOL] = function() {
+        return 7;
+      };
+      return ''[KEY](O) != 7;
+    })) {
+      redefine(String.prototype, KEY, strfn);
+      hide(RegExp.prototype, SYMBOL, length == 2 ? function(string, arg) {
+        return rxfn.call(string, this, arg);
+      } : function(string) {
+        return rxfn.call(string, this);
+      });
     }
   };
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/_collection", ["npm:core-js@2.1.0/modules/_global", "npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_redefine", "npm:core-js@2.1.0/modules/_redefine-all", "npm:core-js@2.1.0/modules/_meta", "npm:core-js@2.1.0/modules/_for-of", "npm:core-js@2.1.0/modules/_an-instance", "npm:core-js@2.1.0/modules/_is-object", "npm:core-js@2.1.0/modules/_fails", "npm:core-js@2.1.0/modules/_iter-detect", "npm:core-js@2.1.0/modules/_set-to-string-tag", "npm:core-js@2.1.0/modules/_inherit-if-required"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.regexp.match", ["npm:core-js@2.1.0/modules/_fix-re-wks"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  require("npm:core-js@2.1.0/modules/_fix-re-wks")('match', 1, function(defined, MATCH, $match) {
+    return [function match(regexp) {
+      'use strict';
+      var O = defined(this),
+          fn = regexp == undefined ? undefined : regexp[MATCH];
+      return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[MATCH](String(O));
+    }, $match];
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.regexp.replace", ["npm:core-js@2.1.0/modules/_fix-re-wks"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  require("npm:core-js@2.1.0/modules/_fix-re-wks")('replace', 2, function(defined, REPLACE, $replace) {
+    return [function replace(searchValue, replaceValue) {
+      'use strict';
+      var O = defined(this),
+          fn = searchValue == undefined ? undefined : searchValue[REPLACE];
+      return fn !== undefined ? fn.call(searchValue, O, replaceValue) : $replace.call(String(O), searchValue, replaceValue);
+    }, $replace];
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.regexp.search", ["npm:core-js@2.1.0/modules/_fix-re-wks"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  require("npm:core-js@2.1.0/modules/_fix-re-wks")('search', 1, function(defined, SEARCH, $search) {
+    return [function search(regexp) {
+      'use strict';
+      var O = defined(this),
+          fn = regexp == undefined ? undefined : regexp[SEARCH];
+      return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[SEARCH](String(O));
+    }, $search];
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.regexp.split", ["npm:core-js@2.1.0/modules/_fix-re-wks", "npm:core-js@2.1.0/modules/_is-regexp"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  require("npm:core-js@2.1.0/modules/_fix-re-wks")('split', 2, function(defined, SPLIT, $split) {
+    'use strict';
+    var isRegExp = require("npm:core-js@2.1.0/modules/_is-regexp"),
+        _split = $split,
+        $push = [].push,
+        $SPLIT = 'split',
+        LENGTH = 'length',
+        LAST_INDEX = 'lastIndex';
+    if ('abbc'[$SPLIT](/(b)*/)[1] == 'c' || 'test'[$SPLIT](/(?:)/, -1)[LENGTH] != 4 || 'ab'[$SPLIT](/(?:ab)*/)[LENGTH] != 2 || '.'[$SPLIT](/(.?)(.?)/)[LENGTH] != 4 || '.'[$SPLIT](/()()/)[LENGTH] > 1 || ''[$SPLIT](/.?/)[LENGTH]) {
+      var NPCG = /()??/.exec('')[1] === undefined;
+      $split = function(separator, limit) {
+        var string = String(this);
+        if (separator === undefined && limit === 0)
+          return [];
+        if (!isRegExp(separator))
+          return _split.call(string, separator, limit);
+        var output = [];
+        var flags = (separator.ignoreCase ? 'i' : '') + (separator.multiline ? 'm' : '') + (separator.unicode ? 'u' : '') + (separator.sticky ? 'y' : '');
+        var lastLastIndex = 0;
+        var splitLimit = limit === undefined ? 4294967295 : limit >>> 0;
+        var separatorCopy = new RegExp(separator.source, flags + 'g');
+        var separator2,
+            match,
+            lastIndex,
+            lastLength,
+            i;
+        if (!NPCG)
+          separator2 = new RegExp('^' + separatorCopy.source + '$(?!\\s)', flags);
+        while (match = separatorCopy.exec(string)) {
+          lastIndex = match.index + match[0][LENGTH];
+          if (lastIndex > lastLastIndex) {
+            output.push(string.slice(lastLastIndex, match.index));
+            if (!NPCG && match[LENGTH] > 1)
+              match[0].replace(separator2, function() {
+                for (i = 1; i < arguments[LENGTH] - 2; i++)
+                  if (arguments[i] === undefined)
+                    match[i] = undefined;
+              });
+            if (match[LENGTH] > 1 && match.index < string[LENGTH])
+              $push.apply(output, match.slice(1));
+            lastLength = match[0][LENGTH];
+            lastLastIndex = lastIndex;
+            if (output[LENGTH] >= splitLimit)
+              break;
+          }
+          if (separatorCopy[LAST_INDEX] === match.index)
+            separatorCopy[LAST_INDEX]++;
+        }
+        if (lastLastIndex === string[LENGTH]) {
+          if (lastLength || !separatorCopy.test(''))
+            output.push('');
+        } else
+          output.push(string.slice(lastLastIndex));
+        return output[LENGTH] > splitLimit ? output.slice(0, splitLimit) : output;
+      };
+    } else if ('0'[$SPLIT](undefined, 0)[LENGTH]) {
+      $split = function(separator, limit) {
+        return separator === undefined && limit === 0 ? [] : _split.call(this, separator, limit);
+      };
+    }
+    return [function split(separator, limit) {
+      var O = defined(this),
+          fn = separator == undefined ? undefined : separator[SPLIT];
+      return fn !== undefined ? fn.call(separator, O, limit) : $split.call(String(O), separator, limit);
+    }, $split];
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/_string-html", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_fails", "npm:core-js@2.1.0/modules/_defined"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      fails = require("npm:core-js@2.1.0/modules/_fails"),
+      defined = require("npm:core-js@2.1.0/modules/_defined"),
+      quot = /"/g;
+  var createHTML = function(string, tag, attribute, value) {
+    var S = String(defined(string)),
+        p1 = '<' + tag;
+    if (attribute !== '')
+      p1 += ' ' + attribute + '="' + String(value).replace(quot, '&quot;') + '"';
+    return p1 + '>' + S + '</' + tag + '>';
+  };
+  module.exports = function(NAME, exec) {
+    var O = {};
+    O[NAME] = exec(createHTML);
+    $export($export.P + $export.F * fails(function() {
+      var test = ''[NAME]('"');
+      return test !== test.toLowerCase() || test.split('"').length > 3;
+    }), 'String', O);
+  };
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.anchor", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  require("npm:core-js@2.1.0/modules/_string-html")('anchor', function(createHTML) {
+    return function anchor(name) {
+      return createHTML(this, 'a', 'name', name);
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.big", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  require("npm:core-js@2.1.0/modules/_string-html")('big', function(createHTML) {
+    return function big() {
+      return createHTML(this, 'big', '', '');
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.blink", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  require("npm:core-js@2.1.0/modules/_string-html")('blink', function(createHTML) {
+    return function blink() {
+      return createHTML(this, 'blink', '', '');
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.bold", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  require("npm:core-js@2.1.0/modules/_string-html")('bold', function(createHTML) {
+    return function bold() {
+      return createHTML(this, 'b', '', '');
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/_string-at", ["npm:core-js@2.1.0/modules/_to-integer", "npm:core-js@2.1.0/modules/_defined"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var toInteger = require("npm:core-js@2.1.0/modules/_to-integer"),
+      defined = require("npm:core-js@2.1.0/modules/_defined");
+  module.exports = function(TO_STRING) {
+    return function(that, pos) {
+      var s = String(defined(that)),
+          i = toInteger(pos),
+          l = s.length,
+          a,
+          b;
+      if (i < 0 || i >= l)
+        return TO_STRING ? '' : undefined;
+      a = s.charCodeAt(i);
+      return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff ? TO_STRING ? s.charAt(i) : a : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
+    };
+  };
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.code-point-at", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_string-at"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      $at = require("npm:core-js@2.1.0/modules/_string-at")(false);
+  $export($export.P, 'String', {codePointAt: function codePointAt(pos) {
+      return $at(this, pos);
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/_string-context", ["npm:core-js@2.1.0/modules/_is-regexp", "npm:core-js@2.1.0/modules/_defined"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var isRegExp = require("npm:core-js@2.1.0/modules/_is-regexp"),
+      defined = require("npm:core-js@2.1.0/modules/_defined");
+  module.exports = function(that, searchString, NAME) {
+    if (isRegExp(searchString))
+      throw TypeError('String#' + NAME + " doesn't accept regex!");
+    return String(defined(that));
+  };
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/_fails-is-regexp", ["npm:core-js@2.1.0/modules/_wks"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var MATCH = require("npm:core-js@2.1.0/modules/_wks")('match');
+  module.exports = function(KEY) {
+    var re = /./;
+    try {
+      '/./'[KEY](re);
+    } catch (e) {
+      try {
+        re[MATCH] = false;
+        return !'/./'[KEY](re);
+      } catch (f) {}
+    }
+    return true;
+  };
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.ends-with", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_to-length", "npm:core-js@2.1.0/modules/_string-context", "npm:core-js@2.1.0/modules/_fails-is-regexp"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      toLength = require("npm:core-js@2.1.0/modules/_to-length"),
+      context = require("npm:core-js@2.1.0/modules/_string-context"),
+      ENDS_WITH = 'endsWith',
+      $endsWith = ''[ENDS_WITH];
+  $export($export.P + $export.F * require("npm:core-js@2.1.0/modules/_fails-is-regexp")(ENDS_WITH), 'String', {endsWith: function endsWith(searchString) {
+      var that = context(this, searchString, ENDS_WITH),
+          endPosition = arguments.length > 1 ? arguments[1] : undefined,
+          len = toLength(that.length),
+          end = endPosition === undefined ? len : Math.min(toLength(endPosition), len),
+          search = String(searchString);
+      return $endsWith ? $endsWith.call(that, search, end) : that.slice(end - search.length, end) === search;
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.fixed", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  require("npm:core-js@2.1.0/modules/_string-html")('fixed', function(createHTML) {
+    return function fixed() {
+      return createHTML(this, 'tt', '', '');
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.fontcolor", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  require("npm:core-js@2.1.0/modules/_string-html")('fontcolor', function(createHTML) {
+    return function fontcolor(color) {
+      return createHTML(this, 'font', 'color', color);
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.fontsize", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  require("npm:core-js@2.1.0/modules/_string-html")('fontsize', function(createHTML) {
+    return function fontsize(size) {
+      return createHTML(this, 'font', 'size', size);
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.from-code-point", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_to-index"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      toIndex = require("npm:core-js@2.1.0/modules/_to-index"),
+      fromCharCode = String.fromCharCode,
+      $fromCodePoint = String.fromCodePoint;
+  $export($export.S + $export.F * (!!$fromCodePoint && $fromCodePoint.length != 1), 'String', {fromCodePoint: function fromCodePoint(x) {
+      var res = [],
+          aLen = arguments.length,
+          i = 0,
+          code;
+      while (aLen > i) {
+        code = +arguments[i++];
+        if (toIndex(code, 0x10ffff) !== code)
+          throw RangeError(code + ' is not a valid code point');
+        res.push(code < 0x10000 ? fromCharCode(code) : fromCharCode(((code -= 0x10000) >> 10) + 0xd800, code % 0x400 + 0xdc00));
+      }
+      return res.join('');
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.includes", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_string-context", "npm:core-js@2.1.0/modules/_fails-is-regexp"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      context = require("npm:core-js@2.1.0/modules/_string-context"),
+      INCLUDES = 'includes';
+  $export($export.P + $export.F * require("npm:core-js@2.1.0/modules/_fails-is-regexp")(INCLUDES), 'String', {includes: function includes(searchString) {
+      return !!~context(this, searchString, INCLUDES).indexOf(searchString, arguments.length > 1 ? arguments[1] : undefined);
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.italics", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  require("npm:core-js@2.1.0/modules/_string-html")('italics', function(createHTML) {
+    return function italics() {
+      return createHTML(this, 'i', '', '');
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.iterator", ["npm:core-js@2.1.0/modules/_string-at", "npm:core-js@2.1.0/modules/_iter-define"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  var $at = require("npm:core-js@2.1.0/modules/_string-at")(true);
+  require("npm:core-js@2.1.0/modules/_iter-define")(String, 'String', function(iterated) {
+    this._t = String(iterated);
+    this._i = 0;
+  }, function() {
+    var O = this._t,
+        index = this._i,
+        point;
+    if (index >= O.length)
+      return {
+        value: undefined,
+        done: true
+      };
+    point = $at(O, index);
+    this._i += point.length;
+    return {
+      value: point,
+      done: false
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.link", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  require("npm:core-js@2.1.0/modules/_string-html")('link', function(createHTML) {
+    return function link(url) {
+      return createHTML(this, 'a', 'href', url);
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.raw", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_to-iobject", "npm:core-js@2.1.0/modules/_to-length"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      toIObject = require("npm:core-js@2.1.0/modules/_to-iobject"),
+      toLength = require("npm:core-js@2.1.0/modules/_to-length");
+  $export($export.S, 'String', {raw: function raw(callSite) {
+      var tpl = toIObject(callSite.raw),
+          len = toLength(tpl.length),
+          aLen = arguments.length,
+          res = [],
+          i = 0;
+      while (len > i) {
+        res.push(String(tpl[i++]));
+        if (i < aLen)
+          res.push(String(arguments[i]));
+      }
+      return res.join('');
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.repeat", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_string-repeat"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.P, 'String', {repeat: require("npm:core-js@2.1.0/modules/_string-repeat")});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.small", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  require("npm:core-js@2.1.0/modules/_string-html")('small', function(createHTML) {
+    return function small() {
+      return createHTML(this, 'small', '', '');
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.starts-with", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_to-length", "npm:core-js@2.1.0/modules/_string-context", "npm:core-js@2.1.0/modules/_fails-is-regexp"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      toLength = require("npm:core-js@2.1.0/modules/_to-length"),
+      context = require("npm:core-js@2.1.0/modules/_string-context"),
+      STARTS_WITH = 'startsWith',
+      $startsWith = ''[STARTS_WITH];
+  $export($export.P + $export.F * require("npm:core-js@2.1.0/modules/_fails-is-regexp")(STARTS_WITH), 'String', {startsWith: function startsWith(searchString) {
+      var that = context(this, searchString, STARTS_WITH),
+          index = toLength(Math.min(arguments.length > 1 ? arguments[1] : undefined, that.length)),
+          search = String(searchString);
+      return $startsWith ? $startsWith.call(that, search, index) : that.slice(index, index + search.length) === search;
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.strike", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  require("npm:core-js@2.1.0/modules/_string-html")('strike', function(createHTML) {
+    return function strike() {
+      return createHTML(this, 'strike', '', '');
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.sub", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  require("npm:core-js@2.1.0/modules/_string-html")('sub', function(createHTML) {
+    return function sub() {
+      return createHTML(this, 'sub', '', '');
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.string.sup", ["npm:core-js@2.1.0/modules/_string-html"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  require("npm:core-js@2.1.0/modules/_string-html")('sup', function(createHTML) {
+    return function sup() {
+      return createHTML(this, 'sup', '', '');
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/_enum-keys", ["npm:core-js@2.1.0/modules/_object-keys", "npm:core-js@2.1.0/modules/_object-gops", "npm:core-js@2.1.0/modules/_object-pie"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var getKeys = require("npm:core-js@2.1.0/modules/_object-keys"),
+      gOPS = require("npm:core-js@2.1.0/modules/_object-gops"),
+      pIE = require("npm:core-js@2.1.0/modules/_object-pie");
+  module.exports = function(it) {
+    var result = getKeys(it),
+        getSymbols = gOPS.f;
+    if (getSymbols) {
+      var symbols = getSymbols(it),
+          isEnum = pIE.f,
+          i = 0,
+          key;
+      while (symbols.length > i)
+        if (isEnum.call(it, key = symbols[i++]))
+          result.push(key);
+    }
+    return result;
+  };
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.symbol", ["npm:core-js@2.1.0/modules/_global", "npm:core-js@2.1.0/modules/_core", "npm:core-js@2.1.0/modules/_has", "npm:core-js@2.1.0/modules/_descriptors", "npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_redefine", "npm:core-js@2.1.0/modules/_meta", "npm:core-js@2.1.0/modules/_fails", "npm:core-js@2.1.0/modules/_shared", "npm:core-js@2.1.0/modules/_set-to-string-tag", "npm:core-js@2.1.0/modules/_uid", "npm:core-js@2.1.0/modules/_wks", "npm:core-js@2.1.0/modules/_keyof", "npm:core-js@2.1.0/modules/_enum-keys", "npm:core-js@2.1.0/modules/_is-array", "npm:core-js@2.1.0/modules/_an-object", "npm:core-js@2.1.0/modules/_to-iobject", "npm:core-js@2.1.0/modules/_to-primitive", "npm:core-js@2.1.0/modules/_property-desc", "npm:core-js@2.1.0/modules/_object-create", "npm:core-js@2.1.0/modules/_object-gopn-ext", "npm:core-js@2.1.0/modules/_object-gopd", "npm:core-js@2.1.0/modules/_object-dp", "npm:core-js@2.1.0/modules/_object-gopn", "npm:core-js@2.1.0/modules/_object-pie", "npm:core-js@2.1.0/modules/_object-gops", "npm:core-js@2.1.0/modules/_library"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
   'use strict';
   var global = require("npm:core-js@2.1.0/modules/_global"),
+      core = require("npm:core-js@2.1.0/modules/_core"),
+      has = require("npm:core-js@2.1.0/modules/_has"),
+      DESCRIPTORS = require("npm:core-js@2.1.0/modules/_descriptors"),
       $export = require("npm:core-js@2.1.0/modules/_export"),
       redefine = require("npm:core-js@2.1.0/modules/_redefine"),
-      redefineAll = require("npm:core-js@2.1.0/modules/_redefine-all"),
-      meta = require("npm:core-js@2.1.0/modules/_meta"),
-      forOf = require("npm:core-js@2.1.0/modules/_for-of"),
-      anInstance = require("npm:core-js@2.1.0/modules/_an-instance"),
-      isObject = require("npm:core-js@2.1.0/modules/_is-object"),
-      fails = require("npm:core-js@2.1.0/modules/_fails"),
-      $iterDetect = require("npm:core-js@2.1.0/modules/_iter-detect"),
+      META = require("npm:core-js@2.1.0/modules/_meta").KEY,
+      $fails = require("npm:core-js@2.1.0/modules/_fails"),
+      shared = require("npm:core-js@2.1.0/modules/_shared"),
       setToStringTag = require("npm:core-js@2.1.0/modules/_set-to-string-tag"),
-      inheritIfRequired = require("npm:core-js@2.1.0/modules/_inherit-if-required");
-  module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
-    var Base = global[NAME],
-        C = Base,
-        ADDER = IS_MAP ? 'set' : 'add',
-        proto = C && C.prototype,
-        O = {};
-    var fixMethod = function(KEY) {
-      var fn = proto[KEY];
-      redefine(proto, KEY, KEY == 'delete' ? function(a) {
-        return IS_WEAK && !isObject(a) ? false : fn.call(this, a === 0 ? 0 : a);
-      } : KEY == 'has' ? function has(a) {
-        return IS_WEAK && !isObject(a) ? false : fn.call(this, a === 0 ? 0 : a);
-      } : KEY == 'get' ? function get(a) {
-        return IS_WEAK && !isObject(a) ? undefined : fn.call(this, a === 0 ? 0 : a);
-      } : KEY == 'add' ? function add(a) {
-        fn.call(this, a === 0 ? 0 : a);
-        return this;
-      } : function set(a, b) {
-        fn.call(this, a === 0 ? 0 : a, b);
-        return this;
-      });
-    };
-    if (typeof C != 'function' || !(IS_WEAK || proto.forEach && !fails(function() {
-      new C().entries().next();
-    }))) {
-      C = common.getConstructor(wrapper, NAME, IS_MAP, ADDER);
-      redefineAll(C.prototype, methods);
-      meta.NEED = true;
-    } else {
-      var instance = new C,
-          HASNT_CHAINING = instance[ADDER](IS_WEAK ? {} : -0, 1) != instance,
-          THROWS_ON_PRIMITIVES = fails(function() {
-            instance.has(1);
-          }),
-          ACCEPT_ITERABLES = $iterDetect(function(iter) {
-            new C(iter);
-          }),
-          BUGGY_ZERO = !IS_WEAK && fails(function() {
-            var $instance = new C(),
-                index = 5;
-            while (index--)
-              $instance[ADDER](index, index);
-            return !$instance.has(-0);
-          });
-      if (!ACCEPT_ITERABLES) {
-        C = wrapper(function(target, iterable) {
-          anInstance(target, C, NAME);
-          var that = inheritIfRequired(new Base, target, C);
-          if (iterable != undefined)
-            forOf(iterable, IS_MAP, that[ADDER], that);
-          return that;
-        });
-        C.prototype = proto;
-        proto.constructor = C;
-      }
-      if (THROWS_ON_PRIMITIVES || BUGGY_ZERO) {
-        fixMethod('delete');
-        fixMethod('has');
-        IS_MAP && fixMethod('get');
-      }
-      if (BUGGY_ZERO || HASNT_CHAINING)
-        fixMethod(ADDER);
-      if (IS_WEAK && proto.clear)
-        delete proto.clear;
-    }
-    setToStringTag(C, NAME);
-    O[NAME] = C;
-    $export($export.G + $export.W + $export.F * (C != Base), O);
-    if (!IS_WEAK)
-      common.setStrong(C, NAME, IS_MAP);
-    return C;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.map", ["npm:core-js@2.1.0/modules/_collection-strong", "npm:core-js@2.1.0/modules/_collection"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var strong = require("npm:core-js@2.1.0/modules/_collection-strong");
-  module.exports = require("npm:core-js@2.1.0/modules/_collection")('Map', function(get) {
-    return function Map() {
-      return get(this, arguments.length > 0 ? arguments[0] : undefined);
-    };
-  }, {
-    get: function get(key) {
-      var entry = strong.getEntry(this, key);
-      return entry && entry.v;
-    },
-    set: function set(key, value) {
-      return strong.def(this, key === 0 ? 0 : key, value);
-    }
-  }, strong, true);
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.set", ["npm:core-js@2.1.0/modules/_collection-strong", "npm:core-js@2.1.0/modules/_collection"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var strong = require("npm:core-js@2.1.0/modules/_collection-strong");
-  module.exports = require("npm:core-js@2.1.0/modules/_collection")('Set', function(get) {
-    return function Set() {
-      return get(this, arguments.length > 0 ? arguments[0] : undefined);
-    };
-  }, {add: function add(value) {
-      return strong.def(this, value = value === 0 ? 0 : value, value);
-    }}, strong);
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_collection-weak", ["npm:core-js@2.1.0/modules/_redefine-all", "npm:core-js@2.1.0/modules/_meta", "npm:core-js@2.1.0/modules/_an-object", "npm:core-js@2.1.0/modules/_is-object", "npm:core-js@2.1.0/modules/_an-instance", "npm:core-js@2.1.0/modules/_for-of", "npm:core-js@2.1.0/modules/_array-methods", "npm:core-js@2.1.0/modules/_has"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var redefineAll = require("npm:core-js@2.1.0/modules/_redefine-all"),
-      getWeak = require("npm:core-js@2.1.0/modules/_meta").getWeak,
+      uid = require("npm:core-js@2.1.0/modules/_uid"),
+      wks = require("npm:core-js@2.1.0/modules/_wks"),
+      keyOf = require("npm:core-js@2.1.0/modules/_keyof"),
+      enumKeys = require("npm:core-js@2.1.0/modules/_enum-keys"),
+      isArray = require("npm:core-js@2.1.0/modules/_is-array"),
       anObject = require("npm:core-js@2.1.0/modules/_an-object"),
-      isObject = require("npm:core-js@2.1.0/modules/_is-object"),
-      anInstance = require("npm:core-js@2.1.0/modules/_an-instance"),
-      forOf = require("npm:core-js@2.1.0/modules/_for-of"),
-      createArrayMethod = require("npm:core-js@2.1.0/modules/_array-methods"),
-      $has = require("npm:core-js@2.1.0/modules/_has"),
-      arrayFind = createArrayMethod(5),
-      arrayFindIndex = createArrayMethod(6),
-      id = 0;
-  var uncaughtFrozenStore = function(that) {
-    return that._l || (that._l = new UncaughtFrozenStore);
-  };
-  var UncaughtFrozenStore = function() {
-    this.a = [];
-  };
-  var findUncaughtFrozen = function(store, key) {
-    return arrayFind(store.a, function(it) {
-      return it[0] === key;
-    });
-  };
-  UncaughtFrozenStore.prototype = {
-    get: function(key) {
-      var entry = findUncaughtFrozen(this, key);
-      if (entry)
-        return entry[1];
-    },
-    has: function(key) {
-      return !!findUncaughtFrozen(this, key);
-    },
-    set: function(key, value) {
-      var entry = findUncaughtFrozen(this, key);
-      if (entry)
-        entry[1] = value;
-      else
-        this.a.push([key, value]);
-    },
-    'delete': function(key) {
-      var index = arrayFindIndex(this.a, function(it) {
-        return it[0] === key;
-      });
-      if (~index)
-        this.a.splice(index, 1);
-      return !!~index;
-    }
-  };
-  module.exports = {
-    getConstructor: function(wrapper, NAME, IS_MAP, ADDER) {
-      var C = wrapper(function(that, iterable) {
-        anInstance(that, C, NAME, '_i');
-        that._i = id++;
-        that._l = undefined;
-        if (iterable != undefined)
-          forOf(iterable, IS_MAP, that[ADDER], that);
-      });
-      redefineAll(C.prototype, {
-        'delete': function(key) {
-          if (!isObject(key))
-            return false;
-          var data = getWeak(key);
-          if (data === true)
-            return uncaughtFrozenStore(this)['delete'](key);
-          return data && $has(data, this._i) && delete data[this._i];
-        },
-        has: function has(key) {
-          if (!isObject(key))
-            return false;
-          var data = getWeak(key);
-          if (data === true)
-            return uncaughtFrozenStore(this).has(key);
-          return data && $has(data, this._i);
-        }
-      });
-      return C;
-    },
-    def: function(that, key, value) {
-      var data = getWeak(anObject(key), true);
-      if (data === true)
-        uncaughtFrozenStore(that).set(key, value);
-      else
-        data[that._i] = value;
-      return that;
-    },
-    ufstore: uncaughtFrozenStore
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.weak-map", ["npm:core-js@2.1.0/modules/_array-methods", "npm:core-js@2.1.0/modules/_redefine", "npm:core-js@2.1.0/modules/_meta", "npm:core-js@2.1.0/modules/_object-assign", "npm:core-js@2.1.0/modules/_collection-weak", "npm:core-js@2.1.0/modules/_is-object", "npm:core-js@2.1.0/modules/_has", "npm:core-js@2.1.0/modules/_collection"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var each = require("npm:core-js@2.1.0/modules/_array-methods")(0),
-      redefine = require("npm:core-js@2.1.0/modules/_redefine"),
-      meta = require("npm:core-js@2.1.0/modules/_meta"),
-      assign = require("npm:core-js@2.1.0/modules/_object-assign"),
-      weak = require("npm:core-js@2.1.0/modules/_collection-weak"),
-      isObject = require("npm:core-js@2.1.0/modules/_is-object"),
-      has = require("npm:core-js@2.1.0/modules/_has"),
-      getWeak = meta.getWeak,
-      isExtensible = Object.isExtensible,
-      uncaughtFrozenStore = weak.ufstore,
-      tmp = {},
-      InternalMap;
-  var wrapper = function(get) {
-    return function WeakMap() {
-      return get(this, arguments.length > 0 ? arguments[0] : undefined);
-    };
-  };
-  var methods = {
-    get: function get(key) {
-      if (isObject(key)) {
-        var data = getWeak(key);
-        if (data === true)
-          return uncaughtFrozenStore(this).get(key);
-        return data ? data[this._i] : undefined;
+      toIObject = require("npm:core-js@2.1.0/modules/_to-iobject"),
+      toPrimitive = require("npm:core-js@2.1.0/modules/_to-primitive"),
+      createDesc = require("npm:core-js@2.1.0/modules/_property-desc"),
+      _create = require("npm:core-js@2.1.0/modules/_object-create"),
+      gOPNExt = require("npm:core-js@2.1.0/modules/_object-gopn-ext"),
+      $GOPD = require("npm:core-js@2.1.0/modules/_object-gopd"),
+      $DP = require("npm:core-js@2.1.0/modules/_object-dp"),
+      gOPD = $GOPD.f,
+      dP = $DP.f,
+      gOPN = gOPNExt.f,
+      $Symbol = global.Symbol,
+      $JSON = global.JSON,
+      _stringify = $JSON && $JSON.stringify,
+      setter = false,
+      HIDDEN = wks('_hidden'),
+      isEnum = {}.propertyIsEnumerable,
+      SymbolRegistry = shared('symbol-registry'),
+      AllSymbols = shared('symbols'),
+      ObjectProto = Object.prototype,
+      USE_NATIVE = typeof $Symbol == 'function';
+  var setSymbolDesc = DESCRIPTORS && $fails(function() {
+    return _create(dP({}, 'a', {get: function() {
+        return dP(this, 'a', {value: 7}).a;
+      }})).a != 7;
+  }) ? function(it, key, D) {
+    var protoDesc = gOPD(ObjectProto, key);
+    if (protoDesc)
+      delete ObjectProto[key];
+    dP(it, key, D);
+    if (protoDesc && it !== ObjectProto)
+      dP(ObjectProto, key, protoDesc);
+  } : dP;
+  var wrap = function(tag) {
+    var sym = AllSymbols[tag] = _create($Symbol.prototype);
+    sym._k = tag;
+    DESCRIPTORS && setter && setSymbolDesc(ObjectProto, tag, {
+      configurable: true,
+      set: function(value) {
+        if (has(this, HIDDEN) && has(this[HIDDEN], tag))
+          this[HIDDEN][tag] = false;
+        setSymbolDesc(this, tag, createDesc(1, value));
       }
-    },
-    set: function set(key, value) {
-      return weak.def(this, key, value);
-    }
-  };
-  var $WeakMap = module.exports = require("npm:core-js@2.1.0/modules/_collection")('WeakMap', wrapper, methods, weak, true, true);
-  if (new $WeakMap().set((Object.freeze || Object)(tmp), 7).get(tmp) != 7) {
-    InternalMap = weak.getConstructor(wrapper);
-    assign(InternalMap.prototype, methods);
-    meta.NEED = true;
-    each(['delete', 'has', 'get', 'set'], function(key) {
-      var proto = $WeakMap.prototype,
-          method = proto[key];
-      redefine(proto, key, function(a, b) {
-        if (isObject(a) && !isExtensible(a)) {
-          if (!this._f)
-            this._f = new InternalMap;
-          var result = this._f[key](a, b);
-          return key == 'set' ? this : result;
-        }
-        return method.call(this, a, b);
-      });
     });
-  }
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.weak-set", ["npm:core-js@2.1.0/modules/_collection-weak", "npm:core-js@2.1.0/modules/_collection"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var weak = require("npm:core-js@2.1.0/modules/_collection-weak");
-  require("npm:core-js@2.1.0/modules/_collection")('WeakSet', function(get) {
-    return function WeakSet() {
-      return get(this, arguments.length > 0 ? arguments[0] : undefined);
+    return sym;
+  };
+  var isSymbol = function(it) {
+    return typeof it == 'symbol';
+  };
+  var $defineProperty = function defineProperty(it, key, D) {
+    anObject(it);
+    key = toPrimitive(key, true);
+    anObject(D);
+    if (has(AllSymbols, key)) {
+      if (!D.enumerable) {
+        if (!has(it, HIDDEN))
+          dP(it, HIDDEN, createDesc(1, {}));
+        it[HIDDEN][key] = true;
+      } else {
+        if (has(it, HIDDEN) && it[HIDDEN][key])
+          it[HIDDEN][key] = false;
+        D = _create(D, {enumerable: createDesc(0, false)});
+      }
+      return setSymbolDesc(it, key, D);
+    }
+    return dP(it, key, D);
+  };
+  var $defineProperties = function defineProperties(it, P) {
+    anObject(it);
+    var keys = enumKeys(P = toIObject(P)),
+        i = 0,
+        l = keys.length,
+        key;
+    while (l > i)
+      $defineProperty(it, key = keys[i++], P[key]);
+    return it;
+  };
+  var $create = function create(it, P) {
+    return P === undefined ? _create(it) : $defineProperties(_create(it), P);
+  };
+  var $propertyIsEnumerable = function propertyIsEnumerable(key) {
+    var E = isEnum.call(this, key = toPrimitive(key, true));
+    return E || !has(this, key) || !has(AllSymbols, key) || has(this, HIDDEN) && this[HIDDEN][key] ? E : true;
+  };
+  var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(it, key) {
+    var D = gOPD(it = toIObject(it), key = toPrimitive(key, true));
+    if (D && has(AllSymbols, key) && !(has(it, HIDDEN) && it[HIDDEN][key]))
+      D.enumerable = true;
+    return D;
+  };
+  var $getOwnPropertyNames = function getOwnPropertyNames(it) {
+    var names = gOPN(toIObject(it)),
+        result = [],
+        i = 0,
+        key;
+    while (names.length > i)
+      if (!has(AllSymbols, key = names[i++]) && key != HIDDEN && key != META)
+        result.push(key);
+    return result;
+  };
+  var $getOwnPropertySymbols = function getOwnPropertySymbols(it) {
+    var names = gOPN(toIObject(it)),
+        result = [],
+        i = 0,
+        key;
+    while (names.length > i)
+      if (has(AllSymbols, key = names[i++]))
+        result.push(AllSymbols[key]);
+    return result;
+  };
+  var $stringify = function stringify(it) {
+    if (it === undefined || isSymbol(it))
+      return;
+    var args = [it],
+        i = 1,
+        replacer,
+        $replacer;
+    while (arguments.length > i)
+      args.push(arguments[i++]);
+    replacer = args[1];
+    if (typeof replacer == 'function')
+      $replacer = replacer;
+    if ($replacer || !isArray(replacer))
+      replacer = function(key, value) {
+        if ($replacer)
+          value = $replacer.call(this, key, value);
+        if (!isSymbol(value))
+          return value;
+      };
+    args[1] = replacer;
+    return _stringify.apply($JSON, args);
+  };
+  var BUGGY_JSON = $fails(function() {
+    var S = $Symbol();
+    return _stringify([S]) != '[null]' || _stringify({a: S}) != '{}' || _stringify(Object(S)) != '{}';
+  });
+  if (!USE_NATIVE) {
+    $Symbol = function Symbol() {
+      if (isSymbol(this))
+        throw TypeError('Symbol is not a constructor');
+      return wrap(uid(arguments.length > 0 ? arguments[0] : undefined));
     };
-  }, {add: function add(value) {
-      return weak.def(this, value, true);
-    }}, weak, false, true);
+    redefine($Symbol.prototype, 'toString', function toString() {
+      return this._k;
+    });
+    isSymbol = function(it) {
+      return it instanceof $Symbol;
+    };
+    $GOPD.f = $getOwnPropertyDescriptor;
+    $DP.f = $defineProperty;
+    require("npm:core-js@2.1.0/modules/_object-gopn").f = gOPNExt.f = $getOwnPropertyNames;
+    require("npm:core-js@2.1.0/modules/_object-pie").f = $propertyIsEnumerable;
+    require("npm:core-js@2.1.0/modules/_object-gops").f = $getOwnPropertySymbols;
+    if (DESCRIPTORS && !require("npm:core-js@2.1.0/modules/_library")) {
+      redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
+    }
+  }
+  $export($export.G + $export.W + $export.F * !USE_NATIVE, {Symbol: $Symbol});
+  for (var symbols = ('hasInstance,isConcatSpreadable,iterator,match,replace,search,species,split,toPrimitive,toStringTag,unscopables').split(','),
+      i = 0; symbols.length > i; ) {
+    var key = symbols[i++],
+        Wrapper = core.Symbol,
+        sym = wks(key);
+    if (!(key in Wrapper))
+      dP(Wrapper, key, {value: USE_NATIVE ? sym : wrap(sym)});
+  }
+  ;
+  setter = true;
+  $export($export.S + $export.F * !USE_NATIVE, 'Symbol', {
+    'for': function(key) {
+      return has(SymbolRegistry, key += '') ? SymbolRegistry[key] : SymbolRegistry[key] = $Symbol(key);
+    },
+    keyFor: function keyFor(key) {
+      return keyOf(SymbolRegistry, key);
+    },
+    useSetter: function() {
+      setter = true;
+    },
+    useSimple: function() {
+      setter = false;
+    }
+  });
+  $export($export.S + $export.F * !USE_NATIVE, 'Object', {
+    create: $create,
+    defineProperty: $defineProperty,
+    defineProperties: $defineProperties,
+    getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
+    getOwnPropertyNames: $getOwnPropertyNames,
+    getOwnPropertySymbols: $getOwnPropertySymbols
+  });
+  $JSON && $export($export.S + $export.F * (!USE_NATIVE || BUGGY_JSON), 'JSON', {stringify: $stringify});
+  setToStringTag($Symbol, 'Symbol');
+  setToStringTag(Math, 'Math', true);
+  setToStringTag(global.JSON, 'JSON', true);
   global.define = __define;
   return module.exports;
 });
@@ -26270,6 +25931,42 @@ System.registerDynamic("npm:core-js@2.1.0/modules/es6.typed.data-view", ["npm:co
   global.define = undefined;
   var $export = require("npm:core-js@2.1.0/modules/_export");
   $export($export.G + $export.W + $export.F * !require("npm:core-js@2.1.0/modules/_typed").ABV, {DataView: require("npm:core-js@2.1.0/modules/_typed-buffer").DataView});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.array.iterator", ["npm:core-js@2.1.0/modules/_add-to-unscopables", "npm:core-js@2.1.0/modules/_iter-step", "npm:core-js@2.1.0/modules/_iterators", "npm:core-js@2.1.0/modules/_to-iobject", "npm:core-js@2.1.0/modules/_iter-define"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  var addToUnscopables = require("npm:core-js@2.1.0/modules/_add-to-unscopables"),
+      step = require("npm:core-js@2.1.0/modules/_iter-step"),
+      Iterators = require("npm:core-js@2.1.0/modules/_iterators"),
+      toIObject = require("npm:core-js@2.1.0/modules/_to-iobject");
+  module.exports = require("npm:core-js@2.1.0/modules/_iter-define")(Array, 'Array', function(iterated, kind) {
+    this._t = toIObject(iterated);
+    this._i = 0;
+    this._k = kind;
+  }, function() {
+    var O = this._t,
+        kind = this._k,
+        index = this._i++;
+    if (!O || index >= O.length) {
+      this._t = undefined;
+      return step(1);
+    }
+    if (kind == 'keys')
+      return step(0, index);
+    if (kind == 'values')
+      return step(0, O[index]);
+    return step(0, [index, O[index]]);
+  }, 'values');
+  Iterators.Arguments = Iterators.Array;
+  addToUnscopables('keys');
+  addToUnscopables('values');
+  addToUnscopables('entries');
   global.define = __define;
   return module.exports;
 });
@@ -26733,6 +26430,62 @@ System.registerDynamic("npm:core-js@2.1.0/modules/_typed-array", ["npm:core-js@2
   return module.exports;
 });
 
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.typed.float32-array", ["npm:core-js@2.1.0/modules/_typed-array"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  require("npm:core-js@2.1.0/modules/_typed-array")('Float32', 4, function(init) {
+    return function Float32Array(data, byteOffset, length) {
+      return init(this, data, byteOffset, length);
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.typed.float64-array", ["npm:core-js@2.1.0/modules/_typed-array"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  require("npm:core-js@2.1.0/modules/_typed-array")('Float64', 8, function(init) {
+    return function Float64Array(data, byteOffset, length) {
+      return init(this, data, byteOffset, length);
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.typed.int16-array", ["npm:core-js@2.1.0/modules/_typed-array"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  require("npm:core-js@2.1.0/modules/_typed-array")('Int16', 2, function(init) {
+    return function Int16Array(data, byteOffset, length) {
+      return init(this, data, byteOffset, length);
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.typed.int32-array", ["npm:core-js@2.1.0/modules/_typed-array"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  require("npm:core-js@2.1.0/modules/_typed-array")('Int32', 4, function(init) {
+    return function Int32Array(data, byteOffset, length) {
+      return init(this, data, byteOffset, length);
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
 System.registerDynamic("npm:core-js@2.1.0/modules/es6.typed.int8-array", ["npm:core-js@2.1.0/modules/_typed-array"], true, function(require, exports, module) {
   ;
   var global = this,
@@ -26740,6 +26493,34 @@ System.registerDynamic("npm:core-js@2.1.0/modules/es6.typed.int8-array", ["npm:c
   global.define = undefined;
   require("npm:core-js@2.1.0/modules/_typed-array")('Int8', 1, function(init) {
     return function Int8Array(data, byteOffset, length) {
+      return init(this, data, byteOffset, length);
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.typed.uint16-array", ["npm:core-js@2.1.0/modules/_typed-array"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  require("npm:core-js@2.1.0/modules/_typed-array")('Uint16', 2, function(init) {
+    return function Uint16Array(data, byteOffset, length) {
+      return init(this, data, byteOffset, length);
+    };
+  });
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.typed.uint32-array", ["npm:core-js@2.1.0/modules/_typed-array"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  require("npm:core-js@2.1.0/modules/_typed-array")('Uint32', 4, function(init) {
+    return function Uint32Array(data, byteOffset, length) {
       return init(this, data, byteOffset, length);
     };
   });
@@ -26775,863 +26556,210 @@ System.registerDynamic("npm:core-js@2.1.0/modules/es6.typed.uint8-clamped-array"
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.typed.int16-array", ["npm:core-js@2.1.0/modules/_typed-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/_typed-array")('Int16', 2, function(init) {
-    return function Int16Array(data, byteOffset, length) {
-      return init(this, data, byteOffset, length);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.typed.uint16-array", ["npm:core-js@2.1.0/modules/_typed-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/_typed-array")('Uint16', 2, function(init) {
-    return function Uint16Array(data, byteOffset, length) {
-      return init(this, data, byteOffset, length);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.typed.int32-array", ["npm:core-js@2.1.0/modules/_typed-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/_typed-array")('Int32', 4, function(init) {
-    return function Int32Array(data, byteOffset, length) {
-      return init(this, data, byteOffset, length);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.typed.uint32-array", ["npm:core-js@2.1.0/modules/_typed-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/_typed-array")('Uint32', 4, function(init) {
-    return function Uint32Array(data, byteOffset, length) {
-      return init(this, data, byteOffset, length);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.typed.float32-array", ["npm:core-js@2.1.0/modules/_typed-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/_typed-array")('Float32', 4, function(init) {
-    return function Float32Array(data, byteOffset, length) {
-      return init(this, data, byteOffset, length);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.typed.float64-array", ["npm:core-js@2.1.0/modules/_typed-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/_typed-array")('Float64', 8, function(init) {
-    return function Float64Array(data, byteOffset, length) {
-      return init(this, data, byteOffset, length);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.apply", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      _apply = Function.apply;
-  $export($export.S, 'Reflect', {apply: function apply(target, thisArgument, argumentsList) {
-      return _apply.call(target, thisArgument, argumentsList);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.construct", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_object-create", "npm:core-js@2.1.0/modules/_a-function", "npm:core-js@2.1.0/modules/_an-object", "npm:core-js@2.1.0/modules/_is-object", "npm:core-js@2.1.0/modules/_bind", "npm:core-js@2.1.0/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      create = require("npm:core-js@2.1.0/modules/_object-create"),
-      aFunction = require("npm:core-js@2.1.0/modules/_a-function"),
-      anObject = require("npm:core-js@2.1.0/modules/_an-object"),
-      isObject = require("npm:core-js@2.1.0/modules/_is-object"),
-      bind = require("npm:core-js@2.1.0/modules/_bind");
-  $export($export.S + $export.F * require("npm:core-js@2.1.0/modules/_fails")(function() {
-    function F() {}
-    return !(Reflect.construct(function() {}, [], F) instanceof F);
-  }), 'Reflect', {construct: function construct(Target, args) {
-      aFunction(Target);
-      var newTarget = arguments.length < 3 ? Target : aFunction(arguments[2]);
-      if (Target == newTarget) {
-        if (args != undefined)
-          switch (anObject(args).length) {
-            case 0:
-              return new Target;
-            case 1:
-              return new Target(args[0]);
-            case 2:
-              return new Target(args[0], args[1]);
-            case 3:
-              return new Target(args[0], args[1], args[2]);
-            case 4:
-              return new Target(args[0], args[1], args[2], args[3]);
-          }
-        var $args = [null];
-        $args.push.apply($args, args);
-        return new (bind.apply(Target, $args));
-      }
-      var proto = newTarget.prototype,
-          instance = create(isObject(proto) ? proto : Object.prototype),
-          result = Function.apply.call(Target, instance, args);
-      return isObject(result) ? result : instance;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.define-property", ["npm:core-js@2.1.0/modules/_object-dp", "npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_an-object", "npm:core-js@2.1.0/modules/_to-primitive", "npm:core-js@2.1.0/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var dP = require("npm:core-js@2.1.0/modules/_object-dp"),
-      $export = require("npm:core-js@2.1.0/modules/_export"),
-      anObject = require("npm:core-js@2.1.0/modules/_an-object"),
-      toPrimitive = require("npm:core-js@2.1.0/modules/_to-primitive");
-  $export($export.S + $export.F * require("npm:core-js@2.1.0/modules/_fails")(function() {
-    Reflect.defineProperty(dP.f({}, 1, {value: 1}), 1, {value: 2});
-  }), 'Reflect', {defineProperty: function defineProperty(target, propertyKey, attributes) {
-      anObject(target);
-      propertyKey = toPrimitive(propertyKey, true);
-      anObject(attributes);
-      try {
-        dP.f(target, propertyKey, attributes);
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.delete-property", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_object-gopd", "npm:core-js@2.1.0/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      gOPD = require("npm:core-js@2.1.0/modules/_object-gopd").f,
-      anObject = require("npm:core-js@2.1.0/modules/_an-object");
-  $export($export.S, 'Reflect', {deleteProperty: function deleteProperty(target, propertyKey) {
-      var desc = gOPD(anObject(target), propertyKey);
-      return desc && !desc.configurable ? false : delete target[propertyKey];
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.enumerate", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_an-object", "npm:core-js@2.1.0/modules/_iter-create"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/_collection-weak", ["npm:core-js@2.1.0/modules/_redefine-all", "npm:core-js@2.1.0/modules/_meta", "npm:core-js@2.1.0/modules/_an-object", "npm:core-js@2.1.0/modules/_is-object", "npm:core-js@2.1.0/modules/_an-instance", "npm:core-js@2.1.0/modules/_for-of", "npm:core-js@2.1.0/modules/_array-methods", "npm:core-js@2.1.0/modules/_has"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
   'use strict';
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      anObject = require("npm:core-js@2.1.0/modules/_an-object");
-  var Enumerate = function(iterated) {
-    this._t = anObject(iterated);
-    this._i = 0;
-    var keys = this._k = [],
-        key;
-    for (key in iterated)
-      keys.push(key);
-  };
-  require("npm:core-js@2.1.0/modules/_iter-create")(Enumerate, 'Object', function() {
-    var that = this,
-        keys = that._k,
-        key;
-    do {
-      if (that._i >= keys.length)
-        return {
-          value: undefined,
-          done: true
-        };
-    } while (!((key = keys[that._i++]) in that._t));
-    return {
-      value: key,
-      done: false
-    };
-  });
-  $export($export.S, 'Reflect', {enumerate: function enumerate(target) {
-      return new Enumerate(target);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.get", ["npm:core-js@2.1.0/modules/_object-gopd", "npm:core-js@2.1.0/modules/_object-gpo", "npm:core-js@2.1.0/modules/_has", "npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_is-object", "npm:core-js@2.1.0/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var gOPD = require("npm:core-js@2.1.0/modules/_object-gopd"),
-      getPrototypeOf = require("npm:core-js@2.1.0/modules/_object-gpo"),
-      has = require("npm:core-js@2.1.0/modules/_has"),
-      $export = require("npm:core-js@2.1.0/modules/_export"),
+  var redefineAll = require("npm:core-js@2.1.0/modules/_redefine-all"),
+      getWeak = require("npm:core-js@2.1.0/modules/_meta").getWeak,
+      anObject = require("npm:core-js@2.1.0/modules/_an-object"),
       isObject = require("npm:core-js@2.1.0/modules/_is-object"),
-      anObject = require("npm:core-js@2.1.0/modules/_an-object");
-  function get(target, propertyKey) {
-    var receiver = arguments.length < 3 ? target : arguments[2],
-        desc,
-        proto;
-    if (anObject(target) === receiver)
-      return target[propertyKey];
-    if (desc = gOPD.f(target, propertyKey))
-      return has(desc, 'value') ? desc.value : desc.get !== undefined ? desc.get.call(receiver) : undefined;
-    if (isObject(proto = getPrototypeOf(target)))
-      return get(proto, propertyKey, receiver);
-  }
-  $export($export.S, 'Reflect', {get: get});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.get-own-property-descriptor", ["npm:core-js@2.1.0/modules/_object-gopd", "npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var gOPD = require("npm:core-js@2.1.0/modules/_object-gopd"),
-      $export = require("npm:core-js@2.1.0/modules/_export"),
-      anObject = require("npm:core-js@2.1.0/modules/_an-object");
-  $export($export.S, 'Reflect', {getOwnPropertyDescriptor: function getOwnPropertyDescriptor(target, propertyKey) {
-      return gOPD.f(anObject(target), propertyKey);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.get-prototype-of", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_object-gpo", "npm:core-js@2.1.0/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      getProto = require("npm:core-js@2.1.0/modules/_object-gpo"),
-      anObject = require("npm:core-js@2.1.0/modules/_an-object");
-  $export($export.S, 'Reflect', {getPrototypeOf: function getPrototypeOf(target) {
-      return getProto(anObject(target));
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.has", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S, 'Reflect', {has: function has(target, propertyKey) {
-      return propertyKey in target;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.is-extensible", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      anObject = require("npm:core-js@2.1.0/modules/_an-object"),
-      $isExtensible = Object.isExtensible;
-  $export($export.S, 'Reflect', {isExtensible: function isExtensible(target) {
-      anObject(target);
-      return $isExtensible ? $isExtensible(target) : true;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.own-keys", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_own-keys"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S, 'Reflect', {ownKeys: require("npm:core-js@2.1.0/modules/_own-keys")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.prevent-extensions", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      anObject = require("npm:core-js@2.1.0/modules/_an-object"),
-      $preventExtensions = Object.preventExtensions;
-  $export($export.S, 'Reflect', {preventExtensions: function preventExtensions(target) {
-      anObject(target);
-      try {
-        if ($preventExtensions)
-          $preventExtensions(target);
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.set", ["npm:core-js@2.1.0/modules/_object-dp", "npm:core-js@2.1.0/modules/_object-gopd", "npm:core-js@2.1.0/modules/_object-gpo", "npm:core-js@2.1.0/modules/_has", "npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_property-desc", "npm:core-js@2.1.0/modules/_an-object", "npm:core-js@2.1.0/modules/_is-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var dP = require("npm:core-js@2.1.0/modules/_object-dp"),
-      gOPD = require("npm:core-js@2.1.0/modules/_object-gopd"),
-      getPrototypeOf = require("npm:core-js@2.1.0/modules/_object-gpo"),
-      has = require("npm:core-js@2.1.0/modules/_has"),
-      $export = require("npm:core-js@2.1.0/modules/_export"),
-      createDesc = require("npm:core-js@2.1.0/modules/_property-desc"),
-      anObject = require("npm:core-js@2.1.0/modules/_an-object"),
-      isObject = require("npm:core-js@2.1.0/modules/_is-object");
-  function set(target, propertyKey, V) {
-    var receiver = arguments.length < 4 ? target : arguments[3],
-        ownDesc = gOPD.f(anObject(target), propertyKey),
-        existingDescriptor,
-        proto;
-    if (!ownDesc) {
-      if (isObject(proto = getPrototypeOf(target))) {
-        return set(proto, propertyKey, V, receiver);
-      }
-      ownDesc = createDesc(0);
+      anInstance = require("npm:core-js@2.1.0/modules/_an-instance"),
+      forOf = require("npm:core-js@2.1.0/modules/_for-of"),
+      createArrayMethod = require("npm:core-js@2.1.0/modules/_array-methods"),
+      $has = require("npm:core-js@2.1.0/modules/_has"),
+      arrayFind = createArrayMethod(5),
+      arrayFindIndex = createArrayMethod(6),
+      id = 0;
+  var uncaughtFrozenStore = function(that) {
+    return that._l || (that._l = new UncaughtFrozenStore);
+  };
+  var UncaughtFrozenStore = function() {
+    this.a = [];
+  };
+  var findUncaughtFrozen = function(store, key) {
+    return arrayFind(store.a, function(it) {
+      return it[0] === key;
+    });
+  };
+  UncaughtFrozenStore.prototype = {
+    get: function(key) {
+      var entry = findUncaughtFrozen(this, key);
+      if (entry)
+        return entry[1];
+    },
+    has: function(key) {
+      return !!findUncaughtFrozen(this, key);
+    },
+    set: function(key, value) {
+      var entry = findUncaughtFrozen(this, key);
+      if (entry)
+        entry[1] = value;
+      else
+        this.a.push([key, value]);
+    },
+    'delete': function(key) {
+      var index = arrayFindIndex(this.a, function(it) {
+        return it[0] === key;
+      });
+      if (~index)
+        this.a.splice(index, 1);
+      return !!~index;
     }
-    if (has(ownDesc, 'value')) {
-      if (ownDesc.writable === false || !isObject(receiver))
-        return false;
-      existingDescriptor = gOPD.f(receiver, propertyKey) || createDesc(0);
-      existingDescriptor.value = V;
-      dP.f(receiver, propertyKey, existingDescriptor);
-      return true;
-    }
-    return ownDesc.set === undefined ? false : (ownDesc.set.call(receiver, V), true);
-  }
-  $export($export.S, 'Reflect', {set: set});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es6.reflect.set-prototype-of", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_set-proto"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      setProto = require("npm:core-js@2.1.0/modules/_set-proto");
-  if (setProto)
-    $export($export.S, 'Reflect', {setPrototypeOf: function setPrototypeOf(target, proto) {
-        setProto.check(target, proto);
-        try {
-          setProto.set(target, proto);
-          return true;
-        } catch (e) {
-          return false;
+  };
+  module.exports = {
+    getConstructor: function(wrapper, NAME, IS_MAP, ADDER) {
+      var C = wrapper(function(that, iterable) {
+        anInstance(that, C, NAME, '_i');
+        that._i = id++;
+        that._l = undefined;
+        if (iterable != undefined)
+          forOf(iterable, IS_MAP, that[ADDER], that);
+      });
+      redefineAll(C.prototype, {
+        'delete': function(key) {
+          if (!isObject(key))
+            return false;
+          var data = getWeak(key);
+          if (data === true)
+            return uncaughtFrozenStore(this)['delete'](key);
+          return data && $has(data, this._i) && delete data[this._i];
+        },
+        has: function has(key) {
+          if (!isObject(key))
+            return false;
+          var data = getWeak(key);
+          if (data === true)
+            return uncaughtFrozenStore(this).has(key);
+          return data && $has(data, this._i);
         }
-      }});
+      });
+      return C;
+    },
+    def: function(that, key, value) {
+      var data = getWeak(anObject(key), true);
+      if (data === true)
+        uncaughtFrozenStore(that).set(key, value);
+      else
+        data[that._i] = value;
+      return that;
+    },
+    ufstore: uncaughtFrozenStore
+  };
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/es6/index", ["npm:core-js@2.1.0/modules/es6.symbol", "npm:core-js@2.1.0/modules/es6.object.create", "npm:core-js@2.1.0/modules/es6.object.define-property", "npm:core-js@2.1.0/modules/es6.object.define-properties", "npm:core-js@2.1.0/modules/es6.object.get-own-property-descriptor", "npm:core-js@2.1.0/modules/es6.object.get-prototype-of", "npm:core-js@2.1.0/modules/es6.object.keys", "npm:core-js@2.1.0/modules/es6.object.get-own-property-names", "npm:core-js@2.1.0/modules/es6.object.freeze", "npm:core-js@2.1.0/modules/es6.object.seal", "npm:core-js@2.1.0/modules/es6.object.prevent-extensions", "npm:core-js@2.1.0/modules/es6.object.is-frozen", "npm:core-js@2.1.0/modules/es6.object.is-sealed", "npm:core-js@2.1.0/modules/es6.object.is-extensible", "npm:core-js@2.1.0/modules/es6.object.assign", "npm:core-js@2.1.0/modules/es6.object.is", "npm:core-js@2.1.0/modules/es6.object.set-prototype-of", "npm:core-js@2.1.0/modules/es6.object.to-string", "npm:core-js@2.1.0/modules/es6.function.bind", "npm:core-js@2.1.0/modules/es6.function.name", "npm:core-js@2.1.0/modules/es6.function.has-instance", "npm:core-js@2.1.0/modules/es6.parse-int", "npm:core-js@2.1.0/modules/es6.parse-float", "npm:core-js@2.1.0/modules/es6.number.constructor", "npm:core-js@2.1.0/modules/es6.number.to-fixed", "npm:core-js@2.1.0/modules/es6.number.to-precision", "npm:core-js@2.1.0/modules/es6.number.epsilon", "npm:core-js@2.1.0/modules/es6.number.is-finite", "npm:core-js@2.1.0/modules/es6.number.is-integer", "npm:core-js@2.1.0/modules/es6.number.is-nan", "npm:core-js@2.1.0/modules/es6.number.is-safe-integer", "npm:core-js@2.1.0/modules/es6.number.max-safe-integer", "npm:core-js@2.1.0/modules/es6.number.min-safe-integer", "npm:core-js@2.1.0/modules/es6.number.parse-float", "npm:core-js@2.1.0/modules/es6.number.parse-int", "npm:core-js@2.1.0/modules/es6.math.acosh", "npm:core-js@2.1.0/modules/es6.math.asinh", "npm:core-js@2.1.0/modules/es6.math.atanh", "npm:core-js@2.1.0/modules/es6.math.cbrt", "npm:core-js@2.1.0/modules/es6.math.clz32", "npm:core-js@2.1.0/modules/es6.math.cosh", "npm:core-js@2.1.0/modules/es6.math.expm1", "npm:core-js@2.1.0/modules/es6.math.fround", "npm:core-js@2.1.0/modules/es6.math.hypot", "npm:core-js@2.1.0/modules/es6.math.imul", "npm:core-js@2.1.0/modules/es6.math.log10", "npm:core-js@2.1.0/modules/es6.math.log1p", "npm:core-js@2.1.0/modules/es6.math.log2", "npm:core-js@2.1.0/modules/es6.math.sign", "npm:core-js@2.1.0/modules/es6.math.sinh", "npm:core-js@2.1.0/modules/es6.math.tanh", "npm:core-js@2.1.0/modules/es6.math.trunc", "npm:core-js@2.1.0/modules/es6.string.from-code-point", "npm:core-js@2.1.0/modules/es6.string.raw", "npm:core-js@2.1.0/modules/es6.string.trim", "npm:core-js@2.1.0/modules/es6.string.iterator", "npm:core-js@2.1.0/modules/es6.string.code-point-at", "npm:core-js@2.1.0/modules/es6.string.ends-with", "npm:core-js@2.1.0/modules/es6.string.includes", "npm:core-js@2.1.0/modules/es6.string.repeat", "npm:core-js@2.1.0/modules/es6.string.starts-with", "npm:core-js@2.1.0/modules/es6.string.anchor", "npm:core-js@2.1.0/modules/es6.string.big", "npm:core-js@2.1.0/modules/es6.string.blink", "npm:core-js@2.1.0/modules/es6.string.bold", "npm:core-js@2.1.0/modules/es6.string.fixed", "npm:core-js@2.1.0/modules/es6.string.fontcolor", "npm:core-js@2.1.0/modules/es6.string.fontsize", "npm:core-js@2.1.0/modules/es6.string.italics", "npm:core-js@2.1.0/modules/es6.string.link", "npm:core-js@2.1.0/modules/es6.string.small", "npm:core-js@2.1.0/modules/es6.string.strike", "npm:core-js@2.1.0/modules/es6.string.sub", "npm:core-js@2.1.0/modules/es6.string.sup", "npm:core-js@2.1.0/modules/es6.date.now", "npm:core-js@2.1.0/modules/es6.date.to-string", "npm:core-js@2.1.0/modules/es6.date.to-iso-string", "npm:core-js@2.1.0/modules/es6.date.to-json", "npm:core-js@2.1.0/modules/es6.array.is-array", "npm:core-js@2.1.0/modules/es6.array.from", "npm:core-js@2.1.0/modules/es6.array.of", "npm:core-js@2.1.0/modules/es6.array.join", "npm:core-js@2.1.0/modules/es6.array.slice", "npm:core-js@2.1.0/modules/es6.array.sort", "npm:core-js@2.1.0/modules/es6.array.for-each", "npm:core-js@2.1.0/modules/es6.array.map", "npm:core-js@2.1.0/modules/es6.array.filter", "npm:core-js@2.1.0/modules/es6.array.some", "npm:core-js@2.1.0/modules/es6.array.every", "npm:core-js@2.1.0/modules/es6.array.reduce", "npm:core-js@2.1.0/modules/es6.array.reduce-right", "npm:core-js@2.1.0/modules/es6.array.index-of", "npm:core-js@2.1.0/modules/es6.array.last-index-of", "npm:core-js@2.1.0/modules/es6.array.copy-within", "npm:core-js@2.1.0/modules/es6.array.fill", "npm:core-js@2.1.0/modules/es6.array.find", "npm:core-js@2.1.0/modules/es6.array.find-index", "npm:core-js@2.1.0/modules/es6.array.species", "npm:core-js@2.1.0/modules/es6.array.iterator", "npm:core-js@2.1.0/modules/es6.regexp.constructor", "npm:core-js@2.1.0/modules/es6.regexp.to-string", "npm:core-js@2.1.0/modules/es6.regexp.flags", "npm:core-js@2.1.0/modules/es6.regexp.match", "npm:core-js@2.1.0/modules/es6.regexp.replace", "npm:core-js@2.1.0/modules/es6.regexp.search", "npm:core-js@2.1.0/modules/es6.regexp.split", "npm:core-js@2.1.0/modules/es6.promise", "npm:core-js@2.1.0/modules/es6.map", "npm:core-js@2.1.0/modules/es6.set", "npm:core-js@2.1.0/modules/es6.weak-map", "npm:core-js@2.1.0/modules/es6.weak-set", "npm:core-js@2.1.0/modules/es6.typed.array-buffer", "npm:core-js@2.1.0/modules/es6.typed.data-view", "npm:core-js@2.1.0/modules/es6.typed.int8-array", "npm:core-js@2.1.0/modules/es6.typed.uint8-array", "npm:core-js@2.1.0/modules/es6.typed.uint8-clamped-array", "npm:core-js@2.1.0/modules/es6.typed.int16-array", "npm:core-js@2.1.0/modules/es6.typed.uint16-array", "npm:core-js@2.1.0/modules/es6.typed.int32-array", "npm:core-js@2.1.0/modules/es6.typed.uint32-array", "npm:core-js@2.1.0/modules/es6.typed.float32-array", "npm:core-js@2.1.0/modules/es6.typed.float64-array", "npm:core-js@2.1.0/modules/es6.reflect.apply", "npm:core-js@2.1.0/modules/es6.reflect.construct", "npm:core-js@2.1.0/modules/es6.reflect.define-property", "npm:core-js@2.1.0/modules/es6.reflect.delete-property", "npm:core-js@2.1.0/modules/es6.reflect.enumerate", "npm:core-js@2.1.0/modules/es6.reflect.get", "npm:core-js@2.1.0/modules/es6.reflect.get-own-property-descriptor", "npm:core-js@2.1.0/modules/es6.reflect.get-prototype-of", "npm:core-js@2.1.0/modules/es6.reflect.has", "npm:core-js@2.1.0/modules/es6.reflect.is-extensible", "npm:core-js@2.1.0/modules/es6.reflect.own-keys", "npm:core-js@2.1.0/modules/es6.reflect.prevent-extensions", "npm:core-js@2.1.0/modules/es6.reflect.set", "npm:core-js@2.1.0/modules/es6.reflect.set-prototype-of", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/_collection", ["npm:core-js@2.1.0/modules/_global", "npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_redefine", "npm:core-js@2.1.0/modules/_redefine-all", "npm:core-js@2.1.0/modules/_meta", "npm:core-js@2.1.0/modules/_for-of", "npm:core-js@2.1.0/modules/_an-instance", "npm:core-js@2.1.0/modules/_is-object", "npm:core-js@2.1.0/modules/_fails", "npm:core-js@2.1.0/modules/_iter-detect", "npm:core-js@2.1.0/modules/_set-to-string-tag", "npm:core-js@2.1.0/modules/_inherit-if-required"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.symbol");
-  require("npm:core-js@2.1.0/modules/es6.object.create");
-  require("npm:core-js@2.1.0/modules/es6.object.define-property");
-  require("npm:core-js@2.1.0/modules/es6.object.define-properties");
-  require("npm:core-js@2.1.0/modules/es6.object.get-own-property-descriptor");
-  require("npm:core-js@2.1.0/modules/es6.object.get-prototype-of");
-  require("npm:core-js@2.1.0/modules/es6.object.keys");
-  require("npm:core-js@2.1.0/modules/es6.object.get-own-property-names");
-  require("npm:core-js@2.1.0/modules/es6.object.freeze");
-  require("npm:core-js@2.1.0/modules/es6.object.seal");
-  require("npm:core-js@2.1.0/modules/es6.object.prevent-extensions");
-  require("npm:core-js@2.1.0/modules/es6.object.is-frozen");
-  require("npm:core-js@2.1.0/modules/es6.object.is-sealed");
-  require("npm:core-js@2.1.0/modules/es6.object.is-extensible");
-  require("npm:core-js@2.1.0/modules/es6.object.assign");
-  require("npm:core-js@2.1.0/modules/es6.object.is");
-  require("npm:core-js@2.1.0/modules/es6.object.set-prototype-of");
-  require("npm:core-js@2.1.0/modules/es6.object.to-string");
-  require("npm:core-js@2.1.0/modules/es6.function.bind");
-  require("npm:core-js@2.1.0/modules/es6.function.name");
-  require("npm:core-js@2.1.0/modules/es6.function.has-instance");
-  require("npm:core-js@2.1.0/modules/es6.parse-int");
-  require("npm:core-js@2.1.0/modules/es6.parse-float");
-  require("npm:core-js@2.1.0/modules/es6.number.constructor");
-  require("npm:core-js@2.1.0/modules/es6.number.to-fixed");
-  require("npm:core-js@2.1.0/modules/es6.number.to-precision");
-  require("npm:core-js@2.1.0/modules/es6.number.epsilon");
-  require("npm:core-js@2.1.0/modules/es6.number.is-finite");
-  require("npm:core-js@2.1.0/modules/es6.number.is-integer");
-  require("npm:core-js@2.1.0/modules/es6.number.is-nan");
-  require("npm:core-js@2.1.0/modules/es6.number.is-safe-integer");
-  require("npm:core-js@2.1.0/modules/es6.number.max-safe-integer");
-  require("npm:core-js@2.1.0/modules/es6.number.min-safe-integer");
-  require("npm:core-js@2.1.0/modules/es6.number.parse-float");
-  require("npm:core-js@2.1.0/modules/es6.number.parse-int");
-  require("npm:core-js@2.1.0/modules/es6.math.acosh");
-  require("npm:core-js@2.1.0/modules/es6.math.asinh");
-  require("npm:core-js@2.1.0/modules/es6.math.atanh");
-  require("npm:core-js@2.1.0/modules/es6.math.cbrt");
-  require("npm:core-js@2.1.0/modules/es6.math.clz32");
-  require("npm:core-js@2.1.0/modules/es6.math.cosh");
-  require("npm:core-js@2.1.0/modules/es6.math.expm1");
-  require("npm:core-js@2.1.0/modules/es6.math.fround");
-  require("npm:core-js@2.1.0/modules/es6.math.hypot");
-  require("npm:core-js@2.1.0/modules/es6.math.imul");
-  require("npm:core-js@2.1.0/modules/es6.math.log10");
-  require("npm:core-js@2.1.0/modules/es6.math.log1p");
-  require("npm:core-js@2.1.0/modules/es6.math.log2");
-  require("npm:core-js@2.1.0/modules/es6.math.sign");
-  require("npm:core-js@2.1.0/modules/es6.math.sinh");
-  require("npm:core-js@2.1.0/modules/es6.math.tanh");
-  require("npm:core-js@2.1.0/modules/es6.math.trunc");
-  require("npm:core-js@2.1.0/modules/es6.string.from-code-point");
-  require("npm:core-js@2.1.0/modules/es6.string.raw");
-  require("npm:core-js@2.1.0/modules/es6.string.trim");
-  require("npm:core-js@2.1.0/modules/es6.string.iterator");
-  require("npm:core-js@2.1.0/modules/es6.string.code-point-at");
-  require("npm:core-js@2.1.0/modules/es6.string.ends-with");
-  require("npm:core-js@2.1.0/modules/es6.string.includes");
-  require("npm:core-js@2.1.0/modules/es6.string.repeat");
-  require("npm:core-js@2.1.0/modules/es6.string.starts-with");
-  require("npm:core-js@2.1.0/modules/es6.string.anchor");
-  require("npm:core-js@2.1.0/modules/es6.string.big");
-  require("npm:core-js@2.1.0/modules/es6.string.blink");
-  require("npm:core-js@2.1.0/modules/es6.string.bold");
-  require("npm:core-js@2.1.0/modules/es6.string.fixed");
-  require("npm:core-js@2.1.0/modules/es6.string.fontcolor");
-  require("npm:core-js@2.1.0/modules/es6.string.fontsize");
-  require("npm:core-js@2.1.0/modules/es6.string.italics");
-  require("npm:core-js@2.1.0/modules/es6.string.link");
-  require("npm:core-js@2.1.0/modules/es6.string.small");
-  require("npm:core-js@2.1.0/modules/es6.string.strike");
-  require("npm:core-js@2.1.0/modules/es6.string.sub");
-  require("npm:core-js@2.1.0/modules/es6.string.sup");
-  require("npm:core-js@2.1.0/modules/es6.date.now");
-  require("npm:core-js@2.1.0/modules/es6.date.to-string");
-  require("npm:core-js@2.1.0/modules/es6.date.to-iso-string");
-  require("npm:core-js@2.1.0/modules/es6.date.to-json");
-  require("npm:core-js@2.1.0/modules/es6.array.is-array");
-  require("npm:core-js@2.1.0/modules/es6.array.from");
-  require("npm:core-js@2.1.0/modules/es6.array.of");
-  require("npm:core-js@2.1.0/modules/es6.array.join");
-  require("npm:core-js@2.1.0/modules/es6.array.slice");
-  require("npm:core-js@2.1.0/modules/es6.array.sort");
-  require("npm:core-js@2.1.0/modules/es6.array.for-each");
-  require("npm:core-js@2.1.0/modules/es6.array.map");
-  require("npm:core-js@2.1.0/modules/es6.array.filter");
-  require("npm:core-js@2.1.0/modules/es6.array.some");
-  require("npm:core-js@2.1.0/modules/es6.array.every");
-  require("npm:core-js@2.1.0/modules/es6.array.reduce");
-  require("npm:core-js@2.1.0/modules/es6.array.reduce-right");
-  require("npm:core-js@2.1.0/modules/es6.array.index-of");
-  require("npm:core-js@2.1.0/modules/es6.array.last-index-of");
-  require("npm:core-js@2.1.0/modules/es6.array.copy-within");
-  require("npm:core-js@2.1.0/modules/es6.array.fill");
-  require("npm:core-js@2.1.0/modules/es6.array.find");
-  require("npm:core-js@2.1.0/modules/es6.array.find-index");
-  require("npm:core-js@2.1.0/modules/es6.array.species");
-  require("npm:core-js@2.1.0/modules/es6.array.iterator");
-  require("npm:core-js@2.1.0/modules/es6.regexp.constructor");
-  require("npm:core-js@2.1.0/modules/es6.regexp.to-string");
-  require("npm:core-js@2.1.0/modules/es6.regexp.flags");
-  require("npm:core-js@2.1.0/modules/es6.regexp.match");
-  require("npm:core-js@2.1.0/modules/es6.regexp.replace");
-  require("npm:core-js@2.1.0/modules/es6.regexp.search");
-  require("npm:core-js@2.1.0/modules/es6.regexp.split");
-  require("npm:core-js@2.1.0/modules/es6.promise");
-  require("npm:core-js@2.1.0/modules/es6.map");
-  require("npm:core-js@2.1.0/modules/es6.set");
-  require("npm:core-js@2.1.0/modules/es6.weak-map");
-  require("npm:core-js@2.1.0/modules/es6.weak-set");
-  require("npm:core-js@2.1.0/modules/es6.typed.array-buffer");
-  require("npm:core-js@2.1.0/modules/es6.typed.data-view");
-  require("npm:core-js@2.1.0/modules/es6.typed.int8-array");
-  require("npm:core-js@2.1.0/modules/es6.typed.uint8-array");
-  require("npm:core-js@2.1.0/modules/es6.typed.uint8-clamped-array");
-  require("npm:core-js@2.1.0/modules/es6.typed.int16-array");
-  require("npm:core-js@2.1.0/modules/es6.typed.uint16-array");
-  require("npm:core-js@2.1.0/modules/es6.typed.int32-array");
-  require("npm:core-js@2.1.0/modules/es6.typed.uint32-array");
-  require("npm:core-js@2.1.0/modules/es6.typed.float32-array");
-  require("npm:core-js@2.1.0/modules/es6.typed.float64-array");
-  require("npm:core-js@2.1.0/modules/es6.reflect.apply");
-  require("npm:core-js@2.1.0/modules/es6.reflect.construct");
-  require("npm:core-js@2.1.0/modules/es6.reflect.define-property");
-  require("npm:core-js@2.1.0/modules/es6.reflect.delete-property");
-  require("npm:core-js@2.1.0/modules/es6.reflect.enumerate");
-  require("npm:core-js@2.1.0/modules/es6.reflect.get");
-  require("npm:core-js@2.1.0/modules/es6.reflect.get-own-property-descriptor");
-  require("npm:core-js@2.1.0/modules/es6.reflect.get-prototype-of");
-  require("npm:core-js@2.1.0/modules/es6.reflect.has");
-  require("npm:core-js@2.1.0/modules/es6.reflect.is-extensible");
-  require("npm:core-js@2.1.0/modules/es6.reflect.own-keys");
-  require("npm:core-js@2.1.0/modules/es6.reflect.prevent-extensions");
-  require("npm:core-js@2.1.0/modules/es6.reflect.set");
-  require("npm:core-js@2.1.0/modules/es6.reflect.set-prototype-of");
-  module.exports = require("npm:core-js@2.1.0/modules/_core");
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/web.dom.iterable", ["npm:core-js@2.1.0/modules/es6.array.iterator", "npm:core-js@2.1.0/modules/_redefine", "npm:core-js@2.1.0/modules/_global", "npm:core-js@2.1.0/modules/_hide", "npm:core-js@2.1.0/modules/_iterators", "npm:core-js@2.1.0/modules/_wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $iterators = require("npm:core-js@2.1.0/modules/es6.array.iterator"),
+  'use strict';
+  var global = require("npm:core-js@2.1.0/modules/_global"),
+      $export = require("npm:core-js@2.1.0/modules/_export"),
       redefine = require("npm:core-js@2.1.0/modules/_redefine"),
-      global = require("npm:core-js@2.1.0/modules/_global"),
-      hide = require("npm:core-js@2.1.0/modules/_hide"),
-      Iterators = require("npm:core-js@2.1.0/modules/_iterators"),
-      wks = require("npm:core-js@2.1.0/modules/_wks"),
-      ITERATOR = wks('iterator'),
-      TO_STRING_TAG = wks('toStringTag'),
-      ArrayValues = Iterators.Array;
-  for (var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList', 'CSSRuleList'],
-      i = 0; i < 5; i++) {
-    var NAME = collections[i],
-        Collection = global[NAME],
-        proto = Collection && Collection.prototype,
-        key;
-    if (proto) {
-      if (!proto[ITERATOR])
-        hide(proto, ITERATOR, ArrayValues);
-      if (!proto[TO_STRING_TAG])
-        hide(proto, TO_STRING_TAG, NAME);
-      Iterators[NAME] = ArrayValues;
-      for (key in $iterators)
-        if (!proto[key])
-          redefine(proto, key, $iterators[key], true);
+      redefineAll = require("npm:core-js@2.1.0/modules/_redefine-all"),
+      meta = require("npm:core-js@2.1.0/modules/_meta"),
+      forOf = require("npm:core-js@2.1.0/modules/_for-of"),
+      anInstance = require("npm:core-js@2.1.0/modules/_an-instance"),
+      isObject = require("npm:core-js@2.1.0/modules/_is-object"),
+      fails = require("npm:core-js@2.1.0/modules/_fails"),
+      $iterDetect = require("npm:core-js@2.1.0/modules/_iter-detect"),
+      setToStringTag = require("npm:core-js@2.1.0/modules/_set-to-string-tag"),
+      inheritIfRequired = require("npm:core-js@2.1.0/modules/_inherit-if-required");
+  module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
+    var Base = global[NAME],
+        C = Base,
+        ADDER = IS_MAP ? 'set' : 'add',
+        proto = C && C.prototype,
+        O = {};
+    var fixMethod = function(KEY) {
+      var fn = proto[KEY];
+      redefine(proto, KEY, KEY == 'delete' ? function(a) {
+        return IS_WEAK && !isObject(a) ? false : fn.call(this, a === 0 ? 0 : a);
+      } : KEY == 'has' ? function has(a) {
+        return IS_WEAK && !isObject(a) ? false : fn.call(this, a === 0 ? 0 : a);
+      } : KEY == 'get' ? function get(a) {
+        return IS_WEAK && !isObject(a) ? undefined : fn.call(this, a === 0 ? 0 : a);
+      } : KEY == 'add' ? function add(a) {
+        fn.call(this, a === 0 ? 0 : a);
+        return this;
+      } : function set(a, b) {
+        fn.call(this, a === 0 ? 0 : a, b);
+        return this;
+      });
+    };
+    if (typeof C != 'function' || !(IS_WEAK || proto.forEach && !fails(function() {
+      new C().entries().next();
+    }))) {
+      C = common.getConstructor(wrapper, NAME, IS_MAP, ADDER);
+      redefineAll(C.prototype, methods);
+      meta.NEED = true;
+    } else {
+      var instance = new C,
+          HASNT_CHAINING = instance[ADDER](IS_WEAK ? {} : -0, 1) != instance,
+          THROWS_ON_PRIMITIVES = fails(function() {
+            instance.has(1);
+          }),
+          ACCEPT_ITERABLES = $iterDetect(function(iter) {
+            new C(iter);
+          }),
+          BUGGY_ZERO = !IS_WEAK && fails(function() {
+            var $instance = new C(),
+                index = 5;
+            while (index--)
+              $instance[ADDER](index, index);
+            return !$instance.has(-0);
+          });
+      if (!ACCEPT_ITERABLES) {
+        C = wrapper(function(target, iterable) {
+          anInstance(target, C, NAME);
+          var that = inheritIfRequired(new Base, target, C);
+          if (iterable != undefined)
+            forOf(iterable, IS_MAP, that[ADDER], that);
+          return that;
+        });
+        C.prototype = proto;
+        proto.constructor = C;
+      }
+      if (THROWS_ON_PRIMITIVES || BUGGY_ZERO) {
+        fixMethod('delete');
+        fixMethod('has');
+        IS_MAP && fixMethod('get');
+      }
+      if (BUGGY_ZERO || HASNT_CHAINING)
+        fixMethod(ADDER);
+      if (IS_WEAK && proto.clear)
+        delete proto.clear;
     }
-  }
+    setToStringTag(C, NAME);
+    O[NAME] = C;
+    $export($export.G + $export.W + $export.F * (C != Base), O);
+    if (!IS_WEAK)
+      common.setStrong(C, NAME, IS_MAP);
+    return C;
+  };
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/es6/map", ["npm:core-js@2.1.0/modules/es6.object.to-string", "npm:core-js@2.1.0/modules/es6.string.iterator", "npm:core-js@2.1.0/modules/web.dom.iterable", "npm:core-js@2.1.0/modules/es6.map", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.weak-set", ["npm:core-js@2.1.0/modules/_collection-weak", "npm:core-js@2.1.0/modules/_collection"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.object.to-string");
-  require("npm:core-js@2.1.0/modules/es6.string.iterator");
-  require("npm:core-js@2.1.0/modules/web.dom.iterable");
-  require("npm:core-js@2.1.0/modules/es6.map");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Map;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/es6/math", ["npm:core-js@2.1.0/modules/es6.math.acosh", "npm:core-js@2.1.0/modules/es6.math.asinh", "npm:core-js@2.1.0/modules/es6.math.atanh", "npm:core-js@2.1.0/modules/es6.math.cbrt", "npm:core-js@2.1.0/modules/es6.math.clz32", "npm:core-js@2.1.0/modules/es6.math.cosh", "npm:core-js@2.1.0/modules/es6.math.expm1", "npm:core-js@2.1.0/modules/es6.math.fround", "npm:core-js@2.1.0/modules/es6.math.hypot", "npm:core-js@2.1.0/modules/es6.math.imul", "npm:core-js@2.1.0/modules/es6.math.log10", "npm:core-js@2.1.0/modules/es6.math.log1p", "npm:core-js@2.1.0/modules/es6.math.log2", "npm:core-js@2.1.0/modules/es6.math.sign", "npm:core-js@2.1.0/modules/es6.math.sinh", "npm:core-js@2.1.0/modules/es6.math.tanh", "npm:core-js@2.1.0/modules/es6.math.trunc", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.math.acosh");
-  require("npm:core-js@2.1.0/modules/es6.math.asinh");
-  require("npm:core-js@2.1.0/modules/es6.math.atanh");
-  require("npm:core-js@2.1.0/modules/es6.math.cbrt");
-  require("npm:core-js@2.1.0/modules/es6.math.clz32");
-  require("npm:core-js@2.1.0/modules/es6.math.cosh");
-  require("npm:core-js@2.1.0/modules/es6.math.expm1");
-  require("npm:core-js@2.1.0/modules/es6.math.fround");
-  require("npm:core-js@2.1.0/modules/es6.math.hypot");
-  require("npm:core-js@2.1.0/modules/es6.math.imul");
-  require("npm:core-js@2.1.0/modules/es6.math.log10");
-  require("npm:core-js@2.1.0/modules/es6.math.log1p");
-  require("npm:core-js@2.1.0/modules/es6.math.log2");
-  require("npm:core-js@2.1.0/modules/es6.math.sign");
-  require("npm:core-js@2.1.0/modules/es6.math.sinh");
-  require("npm:core-js@2.1.0/modules/es6.math.tanh");
-  require("npm:core-js@2.1.0/modules/es6.math.trunc");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Math;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/es6/number", ["npm:core-js@2.1.0/modules/es6.number.constructor", "npm:core-js@2.1.0/modules/es6.number.to-fixed", "npm:core-js@2.1.0/modules/es6.number.to-precision", "npm:core-js@2.1.0/modules/es6.number.epsilon", "npm:core-js@2.1.0/modules/es6.number.is-finite", "npm:core-js@2.1.0/modules/es6.number.is-integer", "npm:core-js@2.1.0/modules/es6.number.is-nan", "npm:core-js@2.1.0/modules/es6.number.is-safe-integer", "npm:core-js@2.1.0/modules/es6.number.max-safe-integer", "npm:core-js@2.1.0/modules/es6.number.min-safe-integer", "npm:core-js@2.1.0/modules/es6.number.parse-float", "npm:core-js@2.1.0/modules/es6.number.parse-int", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.number.constructor");
-  require("npm:core-js@2.1.0/modules/es6.number.to-fixed");
-  require("npm:core-js@2.1.0/modules/es6.number.to-precision");
-  require("npm:core-js@2.1.0/modules/es6.number.epsilon");
-  require("npm:core-js@2.1.0/modules/es6.number.is-finite");
-  require("npm:core-js@2.1.0/modules/es6.number.is-integer");
-  require("npm:core-js@2.1.0/modules/es6.number.is-nan");
-  require("npm:core-js@2.1.0/modules/es6.number.is-safe-integer");
-  require("npm:core-js@2.1.0/modules/es6.number.max-safe-integer");
-  require("npm:core-js@2.1.0/modules/es6.number.min-safe-integer");
-  require("npm:core-js@2.1.0/modules/es6.number.parse-float");
-  require("npm:core-js@2.1.0/modules/es6.number.parse-int");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Number;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/es6/object", ["npm:core-js@2.1.0/modules/es6.symbol", "npm:core-js@2.1.0/modules/es6.object.create", "npm:core-js@2.1.0/modules/es6.object.define-property", "npm:core-js@2.1.0/modules/es6.object.define-properties", "npm:core-js@2.1.0/modules/es6.object.get-own-property-descriptor", "npm:core-js@2.1.0/modules/es6.object.get-prototype-of", "npm:core-js@2.1.0/modules/es6.object.keys", "npm:core-js@2.1.0/modules/es6.object.get-own-property-names", "npm:core-js@2.1.0/modules/es6.object.freeze", "npm:core-js@2.1.0/modules/es6.object.seal", "npm:core-js@2.1.0/modules/es6.object.prevent-extensions", "npm:core-js@2.1.0/modules/es6.object.is-frozen", "npm:core-js@2.1.0/modules/es6.object.is-sealed", "npm:core-js@2.1.0/modules/es6.object.is-extensible", "npm:core-js@2.1.0/modules/es6.object.assign", "npm:core-js@2.1.0/modules/es6.object.is", "npm:core-js@2.1.0/modules/es6.object.set-prototype-of", "npm:core-js@2.1.0/modules/es6.object.to-string", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.symbol");
-  require("npm:core-js@2.1.0/modules/es6.object.create");
-  require("npm:core-js@2.1.0/modules/es6.object.define-property");
-  require("npm:core-js@2.1.0/modules/es6.object.define-properties");
-  require("npm:core-js@2.1.0/modules/es6.object.get-own-property-descriptor");
-  require("npm:core-js@2.1.0/modules/es6.object.get-prototype-of");
-  require("npm:core-js@2.1.0/modules/es6.object.keys");
-  require("npm:core-js@2.1.0/modules/es6.object.get-own-property-names");
-  require("npm:core-js@2.1.0/modules/es6.object.freeze");
-  require("npm:core-js@2.1.0/modules/es6.object.seal");
-  require("npm:core-js@2.1.0/modules/es6.object.prevent-extensions");
-  require("npm:core-js@2.1.0/modules/es6.object.is-frozen");
-  require("npm:core-js@2.1.0/modules/es6.object.is-sealed");
-  require("npm:core-js@2.1.0/modules/es6.object.is-extensible");
-  require("npm:core-js@2.1.0/modules/es6.object.assign");
-  require("npm:core-js@2.1.0/modules/es6.object.is");
-  require("npm:core-js@2.1.0/modules/es6.object.set-prototype-of");
-  require("npm:core-js@2.1.0/modules/es6.object.to-string");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Object;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/es6/parse-float", ["npm:core-js@2.1.0/modules/es6.parse-float", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.parse-float");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").parseFloat;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/es6/parse-int", ["npm:core-js@2.1.0/modules/es6.parse-int", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.parse-int");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").parseInt;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/es6/promise", ["npm:core-js@2.1.0/modules/es6.object.to-string", "npm:core-js@2.1.0/modules/es6.string.iterator", "npm:core-js@2.1.0/modules/web.dom.iterable", "npm:core-js@2.1.0/modules/es6.promise", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.object.to-string");
-  require("npm:core-js@2.1.0/modules/es6.string.iterator");
-  require("npm:core-js@2.1.0/modules/web.dom.iterable");
-  require("npm:core-js@2.1.0/modules/es6.promise");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Promise;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/es6/reflect", ["npm:core-js@2.1.0/modules/es6.reflect.apply", "npm:core-js@2.1.0/modules/es6.reflect.construct", "npm:core-js@2.1.0/modules/es6.reflect.define-property", "npm:core-js@2.1.0/modules/es6.reflect.delete-property", "npm:core-js@2.1.0/modules/es6.reflect.enumerate", "npm:core-js@2.1.0/modules/es6.reflect.get", "npm:core-js@2.1.0/modules/es6.reflect.get-own-property-descriptor", "npm:core-js@2.1.0/modules/es6.reflect.get-prototype-of", "npm:core-js@2.1.0/modules/es6.reflect.has", "npm:core-js@2.1.0/modules/es6.reflect.is-extensible", "npm:core-js@2.1.0/modules/es6.reflect.own-keys", "npm:core-js@2.1.0/modules/es6.reflect.prevent-extensions", "npm:core-js@2.1.0/modules/es6.reflect.set", "npm:core-js@2.1.0/modules/es6.reflect.set-prototype-of", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.reflect.apply");
-  require("npm:core-js@2.1.0/modules/es6.reflect.construct");
-  require("npm:core-js@2.1.0/modules/es6.reflect.define-property");
-  require("npm:core-js@2.1.0/modules/es6.reflect.delete-property");
-  require("npm:core-js@2.1.0/modules/es6.reflect.enumerate");
-  require("npm:core-js@2.1.0/modules/es6.reflect.get");
-  require("npm:core-js@2.1.0/modules/es6.reflect.get-own-property-descriptor");
-  require("npm:core-js@2.1.0/modules/es6.reflect.get-prototype-of");
-  require("npm:core-js@2.1.0/modules/es6.reflect.has");
-  require("npm:core-js@2.1.0/modules/es6.reflect.is-extensible");
-  require("npm:core-js@2.1.0/modules/es6.reflect.own-keys");
-  require("npm:core-js@2.1.0/modules/es6.reflect.prevent-extensions");
-  require("npm:core-js@2.1.0/modules/es6.reflect.set");
-  require("npm:core-js@2.1.0/modules/es6.reflect.set-prototype-of");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Reflect;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/es6/regexp", ["npm:core-js@2.1.0/modules/es6.regexp.constructor", "npm:core-js@2.1.0/modules/es6.regexp.to-string", "npm:core-js@2.1.0/modules/es6.regexp.flags", "npm:core-js@2.1.0/modules/es6.regexp.match", "npm:core-js@2.1.0/modules/es6.regexp.replace", "npm:core-js@2.1.0/modules/es6.regexp.search", "npm:core-js@2.1.0/modules/es6.regexp.split", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.regexp.constructor");
-  require("npm:core-js@2.1.0/modules/es6.regexp.to-string");
-  require("npm:core-js@2.1.0/modules/es6.regexp.flags");
-  require("npm:core-js@2.1.0/modules/es6.regexp.match");
-  require("npm:core-js@2.1.0/modules/es6.regexp.replace");
-  require("npm:core-js@2.1.0/modules/es6.regexp.search");
-  require("npm:core-js@2.1.0/modules/es6.regexp.split");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").RegExp;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/es6/set", ["npm:core-js@2.1.0/modules/es6.object.to-string", "npm:core-js@2.1.0/modules/es6.string.iterator", "npm:core-js@2.1.0/modules/web.dom.iterable", "npm:core-js@2.1.0/modules/es6.set", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.object.to-string");
-  require("npm:core-js@2.1.0/modules/es6.string.iterator");
-  require("npm:core-js@2.1.0/modules/web.dom.iterable");
-  require("npm:core-js@2.1.0/modules/es6.set");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Set;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/es6/string", ["npm:core-js@2.1.0/modules/es6.string.from-code-point", "npm:core-js@2.1.0/modules/es6.string.raw", "npm:core-js@2.1.0/modules/es6.string.trim", "npm:core-js@2.1.0/modules/es6.string.iterator", "npm:core-js@2.1.0/modules/es6.string.code-point-at", "npm:core-js@2.1.0/modules/es6.string.ends-with", "npm:core-js@2.1.0/modules/es6.string.includes", "npm:core-js@2.1.0/modules/es6.string.repeat", "npm:core-js@2.1.0/modules/es6.string.starts-with", "npm:core-js@2.1.0/modules/es6.string.anchor", "npm:core-js@2.1.0/modules/es6.string.big", "npm:core-js@2.1.0/modules/es6.string.blink", "npm:core-js@2.1.0/modules/es6.string.bold", "npm:core-js@2.1.0/modules/es6.string.fixed", "npm:core-js@2.1.0/modules/es6.string.fontcolor", "npm:core-js@2.1.0/modules/es6.string.fontsize", "npm:core-js@2.1.0/modules/es6.string.italics", "npm:core-js@2.1.0/modules/es6.string.link", "npm:core-js@2.1.0/modules/es6.string.small", "npm:core-js@2.1.0/modules/es6.string.strike", "npm:core-js@2.1.0/modules/es6.string.sub", "npm:core-js@2.1.0/modules/es6.string.sup", "npm:core-js@2.1.0/modules/es6.regexp.match", "npm:core-js@2.1.0/modules/es6.regexp.replace", "npm:core-js@2.1.0/modules/es6.regexp.search", "npm:core-js@2.1.0/modules/es6.regexp.split", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.string.from-code-point");
-  require("npm:core-js@2.1.0/modules/es6.string.raw");
-  require("npm:core-js@2.1.0/modules/es6.string.trim");
-  require("npm:core-js@2.1.0/modules/es6.string.iterator");
-  require("npm:core-js@2.1.0/modules/es6.string.code-point-at");
-  require("npm:core-js@2.1.0/modules/es6.string.ends-with");
-  require("npm:core-js@2.1.0/modules/es6.string.includes");
-  require("npm:core-js@2.1.0/modules/es6.string.repeat");
-  require("npm:core-js@2.1.0/modules/es6.string.starts-with");
-  require("npm:core-js@2.1.0/modules/es6.string.anchor");
-  require("npm:core-js@2.1.0/modules/es6.string.big");
-  require("npm:core-js@2.1.0/modules/es6.string.blink");
-  require("npm:core-js@2.1.0/modules/es6.string.bold");
-  require("npm:core-js@2.1.0/modules/es6.string.fixed");
-  require("npm:core-js@2.1.0/modules/es6.string.fontcolor");
-  require("npm:core-js@2.1.0/modules/es6.string.fontsize");
-  require("npm:core-js@2.1.0/modules/es6.string.italics");
-  require("npm:core-js@2.1.0/modules/es6.string.link");
-  require("npm:core-js@2.1.0/modules/es6.string.small");
-  require("npm:core-js@2.1.0/modules/es6.string.strike");
-  require("npm:core-js@2.1.0/modules/es6.string.sub");
-  require("npm:core-js@2.1.0/modules/es6.string.sup");
-  require("npm:core-js@2.1.0/modules/es6.regexp.match");
-  require("npm:core-js@2.1.0/modules/es6.regexp.replace");
-  require("npm:core-js@2.1.0/modules/es6.regexp.search");
-  require("npm:core-js@2.1.0/modules/es6.regexp.split");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").String;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/es6/symbol", ["npm:core-js@2.1.0/modules/es6.symbol", "npm:core-js@2.1.0/modules/es6.object.to-string", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.symbol");
-  require("npm:core-js@2.1.0/modules/es6.object.to-string");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Symbol;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/es6/typed", ["npm:core-js@2.1.0/modules/es6.typed.array-buffer", "npm:core-js@2.1.0/modules/es6.typed.data-view", "npm:core-js@2.1.0/modules/es6.typed.int8-array", "npm:core-js@2.1.0/modules/es6.typed.uint8-array", "npm:core-js@2.1.0/modules/es6.typed.uint8-clamped-array", "npm:core-js@2.1.0/modules/es6.typed.int16-array", "npm:core-js@2.1.0/modules/es6.typed.uint16-array", "npm:core-js@2.1.0/modules/es6.typed.int32-array", "npm:core-js@2.1.0/modules/es6.typed.uint32-array", "npm:core-js@2.1.0/modules/es6.typed.float32-array", "npm:core-js@2.1.0/modules/es6.typed.float64-array", "npm:core-js@2.1.0/modules/es6.object.to-string", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.typed.array-buffer");
-  require("npm:core-js@2.1.0/modules/es6.typed.data-view");
-  require("npm:core-js@2.1.0/modules/es6.typed.int8-array");
-  require("npm:core-js@2.1.0/modules/es6.typed.uint8-array");
-  require("npm:core-js@2.1.0/modules/es6.typed.uint8-clamped-array");
-  require("npm:core-js@2.1.0/modules/es6.typed.int16-array");
-  require("npm:core-js@2.1.0/modules/es6.typed.uint16-array");
-  require("npm:core-js@2.1.0/modules/es6.typed.int32-array");
-  require("npm:core-js@2.1.0/modules/es6.typed.uint32-array");
-  require("npm:core-js@2.1.0/modules/es6.typed.float32-array");
-  require("npm:core-js@2.1.0/modules/es6.typed.float64-array");
-  require("npm:core-js@2.1.0/modules/es6.object.to-string");
-  module.exports = require("npm:core-js@2.1.0/modules/_core");
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/es6/weak-map", ["npm:core-js@2.1.0/modules/es6.object.to-string", "npm:core-js@2.1.0/modules/es6.array.iterator", "npm:core-js@2.1.0/modules/es6.weak-map", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.object.to-string");
-  require("npm:core-js@2.1.0/modules/es6.array.iterator");
-  require("npm:core-js@2.1.0/modules/es6.weak-map");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").WeakMap;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/es6/weak-set", ["npm:core-js@2.1.0/modules/es6.object.to-string", "npm:core-js@2.1.0/modules/web.dom.iterable", "npm:core-js@2.1.0/modules/es6.weak-set", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es6.object.to-string");
-  require("npm:core-js@2.1.0/modules/web.dom.iterable");
-  require("npm:core-js@2.1.0/modules/es6.weak-set");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").WeakSet;
+  'use strict';
+  var weak = require("npm:core-js@2.1.0/modules/_collection-weak");
+  require("npm:core-js@2.1.0/modules/_collection")('WeakSet', function(get) {
+    return function WeakSet() {
+      return get(this, arguments.length > 0 ? arguments[0] : undefined);
+    };
+  }, {add: function add(value) {
+      return weak.def(this, value, true);
+    }}, weak, false, true);
   global.define = __define;
   return module.exports;
 });
@@ -27652,17 +26780,6 @@ System.registerDynamic("npm:core-js@2.1.0/modules/es7.array.includes", ["npm:cor
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/es7/array", ["npm:core-js@2.1.0/modules/es7.array.includes", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es7.array.includes");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Array;
-  global.define = __define;
-  return module.exports;
-});
-
 System.registerDynamic("npm:core-js@2.1.0/modules/es7.error.is-error", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_cof"], true, function(require, exports, module) {
   ;
   var global = this,
@@ -27677,115 +26794,146 @@ System.registerDynamic("npm:core-js@2.1.0/modules/es7.error.is-error", ["npm:cor
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/es7/error", ["npm:core-js@2.1.0/modules/es7.error.is-error", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/_collection-to-json", ["npm:core-js@2.1.0/modules/_classof", "npm:core-js@2.1.0/modules/_array-from-iterable"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es7.error.is-error");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Error;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es7.string.at", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_string-at"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      $at = require("npm:core-js@2.1.0/modules/_string-at")(true);
-  $export($export.P, 'String', {at: function at(pos) {
-      return $at(this, pos);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_string-pad", ["npm:core-js@2.1.0/modules/_to-length", "npm:core-js@2.1.0/modules/_string-repeat", "npm:core-js@2.1.0/modules/_defined"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var toLength = require("npm:core-js@2.1.0/modules/_to-length"),
-      repeat = require("npm:core-js@2.1.0/modules/_string-repeat"),
-      defined = require("npm:core-js@2.1.0/modules/_defined");
-  module.exports = function(that, maxLength, fillString, left) {
-    var S = String(defined(that)),
-        stringLength = S.length,
-        fillStr = fillString === undefined ? ' ' : String(fillString),
-        intMaxLength = toLength(maxLength);
-    if (intMaxLength <= stringLength)
-      return S;
-    if (fillStr == '')
-      fillStr = ' ';
-    var fillLen = intMaxLength - stringLength,
-        stringFiller = repeat.call(fillStr, Math.ceil(fillLen / fillStr.length));
-    if (stringFiller.length > fillLen)
-      stringFiller = stringFiller.slice(0, fillLen);
-    return left ? stringFiller + S : S + stringFiller;
+  var classof = require("npm:core-js@2.1.0/modules/_classof"),
+      from = require("npm:core-js@2.1.0/modules/_array-from-iterable");
+  module.exports = function(NAME) {
+    return function toJSON() {
+      if (classof(this) != NAME)
+        throw TypeError(NAME + "#toJSON isn't generic");
+      return from(this);
+    };
   };
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/es7.string.pad-start", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_string-pad"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es7.map.to-json", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_collection-to-json"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      $pad = require("npm:core-js@2.1.0/modules/_string-pad");
-  $export($export.P, 'String', {padStart: function padStart(maxLength) {
-      return $pad(this, maxLength, arguments.length > 1 ? arguments[1] : undefined, true);
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.P + $export.R, 'Map', {toJSON: require("npm:core-js@2.1.0/modules/_collection-to-json")('Map')});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es7.math.iaddh", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.S, 'Math', {iaddh: function iaddh(x0, x1, y0, y1) {
+      var $x0 = x0 >>> 0,
+          $x1 = x1 >>> 0,
+          $y0 = y0 >>> 0;
+      return $x1 + (y1 >>> 0) + (($x0 & $y0 | ($x0 | $y0) & ~($x0 + $y0 >>> 0)) >>> 31) | 0;
     }});
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/es7.string.pad-end", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_string-pad"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es7.math.imulh", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      $pad = require("npm:core-js@2.1.0/modules/_string-pad");
-  $export($export.P, 'String', {padEnd: function padEnd(maxLength) {
-      return $pad(this, maxLength, arguments.length > 1 ? arguments[1] : undefined, false);
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.S, 'Math', {imulh: function imulh(u, v) {
+      var UINT16 = 0xffff,
+          $u = +u,
+          $v = +v,
+          u0 = $u & UINT16,
+          v0 = $v & UINT16,
+          u1 = $u >> 16,
+          v1 = $v >> 16,
+          t = (u1 * v0 >>> 0) + (u0 * v0 >>> 16);
+      return u1 * v1 + (t >> 16) + ((u0 * v1 >>> 0) + (t & UINT16) >> 16);
     }});
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/es7.string.trim-left", ["npm:core-js@2.1.0/modules/_string-trim"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es7.math.isubh", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/modules/_string-trim")('trimLeft', function($trim) {
-    return function trimLeft() {
-      return $trim(this, 1);
-    };
-  }, 'trimStart');
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.S, 'Math', {isubh: function isubh(x0, x1, y0, y1) {
+      var $x0 = x0 >>> 0,
+          $x1 = x1 >>> 0,
+          $y0 = y0 >>> 0;
+      return $x1 - (y1 >>> 0) - ((~$x0 & $y0 | ~($x0 ^ $y0) & $x0 - $y0 >>> 0) >>> 31) | 0;
+    }});
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/es7.string.trim-right", ["npm:core-js@2.1.0/modules/_string-trim"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es7.math.umulh", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/modules/_string-trim")('trimRight', function($trim) {
-    return function trimRight() {
-      return $trim(this, 2);
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.S, 'Math', {umulh: function umulh(u, v) {
+      var UINT16 = 0xffff,
+          $u = +u,
+          $v = +v,
+          u0 = $u & UINT16,
+          v0 = $v & UINT16,
+          u1 = $u >>> 16,
+          v1 = $v >>> 16,
+          t = (u1 * v0 >>> 0) + (u0 * v0 >>> 16);
+      return u1 * v1 + (t >>> 16) + ((u0 * v1 >>> 0) + (t & UINT16) >>> 16);
+    }});
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/_object-to-array", ["npm:core-js@2.1.0/modules/_object-keys", "npm:core-js@2.1.0/modules/_to-iobject", "npm:core-js@2.1.0/modules/_object-pie"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var getKeys = require("npm:core-js@2.1.0/modules/_object-keys"),
+      toIObject = require("npm:core-js@2.1.0/modules/_to-iobject"),
+      isEnum = require("npm:core-js@2.1.0/modules/_object-pie").f;
+  module.exports = function(isEntries) {
+    return function(it) {
+      var O = toIObject(it),
+          keys = getKeys(O),
+          length = keys.length,
+          i = 0,
+          result = [],
+          key;
+      while (length > i)
+        if (isEnum.call(O, key = keys[i++])) {
+          result.push(isEntries ? [key, O[key]] : O[key]);
+        }
+      return result;
     };
-  }, 'trimEnd');
+  };
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:core-js@2.1.0/modules/es7.object.entries", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_object-to-array"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      $entries = require("npm:core-js@2.1.0/modules/_object-to-array")(true);
+  $export($export.S, 'Object', {entries: function entries(it) {
+      return $entries(it);
+    }});
   global.define = __define;
   return module.exports;
 });
@@ -27822,33 +26970,6 @@ System.registerDynamic("npm:core-js@2.1.0/modules/es7.object.get-own-property-de
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/_object-to-array", ["npm:core-js@2.1.0/modules/_object-keys", "npm:core-js@2.1.0/modules/_to-iobject", "npm:core-js@2.1.0/modules/_object-pie"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var getKeys = require("npm:core-js@2.1.0/modules/_object-keys"),
-      toIObject = require("npm:core-js@2.1.0/modules/_to-iobject"),
-      isEnum = require("npm:core-js@2.1.0/modules/_object-pie").f;
-  module.exports = function(isEntries) {
-    return function(it) {
-      var O = toIObject(it),
-          keys = getKeys(O),
-          length = keys.length,
-          i = 0,
-          result = [],
-          key;
-      while (length > i)
-        if (isEnum.call(O, key = keys[i++])) {
-          result.push(isEntries ? [key, O[key]] : O[key]);
-        }
-      return result;
-    };
-  };
-  global.define = __define;
-  return module.exports;
-});
-
 System.registerDynamic("npm:core-js@2.1.0/modules/es7.object.values", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_object-to-array"], true, function(require, exports, module) {
   ;
   var global = this,
@@ -27863,141 +26984,233 @@ System.registerDynamic("npm:core-js@2.1.0/modules/es7.object.values", ["npm:core
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/es7.object.entries", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_object-to-array"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/_collection-strong", ["npm:core-js@2.1.0/modules/_object-dp", "npm:core-js@2.1.0/modules/_object-create", "npm:core-js@2.1.0/modules/_hide", "npm:core-js@2.1.0/modules/_redefine-all", "npm:core-js@2.1.0/modules/_ctx", "npm:core-js@2.1.0/modules/_an-instance", "npm:core-js@2.1.0/modules/_defined", "npm:core-js@2.1.0/modules/_for-of", "npm:core-js@2.1.0/modules/_iter-define", "npm:core-js@2.1.0/modules/_iter-step", "npm:core-js@2.1.0/modules/_set-species", "npm:core-js@2.1.0/modules/_descriptors", "npm:core-js@2.1.0/modules/_meta"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export"),
-      $entries = require("npm:core-js@2.1.0/modules/_object-to-array")(true);
-  $export($export.S, 'Object', {entries: function entries(it) {
-      return $entries(it);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/_collection-to-json", ["npm:core-js@2.1.0/modules/_classof", "npm:core-js@2.1.0/modules/_array-from-iterable"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var classof = require("npm:core-js@2.1.0/modules/_classof"),
-      from = require("npm:core-js@2.1.0/modules/_array-from-iterable");
-  module.exports = function(NAME) {
-    return function toJSON() {
-      if (classof(this) != NAME)
-        throw TypeError(NAME + "#toJSON isn't generic");
-      return from(this);
-    };
+  'use strict';
+  var dP = require("npm:core-js@2.1.0/modules/_object-dp").f,
+      create = require("npm:core-js@2.1.0/modules/_object-create"),
+      hide = require("npm:core-js@2.1.0/modules/_hide"),
+      redefineAll = require("npm:core-js@2.1.0/modules/_redefine-all"),
+      ctx = require("npm:core-js@2.1.0/modules/_ctx"),
+      anInstance = require("npm:core-js@2.1.0/modules/_an-instance"),
+      defined = require("npm:core-js@2.1.0/modules/_defined"),
+      forOf = require("npm:core-js@2.1.0/modules/_for-of"),
+      $iterDefine = require("npm:core-js@2.1.0/modules/_iter-define"),
+      step = require("npm:core-js@2.1.0/modules/_iter-step"),
+      setSpecies = require("npm:core-js@2.1.0/modules/_set-species"),
+      DESCRIPTORS = require("npm:core-js@2.1.0/modules/_descriptors"),
+      fastKey = require("npm:core-js@2.1.0/modules/_meta").fastKey,
+      SIZE = DESCRIPTORS ? '_s' : 'size';
+  var getEntry = function(that, key) {
+    var index = fastKey(key),
+        entry;
+    if (index !== 'F')
+      return that._i[index];
+    for (entry = that._f; entry; entry = entry.n) {
+      if (entry.k == key)
+        return entry;
+    }
+  };
+  module.exports = {
+    getConstructor: function(wrapper, NAME, IS_MAP, ADDER) {
+      var C = wrapper(function(that, iterable) {
+        anInstance(that, C, NAME, '_i');
+        that._i = create(null);
+        that._f = undefined;
+        that._l = undefined;
+        that[SIZE] = 0;
+        if (iterable != undefined)
+          forOf(iterable, IS_MAP, that[ADDER], that);
+      });
+      redefineAll(C.prototype, {
+        clear: function clear() {
+          for (var that = this,
+              data = that._i,
+              entry = that._f; entry; entry = entry.n) {
+            entry.r = true;
+            if (entry.p)
+              entry.p = entry.p.n = undefined;
+            delete data[entry.i];
+          }
+          that._f = that._l = undefined;
+          that[SIZE] = 0;
+        },
+        'delete': function(key) {
+          var that = this,
+              entry = getEntry(that, key);
+          if (entry) {
+            var next = entry.n,
+                prev = entry.p;
+            delete that._i[entry.i];
+            entry.r = true;
+            if (prev)
+              prev.n = next;
+            if (next)
+              next.p = prev;
+            if (that._f == entry)
+              that._f = next;
+            if (that._l == entry)
+              that._l = prev;
+            that[SIZE]--;
+          }
+          return !!entry;
+        },
+        forEach: function forEach(callbackfn) {
+          anInstance(this, C, 'forEach');
+          var f = ctx(callbackfn, arguments.length > 1 ? arguments[1] : undefined, 3),
+              entry;
+          while (entry = entry ? entry.n : this._f) {
+            f(entry.v, entry.k, this);
+            while (entry && entry.r)
+              entry = entry.p;
+          }
+        },
+        has: function has(key) {
+          return !!getEntry(this, key);
+        }
+      });
+      if (DESCRIPTORS)
+        dP(C.prototype, 'size', {get: function() {
+            return defined(this[SIZE]);
+          }});
+      return C;
+    },
+    def: function(that, key, value) {
+      var entry = getEntry(that, key),
+          prev,
+          index;
+      if (entry) {
+        entry.v = value;
+      } else {
+        that._l = entry = {
+          i: index = fastKey(key, true),
+          k: key,
+          v: value,
+          p: prev = that._l,
+          n: undefined,
+          r: false
+        };
+        if (!that._f)
+          that._f = entry;
+        if (prev)
+          prev.n = entry;
+        that[SIZE]++;
+        if (index !== 'F')
+          that._i[index] = entry;
+      }
+      return that;
+    },
+    getEntry: getEntry,
+    setStrong: function(C, NAME, IS_MAP) {
+      $iterDefine(C, NAME, function(iterated, kind) {
+        this._t = iterated;
+        this._k = kind;
+        this._l = undefined;
+      }, function() {
+        var that = this,
+            kind = that._k,
+            entry = that._l;
+        while (entry && entry.r)
+          entry = entry.p;
+        if (!that._t || !(that._l = entry = entry ? entry.n : that._t._f)) {
+          that._t = undefined;
+          return step(1);
+        }
+        if (kind == 'keys')
+          return step(0, entry.k);
+        if (kind == 'values')
+          return step(0, entry.v);
+        return step(0, [entry.k, entry.v]);
+      }, IS_MAP ? 'entries' : 'values', !IS_MAP, true);
+      setSpecies(NAME);
+    }
   };
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/es7.map.to-json", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_collection-to-json"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.map", ["npm:core-js@2.1.0/modules/_collection-strong", "npm:core-js@2.1.0/modules/_collection"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.P + $export.R, 'Map', {toJSON: require("npm:core-js@2.1.0/modules/_collection-to-json")('Map')});
+  'use strict';
+  var strong = require("npm:core-js@2.1.0/modules/_collection-strong");
+  module.exports = require("npm:core-js@2.1.0/modules/_collection")('Map', function(get) {
+    return function Map() {
+      return get(this, arguments.length > 0 ? arguments[0] : undefined);
+    };
+  }, {
+    get: function get(key) {
+      var entry = strong.getEntry(this, key);
+      return entry && entry.v;
+    },
+    set: function set(key, value) {
+      return strong.def(this, key === 0 ? 0 : key, value);
+    }
+  }, strong, true);
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/modules/es7.set.to-json", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_collection-to-json"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.weak-map", ["npm:core-js@2.1.0/modules/_array-methods", "npm:core-js@2.1.0/modules/_redefine", "npm:core-js@2.1.0/modules/_meta", "npm:core-js@2.1.0/modules/_object-assign", "npm:core-js@2.1.0/modules/_collection-weak", "npm:core-js@2.1.0/modules/_is-object", "npm:core-js@2.1.0/modules/_has", "npm:core-js@2.1.0/modules/_collection"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.P + $export.R, 'Set', {toJSON: require("npm:core-js@2.1.0/modules/_collection-to-json")('Set')});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es7.system.global", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_global"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S, 'System', {global: require("npm:core-js@2.1.0/modules/_global")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es7.math.iaddh", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S, 'Math', {iaddh: function iaddh(x0, x1, y0, y1) {
-      var $x0 = x0 >>> 0,
-          $x1 = x1 >>> 0,
-          $y0 = y0 >>> 0;
-      return $x1 + (y1 >>> 0) + (($x0 & $y0 | ($x0 | $y0) & ~($x0 + $y0 >>> 0)) >>> 31) | 0;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es7.math.isubh", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S, 'Math', {isubh: function isubh(x0, x1, y0, y1) {
-      var $x0 = x0 >>> 0,
-          $x1 = x1 >>> 0,
-          $y0 = y0 >>> 0;
-      return $x1 - (y1 >>> 0) - ((~$x0 & $y0 | ~($x0 ^ $y0) & $x0 - $y0 >>> 0) >>> 31) | 0;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es7.math.imulh", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S, 'Math', {imulh: function imulh(u, v) {
-      var UINT16 = 0xffff,
-          $u = +u,
-          $v = +v,
-          u0 = $u & UINT16,
-          v0 = $v & UINT16,
-          u1 = $u >> 16,
-          v1 = $v >> 16,
-          t = (u1 * v0 >>> 0) + (u0 * v0 >>> 16);
-      return u1 * v1 + (t >> 16) + ((u0 * v1 >>> 0) + (t & UINT16) >> 16);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/modules/es7.math.umulh", ["npm:core-js@2.1.0/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/modules/_export");
-  $export($export.S, 'Math', {umulh: function umulh(u, v) {
-      var UINT16 = 0xffff,
-          $u = +u,
-          $v = +v,
-          u0 = $u & UINT16,
-          v0 = $v & UINT16,
-          u1 = $u >>> 16,
-          v1 = $v >>> 16,
-          t = (u1 * v0 >>> 0) + (u0 * v0 >>> 16);
-      return u1 * v1 + (t >>> 16) + ((u0 * v1 >>> 0) + (t & UINT16) >>> 16);
-    }});
+  'use strict';
+  var each = require("npm:core-js@2.1.0/modules/_array-methods")(0),
+      redefine = require("npm:core-js@2.1.0/modules/_redefine"),
+      meta = require("npm:core-js@2.1.0/modules/_meta"),
+      assign = require("npm:core-js@2.1.0/modules/_object-assign"),
+      weak = require("npm:core-js@2.1.0/modules/_collection-weak"),
+      isObject = require("npm:core-js@2.1.0/modules/_is-object"),
+      has = require("npm:core-js@2.1.0/modules/_has"),
+      getWeak = meta.getWeak,
+      isExtensible = Object.isExtensible,
+      uncaughtFrozenStore = weak.ufstore,
+      tmp = {},
+      InternalMap;
+  var wrapper = function(get) {
+    return function WeakMap() {
+      return get(this, arguments.length > 0 ? arguments[0] : undefined);
+    };
+  };
+  var methods = {
+    get: function get(key) {
+      if (isObject(key)) {
+        var data = getWeak(key);
+        if (data === true)
+          return uncaughtFrozenStore(this).get(key);
+        return data ? data[this._i] : undefined;
+      }
+    },
+    set: function set(key, value) {
+      return weak.def(this, key, value);
+    }
+  };
+  var $WeakMap = module.exports = require("npm:core-js@2.1.0/modules/_collection")('WeakMap', wrapper, methods, weak, true, true);
+  if (new $WeakMap().set((Object.freeze || Object)(tmp), 7).get(tmp) != 7) {
+    InternalMap = weak.getConstructor(wrapper);
+    assign(InternalMap.prototype, methods);
+    meta.NEED = true;
+    each(['delete', 'has', 'get', 'set'], function(key) {
+      var proto = $WeakMap.prototype,
+          method = proto[key];
+      redefine(proto, key, function(a, b) {
+        if (isObject(a) && !isExtensible(a)) {
+          if (!this._f)
+            this._f = new InternalMap;
+          var result = this._f[key](a, b);
+          return key == 'set' ? this : result;
+        }
+        return method.call(this, a, b);
+      });
+    });
+  }
   global.define = __define;
   return module.exports;
 });
@@ -28132,6 +27345,24 @@ System.registerDynamic("npm:core-js@2.1.0/modules/es7.reflect.get-metadata", ["n
   return module.exports;
 });
 
+System.registerDynamic("npm:core-js@2.1.0/modules/es6.set", ["npm:core-js@2.1.0/modules/_collection-strong", "npm:core-js@2.1.0/modules/_collection"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  'use strict';
+  var strong = require("npm:core-js@2.1.0/modules/_collection-strong");
+  module.exports = require("npm:core-js@2.1.0/modules/_collection")('Set', function(get) {
+    return function Set() {
+      return get(this, arguments.length > 0 ? arguments[0] : undefined);
+    };
+  }, {add: function add(value) {
+      return strong.def(this, value = value === 0 ? 0 : value, value);
+    }}, strong);
+  global.define = __define;
+  return module.exports;
+});
+
 System.registerDynamic("npm:core-js@2.1.0/modules/es7.reflect.get-metadata-keys", ["npm:core-js@2.1.0/modules/es6.set", "npm:core-js@2.1.0/modules/_array-from-iterable", "npm:core-js@2.1.0/modules/_metadata", "npm:core-js@2.1.0/modules/_an-object", "npm:core-js@2.1.0/modules/_object-gpo"], true, function(require, exports, module) {
   ;
   var global = this,
@@ -28250,143 +27481,161 @@ System.registerDynamic("npm:core-js@2.1.0/modules/es7.reflect.metadata", ["npm:c
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/es7/index", ["npm:core-js@2.1.0/modules/es7.array.includes", "npm:core-js@2.1.0/modules/es7.string.at", "npm:core-js@2.1.0/modules/es7.string.pad-start", "npm:core-js@2.1.0/modules/es7.string.pad-end", "npm:core-js@2.1.0/modules/es7.string.trim-left", "npm:core-js@2.1.0/modules/es7.string.trim-right", "npm:core-js@2.1.0/modules/es7.object.get-own-property-descriptors", "npm:core-js@2.1.0/modules/es7.object.values", "npm:core-js@2.1.0/modules/es7.object.entries", "npm:core-js@2.1.0/modules/es7.map.to-json", "npm:core-js@2.1.0/modules/es7.set.to-json", "npm:core-js@2.1.0/modules/es7.system.global", "npm:core-js@2.1.0/modules/es7.error.is-error", "npm:core-js@2.1.0/modules/es7.math.iaddh", "npm:core-js@2.1.0/modules/es7.math.isubh", "npm:core-js@2.1.0/modules/es7.math.imulh", "npm:core-js@2.1.0/modules/es7.math.umulh", "npm:core-js@2.1.0/modules/es7.reflect.define-metadata", "npm:core-js@2.1.0/modules/es7.reflect.delete-metadata", "npm:core-js@2.1.0/modules/es7.reflect.get-metadata", "npm:core-js@2.1.0/modules/es7.reflect.get-metadata-keys", "npm:core-js@2.1.0/modules/es7.reflect.get-own-metadata", "npm:core-js@2.1.0/modules/es7.reflect.get-own-metadata-keys", "npm:core-js@2.1.0/modules/es7.reflect.has-metadata", "npm:core-js@2.1.0/modules/es7.reflect.has-own-metadata", "npm:core-js@2.1.0/modules/es7.reflect.metadata", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es7.set.to-json", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_collection-to-json"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es7.array.includes");
-  require("npm:core-js@2.1.0/modules/es7.string.at");
-  require("npm:core-js@2.1.0/modules/es7.string.pad-start");
-  require("npm:core-js@2.1.0/modules/es7.string.pad-end");
-  require("npm:core-js@2.1.0/modules/es7.string.trim-left");
-  require("npm:core-js@2.1.0/modules/es7.string.trim-right");
-  require("npm:core-js@2.1.0/modules/es7.object.get-own-property-descriptors");
-  require("npm:core-js@2.1.0/modules/es7.object.values");
-  require("npm:core-js@2.1.0/modules/es7.object.entries");
-  require("npm:core-js@2.1.0/modules/es7.map.to-json");
-  require("npm:core-js@2.1.0/modules/es7.set.to-json");
-  require("npm:core-js@2.1.0/modules/es7.system.global");
-  require("npm:core-js@2.1.0/modules/es7.error.is-error");
-  require("npm:core-js@2.1.0/modules/es7.math.iaddh");
-  require("npm:core-js@2.1.0/modules/es7.math.isubh");
-  require("npm:core-js@2.1.0/modules/es7.math.imulh");
-  require("npm:core-js@2.1.0/modules/es7.math.umulh");
-  require("npm:core-js@2.1.0/modules/es7.reflect.define-metadata");
-  require("npm:core-js@2.1.0/modules/es7.reflect.delete-metadata");
-  require("npm:core-js@2.1.0/modules/es7.reflect.get-metadata");
-  require("npm:core-js@2.1.0/modules/es7.reflect.get-metadata-keys");
-  require("npm:core-js@2.1.0/modules/es7.reflect.get-own-metadata");
-  require("npm:core-js@2.1.0/modules/es7.reflect.get-own-metadata-keys");
-  require("npm:core-js@2.1.0/modules/es7.reflect.has-metadata");
-  require("npm:core-js@2.1.0/modules/es7.reflect.has-own-metadata");
-  require("npm:core-js@2.1.0/modules/es7.reflect.metadata");
-  module.exports = require("npm:core-js@2.1.0/modules/_core");
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.P + $export.R, 'Set', {toJSON: require("npm:core-js@2.1.0/modules/_collection-to-json")('Set')});
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/es7/map", ["npm:core-js@2.1.0/modules/es7.map.to-json", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es7.string.at", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_string-at"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es7.map.to-json");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Map;
+  'use strict';
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      $at = require("npm:core-js@2.1.0/modules/_string-at")(true);
+  $export($export.P, 'String', {at: function at(pos) {
+      return $at(this, pos);
+    }});
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/es7/math", ["npm:core-js@2.1.0/modules/es7.math.iaddh", "npm:core-js@2.1.0/modules/es7.math.isubh", "npm:core-js@2.1.0/modules/es7.math.imulh", "npm:core-js@2.1.0/modules/es7.math.umulh", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/_string-pad", ["npm:core-js@2.1.0/modules/_to-length", "npm:core-js@2.1.0/modules/_string-repeat", "npm:core-js@2.1.0/modules/_defined"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es7.math.iaddh");
-  require("npm:core-js@2.1.0/modules/es7.math.isubh");
-  require("npm:core-js@2.1.0/modules/es7.math.imulh");
-  require("npm:core-js@2.1.0/modules/es7.math.umulh");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Math;
+  var toLength = require("npm:core-js@2.1.0/modules/_to-length"),
+      repeat = require("npm:core-js@2.1.0/modules/_string-repeat"),
+      defined = require("npm:core-js@2.1.0/modules/_defined");
+  module.exports = function(that, maxLength, fillString, left) {
+    var S = String(defined(that)),
+        stringLength = S.length,
+        fillStr = fillString === undefined ? ' ' : String(fillString),
+        intMaxLength = toLength(maxLength);
+    if (intMaxLength <= stringLength)
+      return S;
+    if (fillStr == '')
+      fillStr = ' ';
+    var fillLen = intMaxLength - stringLength,
+        stringFiller = repeat.call(fillStr, Math.ceil(fillLen / fillStr.length));
+    if (stringFiller.length > fillLen)
+      stringFiller = stringFiller.slice(0, fillLen);
+    return left ? stringFiller + S : S + stringFiller;
+  };
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/es7/object", ["npm:core-js@2.1.0/modules/es7.object.get-own-property-descriptors", "npm:core-js@2.1.0/modules/es7.object.values", "npm:core-js@2.1.0/modules/es7.object.entries", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es7.string.pad-end", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_string-pad"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es7.object.get-own-property-descriptors");
-  require("npm:core-js@2.1.0/modules/es7.object.values");
-  require("npm:core-js@2.1.0/modules/es7.object.entries");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Object;
+  'use strict';
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      $pad = require("npm:core-js@2.1.0/modules/_string-pad");
+  $export($export.P, 'String', {padEnd: function padEnd(maxLength) {
+      return $pad(this, maxLength, arguments.length > 1 ? arguments[1] : undefined, false);
+    }});
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/es7/reflect", ["npm:core-js@2.1.0/modules/es7.reflect.define-metadata", "npm:core-js@2.1.0/modules/es7.reflect.delete-metadata", "npm:core-js@2.1.0/modules/es7.reflect.get-metadata", "npm:core-js@2.1.0/modules/es7.reflect.get-metadata-keys", "npm:core-js@2.1.0/modules/es7.reflect.get-own-metadata", "npm:core-js@2.1.0/modules/es7.reflect.get-own-metadata-keys", "npm:core-js@2.1.0/modules/es7.reflect.has-metadata", "npm:core-js@2.1.0/modules/es7.reflect.has-own-metadata", "npm:core-js@2.1.0/modules/es7.reflect.metadata", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es7.string.pad-start", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_string-pad"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es7.reflect.define-metadata");
-  require("npm:core-js@2.1.0/modules/es7.reflect.delete-metadata");
-  require("npm:core-js@2.1.0/modules/es7.reflect.get-metadata");
-  require("npm:core-js@2.1.0/modules/es7.reflect.get-metadata-keys");
-  require("npm:core-js@2.1.0/modules/es7.reflect.get-own-metadata");
-  require("npm:core-js@2.1.0/modules/es7.reflect.get-own-metadata-keys");
-  require("npm:core-js@2.1.0/modules/es7.reflect.has-metadata");
-  require("npm:core-js@2.1.0/modules/es7.reflect.has-own-metadata");
-  require("npm:core-js@2.1.0/modules/es7.reflect.metadata");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Reflect;
+  'use strict';
+  var $export = require("npm:core-js@2.1.0/modules/_export"),
+      $pad = require("npm:core-js@2.1.0/modules/_string-pad");
+  $export($export.P, 'String', {padStart: function padStart(maxLength) {
+      return $pad(this, maxLength, arguments.length > 1 ? arguments[1] : undefined, true);
+    }});
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/es7/set", ["npm:core-js@2.1.0/modules/es7.set.to-json", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es7.string.trim-left", ["npm:core-js@2.1.0/modules/_string-trim"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es7.set.to-json");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").Set;
+  'use strict';
+  require("npm:core-js@2.1.0/modules/_string-trim")('trimLeft', function($trim) {
+    return function trimLeft() {
+      return $trim(this, 1);
+    };
+  }, 'trimStart');
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/es7/string", ["npm:core-js@2.1.0/modules/es7.string.at", "npm:core-js@2.1.0/modules/es7.string.pad-start", "npm:core-js@2.1.0/modules/es7.string.pad-end", "npm:core-js@2.1.0/modules/es7.string.trim-left", "npm:core-js@2.1.0/modules/es7.string.trim-right", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es7.string.trim-right", ["npm:core-js@2.1.0/modules/_string-trim"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es7.string.at");
-  require("npm:core-js@2.1.0/modules/es7.string.pad-start");
-  require("npm:core-js@2.1.0/modules/es7.string.pad-end");
-  require("npm:core-js@2.1.0/modules/es7.string.trim-left");
-  require("npm:core-js@2.1.0/modules/es7.string.trim-right");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").String;
+  'use strict';
+  require("npm:core-js@2.1.0/modules/_string-trim")('trimRight', function($trim) {
+    return function trimRight() {
+      return $trim(this, 2);
+    };
+  }, 'trimEnd');
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/es7/system", ["npm:core-js@2.1.0/modules/es7.system.global", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/es7.system.global", ["npm:core-js@2.1.0/modules/_export", "npm:core-js@2.1.0/modules/_global"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  require("npm:core-js@2.1.0/modules/es7.system.global");
-  module.exports = require("npm:core-js@2.1.0/modules/_core").System;
+  var $export = require("npm:core-js@2.1.0/modules/_export");
+  $export($export.S, 'System', {global: require("npm:core-js@2.1.0/modules/_global")});
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/web/dom-collections", ["npm:core-js@2.1.0/modules/web.dom.iterable", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
+System.registerDynamic("npm:core-js@2.1.0/modules/web.dom.iterable", ["npm:core-js@2.1.0/modules/es6.array.iterator", "npm:core-js@2.1.0/modules/_redefine", "npm:core-js@2.1.0/modules/_global", "npm:core-js@2.1.0/modules/_hide", "npm:core-js@2.1.0/modules/_iterators", "npm:core-js@2.1.0/modules/_wks"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  require("npm:core-js@2.1.0/modules/web.dom.iterable");
-  module.exports = require("npm:core-js@2.1.0/modules/_core");
+  var $iterators = require("npm:core-js@2.1.0/modules/es6.array.iterator"),
+      redefine = require("npm:core-js@2.1.0/modules/_redefine"),
+      global = require("npm:core-js@2.1.0/modules/_global"),
+      hide = require("npm:core-js@2.1.0/modules/_hide"),
+      Iterators = require("npm:core-js@2.1.0/modules/_iterators"),
+      wks = require("npm:core-js@2.1.0/modules/_wks"),
+      ITERATOR = wks('iterator'),
+      TO_STRING_TAG = wks('toStringTag'),
+      ArrayValues = Iterators.Array;
+  for (var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList', 'CSSRuleList'],
+      i = 0; i < 5; i++) {
+    var NAME = collections[i],
+        Collection = global[NAME],
+        proto = Collection && Collection.prototype,
+        key;
+    if (proto) {
+      if (!proto[ITERATOR])
+        hide(proto, ITERATOR, ArrayValues);
+      if (!proto[TO_STRING_TAG])
+        hide(proto, TO_STRING_TAG, NAME);
+      Iterators[NAME] = ArrayValues;
+      for (key in $iterators)
+        if (!proto[key])
+          redefine(proto, key, $iterators[key], true);
+    }
+  }
   global.define = __define;
   return module.exports;
 });
@@ -28402,17 +27651,6 @@ System.registerDynamic("npm:core-js@2.1.0/modules/web.immediate", ["npm:core-js@
     setImmediate: $task.set,
     clearImmediate: $task.clear
   });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/web/immediate", ["npm:core-js@2.1.0/modules/web.immediate", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/web.immediate");
-  module.exports = require("npm:core-js@2.1.0/modules/_core");
   global.define = __define;
   return module.exports;
 });
@@ -28437,30 +27675,6 @@ System.registerDynamic("npm:core-js@2.1.0/modules/web.timers", ["npm:core-js@2.1
     setTimeout: wrap(global.setTimeout),
     setInterval: wrap(global.setInterval)
   });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/web/index", ["npm:core-js@2.1.0/modules/web.timers", "npm:core-js@2.1.0/modules/web.immediate", "npm:core-js@2.1.0/modules/web.dom.iterable", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/web.timers");
-  require("npm:core-js@2.1.0/modules/web.immediate");
-  require("npm:core-js@2.1.0/modules/web.dom.iterable");
-  module.exports = require("npm:core-js@2.1.0/modules/_core");
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/web/timers", ["npm:core-js@2.1.0/modules/web.timers", "npm:core-js@2.1.0/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/modules/web.timers");
-  module.exports = require("npm:core-js@2.1.0/modules/_core");
   global.define = __define;
   return module.exports;
 });
