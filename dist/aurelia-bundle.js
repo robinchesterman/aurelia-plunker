@@ -1,27 +1,4 @@
 "bundle";
-System.registerDynamic("github:systemjs/plugin-text@0.0.4/text", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  exports.translate = function(load) {
-    load.metadata.format = 'amd';
-    return 'def' + 'ine(function() {\nreturn "' + load.source.replace(/(["\\])/g, '\\$1').replace(/[\f]/g, "\\f").replace(/[\b]/g, "\\b").replace(/[\n]/g, "\\n").replace(/[\t]/g, "\\t").replace(/[\r]/g, "\\r").replace(/[\u2028]/g, "\\u2028").replace(/[\u2029]/g, "\\u2029") + '";\n});';
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("github:systemjs/plugin-text@0.0.4", ["github:systemjs/plugin-text@0.0.4/text"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = require("github:systemjs/plugin-text@0.0.4/text");
-  global.define = __define;
-  return module.exports;
-});
-
 System.registerDynamic("npm:process@0.11.2/browser", [], true, function(require, exports, module) {
   ;
   var global = this,
@@ -4300,120 +4277,6 @@ System.registerDynamic("npm:core-js@2.1.0", ["npm:core-js@2.1.0/client/shim.min"
 
 (function() {
 var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-logging@1.0.0-beta.1.1.1/aurelia-logging", ["exports"], function(exports) {
-  'use strict';
-  exports.__esModule = true;
-  exports.getLogger = getLogger;
-  exports.addAppender = addAppender;
-  exports.setLevel = setLevel;
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError('Cannot call a class as a function');
-    }
-  }
-  var logLevel = {
-    none: 0,
-    error: 1,
-    warn: 2,
-    info: 3,
-    debug: 4
-  };
-  exports.logLevel = logLevel;
-  var loggers = {};
-  var currentLevel = logLevel.none;
-  var appenders = [];
-  var slice = Array.prototype.slice;
-  var loggerConstructionKey = {};
-  function log(logger, level, args) {
-    var i = appenders.length;
-    var current = undefined;
-    args = slice.call(args);
-    args.unshift(logger);
-    while (i--) {
-      current = appenders[i];
-      current[level].apply(current, args);
-    }
-  }
-  function debug() {
-    if (currentLevel < 4) {
-      return;
-    }
-    log(this, 'debug', arguments);
-  }
-  function info() {
-    if (currentLevel < 3) {
-      return;
-    }
-    log(this, 'info', arguments);
-  }
-  function warn() {
-    if (currentLevel < 2) {
-      return;
-    }
-    log(this, 'warn', arguments);
-  }
-  function error() {
-    if (currentLevel < 1) {
-      return;
-    }
-    log(this, 'error', arguments);
-  }
-  function connectLogger(logger) {
-    logger.debug = debug;
-    logger.info = info;
-    logger.warn = warn;
-    logger.error = error;
-  }
-  function createLogger(id) {
-    var logger = new Logger(id, loggerConstructionKey);
-    if (appenders.length) {
-      connectLogger(logger);
-    }
-    return logger;
-  }
-  function getLogger(id) {
-    return loggers[id] || (loggers[id] = createLogger(id));
-  }
-  function addAppender(appender) {
-    appenders.push(appender);
-    if (appenders.length === 1) {
-      for (var key in loggers) {
-        connectLogger(loggers[key]);
-      }
-    }
-  }
-  function setLevel(level) {
-    currentLevel = level;
-  }
-  var Logger = (function() {
-    function Logger(id, key) {
-      _classCallCheck(this, Logger);
-      if (key !== loggerConstructionKey) {
-        throw new Error('You cannot instantiate "Logger". Use the "getLogger" API instead.');
-      }
-      this.id = id;
-    }
-    Logger.prototype.debug = function debug(message) {};
-    Logger.prototype.info = function info(message) {};
-    Logger.prototype.warn = function warn(message) {};
-    Logger.prototype.error = function error(message) {};
-    return Logger;
-  })();
-  exports.Logger = Logger;
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-logging@1.0.0-beta.1.1.1", ["npm:aurelia-logging@1.0.0-beta.1.1.1/aurelia-logging"], function(main) {
-  return main;
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
 define("npm:aurelia-pal@1.0.0-beta.1.1.1/aurelia-pal", ["exports"], function(exports) {
   'use strict';
   exports.__esModule = true;
@@ -4473,6 +4336,137 @@ _removeDefine();
 (function() {
 var _removeDefine = System.get("@@amd-helpers").createDefine();
 define("npm:aurelia-pal@1.0.0-beta.1.1.1", ["npm:aurelia-pal@1.0.0-beta.1.1.1/aurelia-pal"], function(main) {
+  return main;
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-task-queue@1.0.0-beta.1.1.1/aurelia-task-queue", ["exports", "npm:aurelia-pal@1.0.0-beta.1.1.1"], function(exports, _aureliaPal) {
+  'use strict';
+  exports.__esModule = true;
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError('Cannot call a class as a function');
+    }
+  }
+  var hasSetImmediate = typeof setImmediate === 'function';
+  function makeRequestFlushFromMutationObserver(flush) {
+    var toggle = 1;
+    var observer = _aureliaPal.DOM.createMutationObserver(flush);
+    var node = _aureliaPal.DOM.createTextNode('');
+    observer.observe(node, {characterData: true});
+    return function requestFlush() {
+      toggle = -toggle;
+      node.data = toggle;
+    };
+  }
+  function makeRequestFlushFromTimer(flush) {
+    return function requestFlush() {
+      var timeoutHandle = setTimeout(handleFlushTimer, 0);
+      var intervalHandle = setInterval(handleFlushTimer, 50);
+      function handleFlushTimer() {
+        clearTimeout(timeoutHandle);
+        clearInterval(intervalHandle);
+        flush();
+      }
+    };
+  }
+  function onError(error, task) {
+    if ('onError' in task) {
+      task.onError(error);
+    } else if (hasSetImmediate) {
+      setImmediate(function() {
+        throw error;
+      });
+    } else {
+      setTimeout(function() {
+        throw error;
+      }, 0);
+    }
+  }
+  var TaskQueue = (function() {
+    function TaskQueue() {
+      var _this = this;
+      _classCallCheck(this, TaskQueue);
+      this.microTaskQueue = [];
+      this.microTaskQueueCapacity = 1024;
+      this.taskQueue = [];
+      if (_aureliaPal.FEATURE.mutationObserver) {
+        this.requestFlushMicroTaskQueue = makeRequestFlushFromMutationObserver(function() {
+          return _this.flushMicroTaskQueue();
+        });
+      } else {
+        this.requestFlushMicroTaskQueue = makeRequestFlushFromTimer(function() {
+          return _this.flushMicroTaskQueue();
+        });
+      }
+      this.requestFlushTaskQueue = makeRequestFlushFromTimer(function() {
+        return _this.flushTaskQueue();
+      });
+    }
+    TaskQueue.prototype.queueMicroTask = function queueMicroTask(task) {
+      if (this.microTaskQueue.length < 1) {
+        this.requestFlushMicroTaskQueue();
+      }
+      this.microTaskQueue.push(task);
+    };
+    TaskQueue.prototype.queueTask = function queueTask(task) {
+      if (this.taskQueue.length < 1) {
+        this.requestFlushTaskQueue();
+      }
+      this.taskQueue.push(task);
+    };
+    TaskQueue.prototype.flushTaskQueue = function flushTaskQueue() {
+      var queue = this.taskQueue;
+      var index = 0;
+      var task = undefined;
+      this.taskQueue = [];
+      try {
+        while (index < queue.length) {
+          task = queue[index];
+          task.call();
+          index++;
+        }
+      } catch (error) {
+        onError(error, task);
+      }
+    };
+    TaskQueue.prototype.flushMicroTaskQueue = function flushMicroTaskQueue() {
+      var queue = this.microTaskQueue;
+      var capacity = this.microTaskQueueCapacity;
+      var index = 0;
+      var task = undefined;
+      try {
+        while (index < queue.length) {
+          task = queue[index];
+          task.call();
+          index++;
+          if (index > capacity) {
+            for (var scan = 0,
+                newLength = queue.length - index; scan < newLength; scan++) {
+              queue[scan] = queue[scan + index];
+            }
+            queue.length -= index;
+            index = 0;
+          }
+        }
+      } catch (error) {
+        onError(error, task);
+      }
+      queue.length = 0;
+    };
+    return TaskQueue;
+  })();
+  exports.TaskQueue = TaskQueue;
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-task-queue@1.0.0-beta.1.1.1", ["npm:aurelia-task-queue@1.0.0-beta.1.1.1/aurelia-task-queue"], function(main) {
   return main;
 });
 
@@ -4746,439 +4740,6 @@ _removeDefine();
 (function() {
 var _removeDefine = System.get("@@amd-helpers").createDefine();
 define("npm:aurelia-metadata@1.0.0-beta.1.1.4", ["npm:aurelia-metadata@1.0.0-beta.1.1.4/aurelia-metadata"], function(main) {
-  return main;
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-path@1.0.0-beta.1.1.0/aurelia-path", ["exports"], function(exports) {
-  'use strict';
-  exports.__esModule = true;
-  exports.relativeToFile = relativeToFile;
-  exports.join = join;
-  exports.buildQueryString = buildQueryString;
-  exports.parseQueryString = parseQueryString;
-  function trimDots(ary) {
-    for (var i = 0; i < ary.length; ++i) {
-      var part = ary[i];
-      if (part === '.') {
-        ary.splice(i, 1);
-        i -= 1;
-      } else if (part === '..') {
-        if (i === 0 || i === 1 && ary[2] === '..' || ary[i - 1] === '..') {
-          continue;
-        } else if (i > 0) {
-          ary.splice(i - 1, 2);
-          i -= 2;
-        }
-      }
-    }
-  }
-  function relativeToFile(name, file) {
-    var fileParts = file && file.split('/');
-    var nameParts = name.trim().split('/');
-    if (nameParts[0].charAt(0) === '.' && fileParts) {
-      var normalizedBaseParts = fileParts.slice(0, fileParts.length - 1);
-      nameParts.unshift.apply(nameParts, normalizedBaseParts);
-    }
-    trimDots(nameParts);
-    return nameParts.join('/');
-  }
-  function join(path1, path2) {
-    if (!path1) {
-      return path2;
-    }
-    if (!path2) {
-      return path1;
-    }
-    var schemeMatch = path1.match(/^([^/]*?:)\//);
-    var scheme = schemeMatch && schemeMatch.length > 0 ? schemeMatch[1] : '';
-    path1 = path1.substr(scheme.length);
-    var urlPrefix = undefined;
-    if (path1.indexOf('///') === 0 && scheme === 'file:') {
-      urlPrefix = '///';
-    } else if (path1.indexOf('//') === 0) {
-      urlPrefix = '//';
-    } else if (path1.indexOf('/') === 0) {
-      urlPrefix = '/';
-    } else {
-      urlPrefix = '';
-    }
-    var trailingSlash = path2.slice(-1) === '/' ? '/' : '';
-    var url1 = path1.split('/');
-    var url2 = path2.split('/');
-    var url3 = [];
-    for (var i = 0,
-        ii = url1.length; i < ii; ++i) {
-      if (url1[i] === '..') {
-        url3.pop();
-      } else if (url1[i] === '.' || url1[i] === '') {
-        continue;
-      } else {
-        url3.push(url1[i]);
-      }
-    }
-    for (var i = 0,
-        ii = url2.length; i < ii; ++i) {
-      if (url2[i] === '..') {
-        url3.pop();
-      } else if (url2[i] === '.' || url2[i] === '') {
-        continue;
-      } else {
-        url3.push(url2[i]);
-      }
-    }
-    return scheme + urlPrefix + url3.join('/') + trailingSlash;
-  }
-  function buildQueryString(params) {
-    var pairs = [];
-    var keys = Object.keys(params || {}).sort();
-    var encode = encodeURIComponent;
-    var encodeKey = function encodeKey(k) {
-      return encode(k).replace('%24', '$');
-    };
-    for (var i = 0,
-        len = keys.length; i < len; i++) {
-      var key = keys[i];
-      var value = params[key];
-      if (value === null || value === undefined) {
-        continue;
-      }
-      if (Array.isArray(value)) {
-        var arrayKey = encodeKey(key) + '[]';
-        for (var j = 0,
-            l = value.length; j < l; j++) {
-          pairs.push(arrayKey + '=' + encode(value[j]));
-        }
-      } else {
-        pairs.push(encodeKey(key) + '=' + encode(value));
-      }
-    }
-    if (pairs.length === 0) {
-      return '';
-    }
-    return pairs.join('&');
-  }
-  function parseQueryString(queryString) {
-    var queryParams = {};
-    if (!queryString || typeof queryString !== 'string') {
-      return queryParams;
-    }
-    var query = queryString;
-    if (query.charAt(0) === '?') {
-      query = query.substr(1);
-    }
-    var pairs = query.split('&');
-    for (var i = 0; i < pairs.length; i++) {
-      var pair = pairs[i].split('=');
-      var key = decodeURIComponent(pair[0]);
-      var keyLength = key.length;
-      var isArray = false;
-      var value = undefined;
-      if (!key) {
-        continue;
-      } else if (pair.length === 1) {
-        value = true;
-      } else {
-        if (keyLength > 2 && key.slice(keyLength - 2) === '[]') {
-          isArray = true;
-          key = key.slice(0, keyLength - 2);
-          if (!queryParams[key]) {
-            queryParams[key] = [];
-          }
-        }
-        value = pair[1] ? decodeURIComponent(pair[1]) : '';
-      }
-      if (isArray) {
-        queryParams[key].push(value);
-      } else {
-        queryParams[key] = value;
-      }
-    }
-    return queryParams;
-  }
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-path@1.0.0-beta.1.1.0", ["npm:aurelia-path@1.0.0-beta.1.1.0/aurelia-path"], function(main) {
-  return main;
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-loader@1.0.0-beta.1.1.1/aurelia-loader", ["exports", "npm:aurelia-path@1.0.0-beta.1.1.0", "npm:aurelia-metadata@1.0.0-beta.1.1.4"], function(exports, _aureliaPath, _aureliaMetadata) {
-  'use strict';
-  exports.__esModule = true;
-  var _createClass = (function() {
-    function defineProperties(target, props) {
-      for (var i = 0; i < props.length; i++) {
-        var descriptor = props[i];
-        descriptor.enumerable = descriptor.enumerable || false;
-        descriptor.configurable = true;
-        if ('value' in descriptor)
-          descriptor.writable = true;
-        Object.defineProperty(target, descriptor.key, descriptor);
-      }
-    }
-    return function(Constructor, protoProps, staticProps) {
-      if (protoProps)
-        defineProperties(Constructor.prototype, protoProps);
-      if (staticProps)
-        defineProperties(Constructor, staticProps);
-      return Constructor;
-    };
-  })();
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError('Cannot call a class as a function');
-    }
-  }
-  var TemplateDependency = function TemplateDependency(src, name) {
-    _classCallCheck(this, TemplateDependency);
-    this.src = src;
-    this.name = name;
-  };
-  exports.TemplateDependency = TemplateDependency;
-  var TemplateRegistryEntry = (function() {
-    function TemplateRegistryEntry(address) {
-      _classCallCheck(this, TemplateRegistryEntry);
-      this.templateIsLoaded = false;
-      this.factoryIsReady = false;
-      this.resources = null;
-      this.dependencies = null;
-      this.address = address;
-      this.onReady = null;
-      this._template = null;
-      this._factory = null;
-    }
-    TemplateRegistryEntry.prototype.addDependency = function addDependency(src, name) {
-      var finalSrc = typeof src === 'string' ? _aureliaPath.relativeToFile(src, this.address) : _aureliaMetadata.Origin.get(src).moduleId;
-      this.dependencies.push(new TemplateDependency(finalSrc, name));
-    };
-    _createClass(TemplateRegistryEntry, [{
-      key: 'template',
-      get: function get() {
-        return this._template;
-      },
-      set: function set(value) {
-        var address = this.address;
-        var requires = undefined;
-        var current = undefined;
-        var src = undefined;
-        var dependencies = undefined;
-        this._template = value;
-        this.templateIsLoaded = true;
-        requires = value.content.querySelectorAll('require');
-        dependencies = this.dependencies = new Array(requires.length);
-        for (var i = 0,
-            ii = requires.length; i < ii; ++i) {
-          current = requires[i];
-          src = current.getAttribute('from');
-          if (!src) {
-            throw new Error('<require> element in ' + address + ' has no "from" attribute.');
-          }
-          dependencies[i] = new TemplateDependency(_aureliaPath.relativeToFile(src, address), current.getAttribute('as'));
-          if (current.parentNode) {
-            current.parentNode.removeChild(current);
-          }
-        }
-      }
-    }, {
-      key: 'factory',
-      get: function get() {
-        return this._factory;
-      },
-      set: function set(value) {
-        this._factory = value;
-        this.factoryIsReady = true;
-      }
-    }]);
-    return TemplateRegistryEntry;
-  })();
-  exports.TemplateRegistryEntry = TemplateRegistryEntry;
-  var Loader = (function() {
-    function Loader() {
-      _classCallCheck(this, Loader);
-      this.templateRegistry = {};
-    }
-    Loader.prototype.map = function map(id, source) {
-      throw new Error('Loaders must implement map(id, source).');
-    };
-    Loader.prototype.normalizeSync = function normalizeSync(moduleId, relativeTo) {
-      throw new Error('Loaders must implement normalizeSync(moduleId, relativeTo).');
-    };
-    Loader.prototype.normalize = function normalize(moduleId, relativeTo) {
-      throw new Error('Loaders must implement normalize(moduleId: string, relativeTo: string): Promise<string>.');
-    };
-    Loader.prototype.loadModule = function loadModule(id) {
-      throw new Error('Loaders must implement loadModule(id).');
-    };
-    Loader.prototype.loadAllModules = function loadAllModules(ids) {
-      throw new Error('Loader must implement loadAllModules(ids).');
-    };
-    Loader.prototype.loadTemplate = function loadTemplate(url) {
-      throw new Error('Loader must implement loadTemplate(url).');
-    };
-    Loader.prototype.loadText = function loadText(url) {
-      throw new Error('Loader must implement loadText(url).');
-    };
-    Loader.prototype.applyPluginToUrl = function applyPluginToUrl(url, pluginName) {
-      throw new Error('Loader must implement applyPluginToUrl(url, pluginName).');
-    };
-    Loader.prototype.addPlugin = function addPlugin(pluginName, implementation) {
-      throw new Error('Loader must implement addPlugin(pluginName, implementation).');
-    };
-    Loader.prototype.getOrCreateTemplateRegistryEntry = function getOrCreateTemplateRegistryEntry(address) {
-      return this.templateRegistry[address] || (this.templateRegistry[address] = new TemplateRegistryEntry(address));
-    };
-    return Loader;
-  })();
-  exports.Loader = Loader;
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-loader@1.0.0-beta.1.1.1", ["npm:aurelia-loader@1.0.0-beta.1.1.1/aurelia-loader"], function(main) {
-  return main;
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-task-queue@1.0.0-beta.1.1.1/aurelia-task-queue", ["exports", "npm:aurelia-pal@1.0.0-beta.1.1.1"], function(exports, _aureliaPal) {
-  'use strict';
-  exports.__esModule = true;
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError('Cannot call a class as a function');
-    }
-  }
-  var hasSetImmediate = typeof setImmediate === 'function';
-  function makeRequestFlushFromMutationObserver(flush) {
-    var toggle = 1;
-    var observer = _aureliaPal.DOM.createMutationObserver(flush);
-    var node = _aureliaPal.DOM.createTextNode('');
-    observer.observe(node, {characterData: true});
-    return function requestFlush() {
-      toggle = -toggle;
-      node.data = toggle;
-    };
-  }
-  function makeRequestFlushFromTimer(flush) {
-    return function requestFlush() {
-      var timeoutHandle = setTimeout(handleFlushTimer, 0);
-      var intervalHandle = setInterval(handleFlushTimer, 50);
-      function handleFlushTimer() {
-        clearTimeout(timeoutHandle);
-        clearInterval(intervalHandle);
-        flush();
-      }
-    };
-  }
-  function onError(error, task) {
-    if ('onError' in task) {
-      task.onError(error);
-    } else if (hasSetImmediate) {
-      setImmediate(function() {
-        throw error;
-      });
-    } else {
-      setTimeout(function() {
-        throw error;
-      }, 0);
-    }
-  }
-  var TaskQueue = (function() {
-    function TaskQueue() {
-      var _this = this;
-      _classCallCheck(this, TaskQueue);
-      this.microTaskQueue = [];
-      this.microTaskQueueCapacity = 1024;
-      this.taskQueue = [];
-      if (_aureliaPal.FEATURE.mutationObserver) {
-        this.requestFlushMicroTaskQueue = makeRequestFlushFromMutationObserver(function() {
-          return _this.flushMicroTaskQueue();
-        });
-      } else {
-        this.requestFlushMicroTaskQueue = makeRequestFlushFromTimer(function() {
-          return _this.flushMicroTaskQueue();
-        });
-      }
-      this.requestFlushTaskQueue = makeRequestFlushFromTimer(function() {
-        return _this.flushTaskQueue();
-      });
-    }
-    TaskQueue.prototype.queueMicroTask = function queueMicroTask(task) {
-      if (this.microTaskQueue.length < 1) {
-        this.requestFlushMicroTaskQueue();
-      }
-      this.microTaskQueue.push(task);
-    };
-    TaskQueue.prototype.queueTask = function queueTask(task) {
-      if (this.taskQueue.length < 1) {
-        this.requestFlushTaskQueue();
-      }
-      this.taskQueue.push(task);
-    };
-    TaskQueue.prototype.flushTaskQueue = function flushTaskQueue() {
-      var queue = this.taskQueue;
-      var index = 0;
-      var task = undefined;
-      this.taskQueue = [];
-      try {
-        while (index < queue.length) {
-          task = queue[index];
-          task.call();
-          index++;
-        }
-      } catch (error) {
-        onError(error, task);
-      }
-    };
-    TaskQueue.prototype.flushMicroTaskQueue = function flushMicroTaskQueue() {
-      var queue = this.microTaskQueue;
-      var capacity = this.microTaskQueueCapacity;
-      var index = 0;
-      var task = undefined;
-      try {
-        while (index < queue.length) {
-          task = queue[index];
-          task.call();
-          index++;
-          if (index > capacity) {
-            for (var scan = 0,
-                newLength = queue.length - index; scan < newLength; scan++) {
-              queue[scan] = queue[scan + index];
-            }
-            queue.length -= index;
-            index = 0;
-          }
-        }
-      } catch (error) {
-        onError(error, task);
-      }
-      queue.length = 0;
-    };
-    return TaskQueue;
-  })();
-  exports.TaskQueue = TaskQueue;
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-task-queue@1.0.0-beta.1.1.1", ["npm:aurelia-task-queue@1.0.0-beta.1.1.1/aurelia-task-queue"], function(main) {
   return main;
 });
 
@@ -9463,6 +9024,554 @@ _removeDefine();
 })();
 (function() {
 var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-pal-browser@1.0.0-beta.1.1.3/aurelia-pal-browser", ["exports", "npm:core-js@2.1.0", "npm:aurelia-pal@1.0.0-beta.1.1.1"], function(exports, _coreJs, _aureliaPal) {
+  'use strict';
+  exports.__esModule = true;
+  exports._ensureFunctionName = _ensureFunctionName;
+  exports._ensureClassList = _ensureClassList;
+  exports._ensurePerformance = _ensurePerformance;
+  exports._ensureCustomEvent = _ensureCustomEvent;
+  exports._ensureElementMatches = _ensureElementMatches;
+  exports._ensureHTMLTemplateElement = _ensureHTMLTemplateElement;
+  exports.initialize = initialize;
+  function _ensureFunctionName() {
+    function test() {}
+    if (!test.name) {
+      Object.defineProperty(Function.prototype, 'name', {get: function get() {
+          var name = this.toString().match(/^\s*function\s*(\S*)\s*\(/)[1];
+          Object.defineProperty(this, 'name', {value: name});
+          return name;
+        }});
+    }
+  }
+  function _ensureClassList() {
+    if (!('classList' in document.createElement('_')) || document.createElementNS && !('classList' in document.createElementNS('http://www.w3.org/2000/svg', 'g'))) {
+      (function() {
+        var protoProp = 'prototype';
+        var strTrim = String.prototype.trim;
+        var arrIndexOf = Array.prototype.indexOf;
+        var emptyArray = [];
+        var DOMEx = function DOMEx(type, message) {
+          this.name = type;
+          this.code = DOMException[type];
+          this.message = message;
+        };
+        var checkTokenAndGetIndex = function checkTokenAndGetIndex(classList, token) {
+          if (token === '') {
+            throw new DOMEx('SYNTAX_ERR', 'An invalid or illegal string was specified');
+          }
+          if (/\s/.test(token)) {
+            throw new DOMEx('INVALID_CHARACTER_ERR', 'String contains an invalid character');
+          }
+          return arrIndexOf.call(classList, token);
+        };
+        var ClassList = function ClassList(elem) {
+          var trimmedClasses = strTrim.call(elem.getAttribute('class') || '');
+          var classes = trimmedClasses ? trimmedClasses.split(/\s+/) : emptyArray;
+          for (var i = 0,
+              ii = classes.length; i < ii; ++i) {
+            this.push(classes[i]);
+          }
+          this._updateClassName = function() {
+            elem.setAttribute('class', this.toString());
+          };
+        };
+        var classListProto = ClassList[protoProp] = [];
+        DOMEx[protoProp] = Error[protoProp];
+        classListProto.item = function(i) {
+          return this[i] || null;
+        };
+        classListProto.contains = function(token) {
+          token += '';
+          return checkTokenAndGetIndex(this, token) !== -1;
+        };
+        classListProto.add = function() {
+          var tokens = arguments;
+          var i = 0;
+          var ii = tokens.length;
+          var token = undefined;
+          var updated = false;
+          do {
+            token = tokens[i] + '';
+            if (checkTokenAndGetIndex(this, token) === -1) {
+              this.push(token);
+              updated = true;
+            }
+          } while (++i < ii);
+          if (updated) {
+            this._updateClassName();
+          }
+        };
+        classListProto.remove = function() {
+          var tokens = arguments;
+          var i = 0;
+          var ii = tokens.length;
+          var token = undefined;
+          var updated = false;
+          var index = undefined;
+          do {
+            token = tokens[i] + '';
+            index = checkTokenAndGetIndex(this, token);
+            while (index !== -1) {
+              this.splice(index, 1);
+              updated = true;
+              index = checkTokenAndGetIndex(this, token);
+            }
+          } while (++i < ii);
+          if (updated) {
+            this._updateClassName();
+          }
+        };
+        classListProto.toggle = function(token, force) {
+          token += '';
+          var result = this.contains(token);
+          var method = result ? force !== true && 'remove' : force !== false && 'add';
+          if (method) {
+            this[method](token);
+          }
+          if (force === true || force === false) {
+            return force;
+          }
+          return !result;
+        };
+        classListProto.toString = function() {
+          return this.join(' ');
+        };
+        Object.defineProperty(Element.prototype, 'classList', {
+          get: function get() {
+            return new ClassList(this);
+          },
+          enumerable: true,
+          configurable: true
+        });
+      })();
+    } else {
+      var testElement = document.createElement('_');
+      testElement.classList.add('c1', 'c2');
+      if (!testElement.classList.contains('c2')) {
+        var createMethod = function createMethod(method) {
+          var original = DOMTokenList.prototype[method];
+          DOMTokenList.prototype[method] = function(token) {
+            for (var i = 0,
+                ii = arguments.length; i < ii; ++i) {
+              token = arguments[i];
+              original.call(this, token);
+            }
+          };
+        };
+        createMethod('add');
+        createMethod('remove');
+      }
+      testElement.classList.toggle('c3', false);
+      if (testElement.classList.contains('c3')) {
+        (function() {
+          var _toggle = DOMTokenList.prototype.toggle;
+          DOMTokenList.prototype.toggle = function(token, force) {
+            if (1 in arguments && !this.contains(token) === !force) {
+              return force;
+            }
+            return _toggle.call(this, token);
+          };
+        })();
+      }
+      testElement = null;
+    }
+  }
+  function _ensurePerformance() {
+    if ('performance' in window === false) {
+      window.performance = {};
+    }
+    Date.now = Date.now || function() {
+      return new Date().getTime();
+    };
+    if ('now' in window.performance === false) {
+      (function() {
+        var nowOffset = Date.now();
+        if (performance.timing && performance.timing.navigationStart) {
+          nowOffset = performance.timing.navigationStart;
+        }
+        window.performance.now = function now() {
+          return Date.now() - nowOffset;
+        };
+      })();
+    }
+  }
+  function _ensureCustomEvent() {
+    if (!window.CustomEvent || typeof window.CustomEvent !== 'function') {
+      var _CustomEvent = function _CustomEvent(event, params) {
+        params = params || {
+          bubbles: false,
+          cancelable: false,
+          detail: undefined
+        };
+        var evt = document.createEvent('CustomEvent');
+        evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+        return evt;
+      };
+      _CustomEvent.prototype = window.Event.prototype;
+      window.CustomEvent = _CustomEvent;
+    }
+  }
+  function _ensureElementMatches() {
+    if (Element && !Element.prototype.matches) {
+      var proto = Element.prototype;
+      proto.matches = proto.matchesSelector || proto.mozMatchesSelector || proto.msMatchesSelector || proto.oMatchesSelector || proto.webkitMatchesSelector;
+    }
+  }
+  var _FEATURE = {};
+  exports._FEATURE = _FEATURE;
+  _FEATURE.shadowDOM = (function() {
+    return !!HTMLElement.prototype.createShadowRoot;
+  })();
+  _FEATURE.scopedCSS = (function() {
+    return 'scoped' in document.createElement('style');
+  })();
+  _FEATURE.htmlTemplateElement = (function() {
+    return 'content' in document.createElement('template');
+  })();
+  _FEATURE.mutationObserver = (function() {
+    return !!(window.MutationObserver || window.WebKitMutationObserver);
+  })();
+  function _ensureHTMLTemplateElement() {
+    function isSVGTemplate(el) {
+      return el.tagName === 'template' && el.namespaceURI === 'http://www.w3.org/2000/svg';
+    }
+    function fixSVGTemplateElement(el) {
+      var template = el.ownerDocument.createElement('template');
+      var attrs = el.attributes;
+      var length = attrs.length;
+      var attr = undefined;
+      el.parentNode.insertBefore(template, el);
+      while (length-- > 0) {
+        attr = attrs[length];
+        template.setAttribute(attr.name, attr.value);
+        el.removeAttribute(attr.name);
+      }
+      el.parentNode.removeChild(el);
+      return fixHTMLTemplateElement(template);
+    }
+    function fixHTMLTemplateElement(template) {
+      var content = template.content = document.createDocumentFragment();
+      var child = undefined;
+      while (child = template.firstChild) {
+        content.appendChild(child);
+      }
+      return template;
+    }
+    function fixHTMLTemplateElementRoot(template) {
+      var content = fixHTMLTemplateElement(template).content;
+      var childTemplates = content.querySelectorAll('template');
+      for (var i = 0,
+          ii = childTemplates.length; i < ii; ++i) {
+        var child = childTemplates[i];
+        if (isSVGTemplate(child)) {
+          fixSVGTemplateElement(child);
+        } else {
+          fixHTMLTemplateElement(child);
+        }
+      }
+      return template;
+    }
+    if (_FEATURE.htmlTemplateElement) {
+      _FEATURE.ensureHTMLTemplateElement = function(template) {
+        return template;
+      };
+    } else {
+      _FEATURE.ensureHTMLTemplateElement = fixHTMLTemplateElementRoot;
+    }
+  }
+  var shadowPoly = window.ShadowDOMPolyfill || null;
+  var _DOM = {
+    Element: Element,
+    SVGElement: SVGElement,
+    boundary: 'aurelia-dom-boundary',
+    addEventListener: function addEventListener(eventName, callback, capture) {
+      document.addEventListener(eventName, callback, capture);
+    },
+    removeEventListener: function removeEventListener(eventName, callback, capture) {
+      document.removeEventListener(eventName, callback, capture);
+    },
+    adoptNode: function adoptNode(node) {
+      return document.adoptNode(node, true);
+    },
+    createElement: function createElement(tagName) {
+      return document.createElement(tagName);
+    },
+    createTextNode: function createTextNode(text) {
+      return document.createTextNode(text);
+    },
+    createComment: function createComment(text) {
+      return document.createComment(text);
+    },
+    createDocumentFragment: function createDocumentFragment() {
+      return document.createDocumentFragment();
+    },
+    createMutationObserver: function createMutationObserver(callback) {
+      return new (window.MutationObserver || window.WebKitMutationObserver)(callback);
+    },
+    createCustomEvent: function createCustomEvent(eventType, options) {
+      return new window.CustomEvent(eventType, options);
+    },
+    dispatchEvent: function dispatchEvent(evt) {
+      document.dispatchEvent(evt);
+    },
+    getComputedStyle: function getComputedStyle(element) {
+      return window.getComputedStyle(element);
+    },
+    getElementById: function getElementById(id) {
+      return document.getElementById(id);
+    },
+    querySelectorAll: function querySelectorAll(query) {
+      return document.querySelectorAll(query);
+    },
+    nextElementSibling: function nextElementSibling(element) {
+      if (element.nextElementSibling) {
+        return element.nextElementSibling;
+      }
+      do {
+        element = element.nextSibling;
+      } while (element && element.nodeType !== 1);
+      return element;
+    },
+    createTemplateFromMarkup: function createTemplateFromMarkup(markup) {
+      var parser = document.createElement('div');
+      parser.innerHTML = markup;
+      var temp = parser.firstElementChild;
+      if (!temp || temp.nodeName !== 'TEMPLATE') {
+        throw new Error('Template markup must be wrapped in a <template> element e.g. <template> <!-- markup here --> </template>');
+      }
+      return _FEATURE.ensureHTMLTemplateElement(temp);
+    },
+    appendNode: function appendNode(newNode, parentNode) {
+      (parentNode || document.body).appendChild(newNode);
+    },
+    replaceNode: function replaceNode(newNode, node, parentNode) {
+      if (node.parentNode) {
+        node.parentNode.replaceChild(newNode, node);
+      } else if (shadowPoly !== null) {
+        shadowPoly.unwrap(parentNode).replaceChild(shadowPoly.unwrap(newNode), shadowPoly.unwrap(node));
+      } else {
+        parentNode.replaceChild(newNode, node);
+      }
+    },
+    removeNode: function removeNode(node, parentNode) {
+      if (node.parentNode) {
+        node.parentNode.removeChild(node);
+      } else if (shadowPoly !== null) {
+        shadowPoly.unwrap(parentNode).removeChild(shadowPoly.unwrap(node));
+      } else {
+        parentNode.removeChild(node);
+      }
+    },
+    injectStyles: function injectStyles(styles, destination, prepend) {
+      var node = document.createElement('style');
+      node.innerHTML = styles;
+      node.type = 'text/css';
+      destination = destination || document.head;
+      if (prepend && destination.childNodes.length > 0) {
+        destination.insertBefore(node, destination.childNodes[0]);
+      } else {
+        destination.appendChild(node);
+      }
+      return node;
+    }
+  };
+  exports._DOM = _DOM;
+  var _PLATFORM = {
+    location: window.location,
+    history: window.history,
+    addEventListener: function addEventListener(eventName, callback, capture) {
+      this.global.addEventListener(eventName, callback, capture);
+    },
+    removeEventListener: function removeEventListener(eventName, callback, capture) {
+      this.global.removeEventListener(eventName, callback, capture);
+    },
+    performance: window.performance,
+    requestAnimationFrame: function requestAnimationFrame(callback) {
+      return this.global.requestAnimationFrame(callback);
+    }
+  };
+  exports._PLATFORM = _PLATFORM;
+  var isInitialized = false;
+  function initialize() {
+    if (isInitialized) {
+      return;
+    }
+    isInitialized = true;
+    _ensureCustomEvent();
+    _ensureFunctionName();
+    _ensureHTMLTemplateElement();
+    _ensureElementMatches();
+    _ensureClassList();
+    _ensurePerformance();
+    _aureliaPal.initializePAL(function(platform, feature, dom) {
+      Object.assign(platform, _PLATFORM);
+      Object.assign(feature, _FEATURE);
+      Object.assign(dom, _DOM);
+      Object.defineProperty(dom, 'title', {
+        get: function get() {
+          return document.title;
+        },
+        set: function set(value) {
+          document.title = value;
+        }
+      });
+      Object.defineProperty(dom, 'activeElement', {get: function get() {
+          return document.activeElement;
+        }});
+      Object.defineProperty(platform, 'XMLHttpRequest', {get: function get() {
+          return platform.global.XMLHttpRequest;
+        }});
+    });
+  }
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-pal-browser@1.0.0-beta.1.1.3", ["npm:aurelia-pal-browser@1.0.0-beta.1.1.3/aurelia-pal-browser"], function(main) {
+  return main;
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-bootstrapper@1.0.0-beta.1.1.2/aurelia-bootstrapper", ["exports", "npm:core-js@2.1.0", "npm:aurelia-pal@1.0.0-beta.1.1.1", "npm:aurelia-pal-browser@1.0.0-beta.1.1.3"], function(exports, _coreJs, _aureliaPal, _aureliaPalBrowser) {
+  'use strict';
+  exports.__esModule = true;
+  exports.bootstrap = bootstrap;
+  var bootstrapQueue = [];
+  var sharedLoader = null;
+  var Aurelia = null;
+  function onBootstrap(callback) {
+    return new Promise(function(resolve, reject) {
+      if (sharedLoader) {
+        resolve(callback(sharedLoader));
+      } else {
+        bootstrapQueue.push(function() {
+          try {
+            resolve(callback(sharedLoader));
+          } catch (e) {
+            reject(e);
+          }
+        });
+      }
+    });
+  }
+  function ready(global) {
+    return new Promise(function(resolve, reject) {
+      if (global.document.readyState === 'complete') {
+        resolve(global.document);
+      } else {
+        global.document.addEventListener('DOMContentLoaded', completed);
+        global.addEventListener('load', completed);
+      }
+      function completed() {
+        global.document.removeEventListener('DOMContentLoaded', completed);
+        global.removeEventListener('load', completed);
+        resolve(global.document);
+      }
+    });
+  }
+  function createLoader() {
+    if (_aureliaPal.PLATFORM.Loader) {
+      return Promise.resolve(new _aureliaPal.PLATFORM.Loader());
+    }
+    if (window.System && typeof window.System['import'] === 'function') {
+      return System.normalize('aurelia-bootstrapper').then(function(bootstrapperName) {
+        return System.normalize('aurelia-loader-default', bootstrapperName);
+      }).then(function(loaderName) {
+        return System['import'](loaderName).then(function(m) {
+          return new m.DefaultLoader();
+        });
+      });
+    }
+    if (typeof window.require === 'function') {
+      return new Promise(function(resolve, reject) {
+        return require(['aurelia-loader-default'], function(m) {
+          return resolve(new m.DefaultLoader());
+        }, reject);
+      });
+    }
+    return Promise.reject('No PLATFORM.Loader is defined and there is neither a System API (ES6) or a Require API (AMD) globally available to load your app.');
+  }
+  function preparePlatform(loader) {
+    return loader.normalize('aurelia-bootstrapper').then(function(bootstrapperName) {
+      return loader.normalize('aurelia-framework', bootstrapperName).then(function(frameworkName) {
+        loader.map('aurelia-framework', frameworkName);
+        return Promise.all([loader.normalize('aurelia-dependency-injection', frameworkName).then(function(diName) {
+          return loader.map('aurelia-dependency-injection', diName);
+        }), loader.normalize('aurelia-router', bootstrapperName).then(function(routerName) {
+          return loader.map('aurelia-router', routerName);
+        }), loader.normalize('aurelia-logging-console', bootstrapperName).then(function(loggingConsoleName) {
+          return loader.map('aurelia-logging-console', loggingConsoleName);
+        })]).then(function() {
+          return loader.loadModule(frameworkName).then(function(m) {
+            return Aurelia = m.Aurelia;
+          });
+        });
+      });
+    });
+  }
+  function handleApp(loader, appHost) {
+    return config(loader, appHost, appHost.getAttribute('aurelia-app'));
+  }
+  function config(loader, appHost, configModuleId) {
+    var aurelia = new Aurelia(loader);
+    aurelia.host = appHost;
+    if (configModuleId) {
+      return loader.loadModule(configModuleId).then(function(customConfig) {
+        return customConfig.configure(aurelia);
+      });
+    }
+    aurelia.use.standardConfiguration().developmentLogging();
+    return aurelia.start().then(function() {
+      return aurelia.setRoot();
+    });
+  }
+  function run() {
+    return ready(window).then(function(doc) {
+      _aureliaPalBrowser.initialize();
+      var appHost = doc.querySelectorAll('[aurelia-app]');
+      return createLoader().then(function(loader) {
+        return preparePlatform(loader).then(function() {
+          for (var i = 0,
+              ii = appHost.length; i < ii; ++i) {
+            handleApp(loader, appHost[i])['catch'](console.error.bind(console));
+          }
+          sharedLoader = loader;
+          for (var i = 0,
+              ii = bootstrapQueue.length; i < ii; ++i) {
+            bootstrapQueue[i]();
+          }
+          bootstrapQueue = null;
+        });
+      });
+    });
+  }
+  function bootstrap(configure) {
+    return onBootstrap(function(loader) {
+      var aurelia = new Aurelia(loader);
+      return configure(aurelia);
+    });
+  }
+  run();
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-bootstrapper@1.0.0-beta.1.1.2", ["npm:aurelia-bootstrapper@1.0.0-beta.1.1.2/aurelia-bootstrapper"], function(main) {
+  return main;
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
 define("npm:aurelia-dependency-injection@1.0.0-beta.1.1.3/aurelia-dependency-injection", ["exports", "npm:core-js@2.1.0", "npm:aurelia-metadata@1.0.0-beta.1.1.4", "npm:aurelia-pal@1.0.0-beta.1.1.1"], function(exports, _coreJs, _aureliaMetadata, _aureliaPal) {
   'use strict';
   exports.__esModule = true;
@@ -9959,6 +10068,759 @@ _removeDefine();
 (function() {
 var _removeDefine = System.get("@@amd-helpers").createDefine();
 define("npm:aurelia-dependency-injection@1.0.0-beta.1.1.3", ["npm:aurelia-dependency-injection@1.0.0-beta.1.1.3/aurelia-dependency-injection"], function(main) {
+  return main;
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-logging@1.0.0-beta.1.1.1/aurelia-logging", ["exports"], function(exports) {
+  'use strict';
+  exports.__esModule = true;
+  exports.getLogger = getLogger;
+  exports.addAppender = addAppender;
+  exports.setLevel = setLevel;
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError('Cannot call a class as a function');
+    }
+  }
+  var logLevel = {
+    none: 0,
+    error: 1,
+    warn: 2,
+    info: 3,
+    debug: 4
+  };
+  exports.logLevel = logLevel;
+  var loggers = {};
+  var currentLevel = logLevel.none;
+  var appenders = [];
+  var slice = Array.prototype.slice;
+  var loggerConstructionKey = {};
+  function log(logger, level, args) {
+    var i = appenders.length;
+    var current = undefined;
+    args = slice.call(args);
+    args.unshift(logger);
+    while (i--) {
+      current = appenders[i];
+      current[level].apply(current, args);
+    }
+  }
+  function debug() {
+    if (currentLevel < 4) {
+      return;
+    }
+    log(this, 'debug', arguments);
+  }
+  function info() {
+    if (currentLevel < 3) {
+      return;
+    }
+    log(this, 'info', arguments);
+  }
+  function warn() {
+    if (currentLevel < 2) {
+      return;
+    }
+    log(this, 'warn', arguments);
+  }
+  function error() {
+    if (currentLevel < 1) {
+      return;
+    }
+    log(this, 'error', arguments);
+  }
+  function connectLogger(logger) {
+    logger.debug = debug;
+    logger.info = info;
+    logger.warn = warn;
+    logger.error = error;
+  }
+  function createLogger(id) {
+    var logger = new Logger(id, loggerConstructionKey);
+    if (appenders.length) {
+      connectLogger(logger);
+    }
+    return logger;
+  }
+  function getLogger(id) {
+    return loggers[id] || (loggers[id] = createLogger(id));
+  }
+  function addAppender(appender) {
+    appenders.push(appender);
+    if (appenders.length === 1) {
+      for (var key in loggers) {
+        connectLogger(loggers[key]);
+      }
+    }
+  }
+  function setLevel(level) {
+    currentLevel = level;
+  }
+  var Logger = (function() {
+    function Logger(id, key) {
+      _classCallCheck(this, Logger);
+      if (key !== loggerConstructionKey) {
+        throw new Error('You cannot instantiate "Logger". Use the "getLogger" API instead.');
+      }
+      this.id = id;
+    }
+    Logger.prototype.debug = function debug(message) {};
+    Logger.prototype.info = function info(message) {};
+    Logger.prototype.warn = function warn(message) {};
+    Logger.prototype.error = function error(message) {};
+    return Logger;
+  })();
+  exports.Logger = Logger;
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-logging@1.0.0-beta.1.1.1", ["npm:aurelia-logging@1.0.0-beta.1.1.1/aurelia-logging"], function(main) {
+  return main;
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-event-aggregator@1.0.0-beta.1.1.1/aurelia-event-aggregator", ["exports", "npm:aurelia-logging@1.0.0-beta.1.1.1"], function(exports, _aureliaLogging) {
+  'use strict';
+  exports.__esModule = true;
+  exports.includeEventsIn = includeEventsIn;
+  exports.configure = configure;
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError('Cannot call a class as a function');
+    }
+  }
+  var logger = _aureliaLogging.getLogger('event-aggregator');
+  var Handler = (function() {
+    function Handler(messageType, callback) {
+      _classCallCheck(this, Handler);
+      this.messageType = messageType;
+      this.callback = callback;
+    }
+    Handler.prototype.handle = function handle(message) {
+      if (message instanceof this.messageType) {
+        this.callback.call(null, message);
+      }
+    };
+    return Handler;
+  })();
+  var EventAggregator = (function() {
+    function EventAggregator() {
+      _classCallCheck(this, EventAggregator);
+      this.eventLookup = {};
+      this.messageHandlers = [];
+    }
+    EventAggregator.prototype.publish = function publish(event, data) {
+      var subscribers = undefined;
+      var i = undefined;
+      if (!event) {
+        throw new Error('Event was invalid.');
+      }
+      if (typeof event === 'string') {
+        subscribers = this.eventLookup[event];
+        if (subscribers) {
+          subscribers = subscribers.slice();
+          i = subscribers.length;
+          try {
+            while (i--) {
+              subscribers[i](data, event);
+            }
+          } catch (e) {
+            logger.error(e);
+          }
+        }
+      } else {
+        subscribers = this.messageHandlers.slice();
+        i = subscribers.length;
+        try {
+          while (i--) {
+            subscribers[i].handle(event);
+          }
+        } catch (e) {
+          logger.error(e);
+        }
+      }
+    };
+    EventAggregator.prototype.subscribe = function subscribe(event, callback) {
+      var handler = undefined;
+      var subscribers = undefined;
+      if (!event) {
+        throw new Error('Event channel/type was invalid.');
+      }
+      if (typeof event === 'string') {
+        handler = callback;
+        subscribers = this.eventLookup[event] || (this.eventLookup[event] = []);
+      } else {
+        handler = new Handler(event, callback);
+        subscribers = this.messageHandlers;
+      }
+      subscribers.push(handler);
+      return {dispose: function dispose() {
+          var idx = subscribers.indexOf(handler);
+          if (idx !== -1) {
+            subscribers.splice(idx, 1);
+          }
+        }};
+    };
+    EventAggregator.prototype.subscribeOnce = function subscribeOnce(event, callback) {
+      var sub = this.subscribe(event, function(a, b) {
+        sub.dispose();
+        return callback(a, b);
+      });
+      return sub;
+    };
+    return EventAggregator;
+  })();
+  exports.EventAggregator = EventAggregator;
+  function includeEventsIn(obj) {
+    var ea = new EventAggregator();
+    obj.subscribeOnce = function(event, callback) {
+      return ea.subscribeOnce(event, callback);
+    };
+    obj.subscribe = function(event, callback) {
+      return ea.subscribe(event, callback);
+    };
+    obj.publish = function(event, data) {
+      ea.publish(event, data);
+    };
+    return ea;
+  }
+  function configure(config) {
+    config.instance(EventAggregator, includeEventsIn(config.aurelia));
+  }
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-event-aggregator@1.0.0-beta.1.1.1", ["npm:aurelia-event-aggregator@1.0.0-beta.1.1.1/aurelia-event-aggregator"], function(main) {
+  return main;
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-fetch-client@1.0.0-beta.1.1.0/aurelia-fetch-client", ["exports", "npm:core-js@2.1.0"], function(exports, _coreJs) {
+  'use strict';
+  exports.__esModule = true;
+  exports.json = json;
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError('Cannot call a class as a function');
+    }
+  }
+  function json(body) {
+    return new Blob([JSON.stringify(body)], {type: 'application/json'});
+  }
+  var HttpClientConfiguration = (function() {
+    function HttpClientConfiguration() {
+      _classCallCheck(this, HttpClientConfiguration);
+      this.baseUrl = '';
+      this.defaults = {};
+      this.interceptors = [];
+    }
+    HttpClientConfiguration.prototype.withBaseUrl = function withBaseUrl(baseUrl) {
+      this.baseUrl = baseUrl;
+      return this;
+    };
+    HttpClientConfiguration.prototype.withDefaults = function withDefaults(defaults) {
+      this.defaults = defaults;
+      return this;
+    };
+    HttpClientConfiguration.prototype.withInterceptor = function withInterceptor(interceptor) {
+      this.interceptors.push(interceptor);
+      return this;
+    };
+    HttpClientConfiguration.prototype.useStandardConfiguration = function useStandardConfiguration() {
+      var standardConfig = {credentials: 'same-origin'};
+      Object.assign(this.defaults, standardConfig, this.defaults);
+      return this.rejectErrorResponses();
+    };
+    HttpClientConfiguration.prototype.rejectErrorResponses = function rejectErrorResponses() {
+      return this.withInterceptor({response: rejectOnError});
+    };
+    return HttpClientConfiguration;
+  })();
+  exports.HttpClientConfiguration = HttpClientConfiguration;
+  function rejectOnError(response) {
+    if (!response.ok) {
+      throw response;
+    }
+    return response;
+  }
+  var HttpClient = (function() {
+    function HttpClient() {
+      _classCallCheck(this, HttpClient);
+      this.activeRequestCount = 0;
+      this.isRequesting = false;
+      this.isConfigured = false;
+      this.baseUrl = '';
+      this.defaults = null;
+      this.interceptors = [];
+      if (typeof fetch === 'undefined') {
+        throw new Error('HttpClient requires a Fetch API implementation, but the current environment doesn\'t support it. You may need to load a polyfill such as https://github.com/github/fetch.');
+      }
+    }
+    HttpClient.prototype.configure = function configure(config) {
+      var _interceptors;
+      var normalizedConfig = undefined;
+      if (typeof config === 'object') {
+        normalizedConfig = {defaults: config};
+      } else if (typeof config === 'function') {
+        normalizedConfig = new HttpClientConfiguration();
+        var c = config(normalizedConfig);
+        if (HttpClientConfiguration.prototype.isPrototypeOf(c)) {
+          normalizedConfig = c;
+        }
+      } else {
+        throw new Error('invalid config');
+      }
+      var defaults = normalizedConfig.defaults;
+      if (defaults && Headers.prototype.isPrototypeOf(defaults.headers)) {
+        throw new Error('Default headers must be a plain object.');
+      }
+      this.baseUrl = normalizedConfig.baseUrl;
+      this.defaults = defaults;
+      (_interceptors = this.interceptors).push.apply(_interceptors, normalizedConfig.interceptors || []);
+      this.isConfigured = true;
+      return this;
+    };
+    HttpClient.prototype.fetch = (function(_fetch) {
+      function fetch(_x, _x2) {
+        return _fetch.apply(this, arguments);
+      }
+      fetch.toString = function() {
+        return _fetch.toString();
+      };
+      return fetch;
+    })(function(input, init) {
+      var _this = this;
+      trackRequestStart.call(this);
+      var request = Promise.resolve().then(function() {
+        return buildRequest.call(_this, input, init, _this.defaults);
+      });
+      var promise = processRequest(request, this.interceptors).then(function(result) {
+        var response = null;
+        if (Response.prototype.isPrototypeOf(result)) {
+          response = result;
+        } else if (Request.prototype.isPrototypeOf(result)) {
+          request = Promise.resolve(result);
+          response = fetch(result);
+        } else {
+          throw new Error('An invalid result was returned by the interceptor chain. Expected a Request or Response instance, but got [' + result + ']');
+        }
+        return request.then(function(_request) {
+          return processResponse(response, _this.interceptors, _request);
+        });
+      });
+      return trackRequestEndWith.call(this, promise);
+    });
+    return HttpClient;
+  })();
+  exports.HttpClient = HttpClient;
+  function trackRequestStart() {
+    this.isRequesting = !!++this.activeRequestCount;
+  }
+  function trackRequestEnd() {
+    this.isRequesting = !!--this.activeRequestCount;
+  }
+  function trackRequestEndWith(promise) {
+    var handle = trackRequestEnd.bind(this);
+    promise.then(handle, handle);
+    return promise;
+  }
+  function parseHeaderValues(headers) {
+    var parsedHeaders = {};
+    for (var _name in headers || {}) {
+      if (headers.hasOwnProperty(_name)) {
+        parsedHeaders[_name] = typeof headers[_name] === 'function' ? headers[_name]() : headers[_name];
+      }
+    }
+    return parsedHeaders;
+  }
+  function buildRequest(input) {
+    var init = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+    var defaults = this.defaults || {};
+    var source = undefined;
+    var url = undefined;
+    var body = undefined;
+    if (Request.prototype.isPrototypeOf(input)) {
+      if (!this.isConfigured) {
+        return input;
+      }
+      source = input;
+      url = input.url;
+      if (input.method !== 'GET' && input.method !== 'HEAD') {
+        body = input.blob();
+      }
+    } else {
+      source = init;
+      url = input;
+      body = init.body;
+    }
+    var bodyObj = body ? {body: body} : null;
+    var parsedDefaultHeaders = parseHeaderValues(defaults.headers);
+    var requestInit = Object.assign({}, defaults, {headers: {}}, source, bodyObj);
+    var requestContentType = new Headers(requestInit.headers).get('Content-Type');
+    var request = new Request((this.baseUrl || '') + url, requestInit);
+    if (!requestContentType && new Headers(parsedDefaultHeaders).has('content-type')) {
+      request.headers.set('Content-Type', new Headers(parsedDefaultHeaders).get('content-type'));
+    }
+    setDefaultHeaders(request.headers, parsedDefaultHeaders);
+    if (body && Blob.prototype.isPrototypeOf(body) && body.type) {
+      request.headers.set('Content-Type', body.type);
+    }
+    return request;
+  }
+  function setDefaultHeaders(headers, defaultHeaders) {
+    for (var _name2 in defaultHeaders || {}) {
+      if (defaultHeaders.hasOwnProperty(_name2) && !headers.has(_name2)) {
+        headers.set(_name2, defaultHeaders[_name2]);
+      }
+    }
+  }
+  function processRequest(request, interceptors) {
+    return applyInterceptors(request, interceptors, 'request', 'requestError');
+  }
+  function processResponse(response, interceptors, request) {
+    return applyInterceptors(response, interceptors, 'response', 'responseError', request);
+  }
+  function applyInterceptors(input, interceptors, successName, errorName) {
+    for (var _len = arguments.length,
+        interceptorArgs = Array(_len > 4 ? _len - 4 : 0),
+        _key = 4; _key < _len; _key++) {
+      interceptorArgs[_key - 4] = arguments[_key];
+    }
+    return (interceptors || []).reduce(function(chain, interceptor) {
+      var successHandler = interceptor[successName];
+      var errorHandler = interceptor[errorName];
+      return chain.then(successHandler && function(value) {
+        return successHandler.call.apply(successHandler, [interceptor, value].concat(interceptorArgs));
+      }, errorHandler && function(reason) {
+        return errorHandler.call.apply(errorHandler, [interceptor, reason].concat(interceptorArgs));
+      });
+    }, Promise.resolve(input));
+  }
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-fetch-client@1.0.0-beta.1.1.0", ["npm:aurelia-fetch-client@1.0.0-beta.1.1.0/aurelia-fetch-client"], function(main) {
+  return main;
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-path@1.0.0-beta.1.1.0/aurelia-path", ["exports"], function(exports) {
+  'use strict';
+  exports.__esModule = true;
+  exports.relativeToFile = relativeToFile;
+  exports.join = join;
+  exports.buildQueryString = buildQueryString;
+  exports.parseQueryString = parseQueryString;
+  function trimDots(ary) {
+    for (var i = 0; i < ary.length; ++i) {
+      var part = ary[i];
+      if (part === '.') {
+        ary.splice(i, 1);
+        i -= 1;
+      } else if (part === '..') {
+        if (i === 0 || i === 1 && ary[2] === '..' || ary[i - 1] === '..') {
+          continue;
+        } else if (i > 0) {
+          ary.splice(i - 1, 2);
+          i -= 2;
+        }
+      }
+    }
+  }
+  function relativeToFile(name, file) {
+    var fileParts = file && file.split('/');
+    var nameParts = name.trim().split('/');
+    if (nameParts[0].charAt(0) === '.' && fileParts) {
+      var normalizedBaseParts = fileParts.slice(0, fileParts.length - 1);
+      nameParts.unshift.apply(nameParts, normalizedBaseParts);
+    }
+    trimDots(nameParts);
+    return nameParts.join('/');
+  }
+  function join(path1, path2) {
+    if (!path1) {
+      return path2;
+    }
+    if (!path2) {
+      return path1;
+    }
+    var schemeMatch = path1.match(/^([^/]*?:)\//);
+    var scheme = schemeMatch && schemeMatch.length > 0 ? schemeMatch[1] : '';
+    path1 = path1.substr(scheme.length);
+    var urlPrefix = undefined;
+    if (path1.indexOf('///') === 0 && scheme === 'file:') {
+      urlPrefix = '///';
+    } else if (path1.indexOf('//') === 0) {
+      urlPrefix = '//';
+    } else if (path1.indexOf('/') === 0) {
+      urlPrefix = '/';
+    } else {
+      urlPrefix = '';
+    }
+    var trailingSlash = path2.slice(-1) === '/' ? '/' : '';
+    var url1 = path1.split('/');
+    var url2 = path2.split('/');
+    var url3 = [];
+    for (var i = 0,
+        ii = url1.length; i < ii; ++i) {
+      if (url1[i] === '..') {
+        url3.pop();
+      } else if (url1[i] === '.' || url1[i] === '') {
+        continue;
+      } else {
+        url3.push(url1[i]);
+      }
+    }
+    for (var i = 0,
+        ii = url2.length; i < ii; ++i) {
+      if (url2[i] === '..') {
+        url3.pop();
+      } else if (url2[i] === '.' || url2[i] === '') {
+        continue;
+      } else {
+        url3.push(url2[i]);
+      }
+    }
+    return scheme + urlPrefix + url3.join('/') + trailingSlash;
+  }
+  function buildQueryString(params) {
+    var pairs = [];
+    var keys = Object.keys(params || {}).sort();
+    var encode = encodeURIComponent;
+    var encodeKey = function encodeKey(k) {
+      return encode(k).replace('%24', '$');
+    };
+    for (var i = 0,
+        len = keys.length; i < len; i++) {
+      var key = keys[i];
+      var value = params[key];
+      if (value === null || value === undefined) {
+        continue;
+      }
+      if (Array.isArray(value)) {
+        var arrayKey = encodeKey(key) + '[]';
+        for (var j = 0,
+            l = value.length; j < l; j++) {
+          pairs.push(arrayKey + '=' + encode(value[j]));
+        }
+      } else {
+        pairs.push(encodeKey(key) + '=' + encode(value));
+      }
+    }
+    if (pairs.length === 0) {
+      return '';
+    }
+    return pairs.join('&');
+  }
+  function parseQueryString(queryString) {
+    var queryParams = {};
+    if (!queryString || typeof queryString !== 'string') {
+      return queryParams;
+    }
+    var query = queryString;
+    if (query.charAt(0) === '?') {
+      query = query.substr(1);
+    }
+    var pairs = query.split('&');
+    for (var i = 0; i < pairs.length; i++) {
+      var pair = pairs[i].split('=');
+      var key = decodeURIComponent(pair[0]);
+      var keyLength = key.length;
+      var isArray = false;
+      var value = undefined;
+      if (!key) {
+        continue;
+      } else if (pair.length === 1) {
+        value = true;
+      } else {
+        if (keyLength > 2 && key.slice(keyLength - 2) === '[]') {
+          isArray = true;
+          key = key.slice(0, keyLength - 2);
+          if (!queryParams[key]) {
+            queryParams[key] = [];
+          }
+        }
+        value = pair[1] ? decodeURIComponent(pair[1]) : '';
+      }
+      if (isArray) {
+        queryParams[key].push(value);
+      } else {
+        queryParams[key] = value;
+      }
+    }
+    return queryParams;
+  }
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-path@1.0.0-beta.1.1.0", ["npm:aurelia-path@1.0.0-beta.1.1.0/aurelia-path"], function(main) {
+  return main;
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-loader@1.0.0-beta.1.1.1/aurelia-loader", ["exports", "npm:aurelia-path@1.0.0-beta.1.1.0", "npm:aurelia-metadata@1.0.0-beta.1.1.4"], function(exports, _aureliaPath, _aureliaMetadata) {
+  'use strict';
+  exports.__esModule = true;
+  var _createClass = (function() {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ('value' in descriptor)
+          descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+    return function(Constructor, protoProps, staticProps) {
+      if (protoProps)
+        defineProperties(Constructor.prototype, protoProps);
+      if (staticProps)
+        defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  })();
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError('Cannot call a class as a function');
+    }
+  }
+  var TemplateDependency = function TemplateDependency(src, name) {
+    _classCallCheck(this, TemplateDependency);
+    this.src = src;
+    this.name = name;
+  };
+  exports.TemplateDependency = TemplateDependency;
+  var TemplateRegistryEntry = (function() {
+    function TemplateRegistryEntry(address) {
+      _classCallCheck(this, TemplateRegistryEntry);
+      this.templateIsLoaded = false;
+      this.factoryIsReady = false;
+      this.resources = null;
+      this.dependencies = null;
+      this.address = address;
+      this.onReady = null;
+      this._template = null;
+      this._factory = null;
+    }
+    TemplateRegistryEntry.prototype.addDependency = function addDependency(src, name) {
+      var finalSrc = typeof src === 'string' ? _aureliaPath.relativeToFile(src, this.address) : _aureliaMetadata.Origin.get(src).moduleId;
+      this.dependencies.push(new TemplateDependency(finalSrc, name));
+    };
+    _createClass(TemplateRegistryEntry, [{
+      key: 'template',
+      get: function get() {
+        return this._template;
+      },
+      set: function set(value) {
+        var address = this.address;
+        var requires = undefined;
+        var current = undefined;
+        var src = undefined;
+        var dependencies = undefined;
+        this._template = value;
+        this.templateIsLoaded = true;
+        requires = value.content.querySelectorAll('require');
+        dependencies = this.dependencies = new Array(requires.length);
+        for (var i = 0,
+            ii = requires.length; i < ii; ++i) {
+          current = requires[i];
+          src = current.getAttribute('from');
+          if (!src) {
+            throw new Error('<require> element in ' + address + ' has no "from" attribute.');
+          }
+          dependencies[i] = new TemplateDependency(_aureliaPath.relativeToFile(src, address), current.getAttribute('as'));
+          if (current.parentNode) {
+            current.parentNode.removeChild(current);
+          }
+        }
+      }
+    }, {
+      key: 'factory',
+      get: function get() {
+        return this._factory;
+      },
+      set: function set(value) {
+        this._factory = value;
+        this.factoryIsReady = true;
+      }
+    }]);
+    return TemplateRegistryEntry;
+  })();
+  exports.TemplateRegistryEntry = TemplateRegistryEntry;
+  var Loader = (function() {
+    function Loader() {
+      _classCallCheck(this, Loader);
+      this.templateRegistry = {};
+    }
+    Loader.prototype.map = function map(id, source) {
+      throw new Error('Loaders must implement map(id, source).');
+    };
+    Loader.prototype.normalizeSync = function normalizeSync(moduleId, relativeTo) {
+      throw new Error('Loaders must implement normalizeSync(moduleId, relativeTo).');
+    };
+    Loader.prototype.normalize = function normalize(moduleId, relativeTo) {
+      throw new Error('Loaders must implement normalize(moduleId: string, relativeTo: string): Promise<string>.');
+    };
+    Loader.prototype.loadModule = function loadModule(id) {
+      throw new Error('Loaders must implement loadModule(id).');
+    };
+    Loader.prototype.loadAllModules = function loadAllModules(ids) {
+      throw new Error('Loader must implement loadAllModules(ids).');
+    };
+    Loader.prototype.loadTemplate = function loadTemplate(url) {
+      throw new Error('Loader must implement loadTemplate(url).');
+    };
+    Loader.prototype.loadText = function loadText(url) {
+      throw new Error('Loader must implement loadText(url).');
+    };
+    Loader.prototype.applyPluginToUrl = function applyPluginToUrl(url, pluginName) {
+      throw new Error('Loader must implement applyPluginToUrl(url, pluginName).');
+    };
+    Loader.prototype.addPlugin = function addPlugin(pluginName, implementation) {
+      throw new Error('Loader must implement addPlugin(pluginName, implementation).');
+    };
+    Loader.prototype.getOrCreateTemplateRegistryEntry = function getOrCreateTemplateRegistryEntry(address) {
+      return this.templateRegistry[address] || (this.templateRegistry[address] = new TemplateRegistryEntry(address));
+    };
+    return Loader;
+  })();
+  exports.Loader = Loader;
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-loader@1.0.0-beta.1.1.1", ["npm:aurelia-loader@1.0.0-beta.1.1.1/aurelia-loader"], function(main) {
   return main;
 });
 
@@ -13377,926 +14239,6 @@ _removeDefine();
 })();
 (function() {
 var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-animator-css@1.0.0-beta.1.1.1/aurelia-animator-css", ["exports", "npm:aurelia-templating@1.0.0-beta.1.1.1", "npm:aurelia-pal@1.0.0-beta.1.1.1"], function(exports, _aureliaTemplating, _aureliaPal) {
-  'use strict';
-  exports.__esModule = true;
-  exports.configure = configure;
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError('Cannot call a class as a function');
-    }
-  }
-  var CssAnimator = (function() {
-    function CssAnimator() {
-      _classCallCheck(this, CssAnimator);
-      this.useAnimationDoneClasses = false;
-      this.animationEnteredClass = 'au-entered';
-      this.animationLeftClass = 'au-left';
-      this.isAnimating = false;
-      this.verifyKeyframesExist = true;
-    }
-    CssAnimator.prototype._addMultipleEventListener = function _addMultipleEventListener(el, s, fn) {
-      var evts = s.split(' ');
-      for (var i = 0,
-          ii = evts.length; i < ii; ++i) {
-        el.addEventListener(evts[i], fn, false);
-      }
-    };
-    CssAnimator.prototype._getElementAnimationDelay = function _getElementAnimationDelay(element) {
-      var styl = _aureliaPal.DOM.getComputedStyle(element);
-      var prop = undefined;
-      var delay = undefined;
-      if (styl.getPropertyValue('animation-delay')) {
-        prop = 'animation-delay';
-      } else if (styl.getPropertyValue('-webkit-animation-delay')) {
-        prop = '-webkit-animation-delay';
-      } else if (styl.getPropertyValue('-moz-animation-delay')) {
-        prop = '-moz-animation-delay';
-      } else {
-        return 0;
-      }
-      delay = styl.getPropertyValue(prop);
-      delay = Number(delay.replace(/[^\d\.]/g, ''));
-      return delay * 1000;
-    };
-    CssAnimator.prototype._getElementAnimationNames = function _getElementAnimationNames(element) {
-      var styl = _aureliaPal.DOM.getComputedStyle(element);
-      var prefix = undefined;
-      if (styl.getPropertyValue('animation-name')) {
-        prefix = '';
-      } else if (styl.getPropertyValue('-webkit-animation-name')) {
-        prefix = '-webkit-';
-      } else if (styl.getPropertyValue('-moz-animation-name')) {
-        prefix = '-moz-';
-      } else {
-        return [];
-      }
-      var animationNames = styl.getPropertyValue(prefix + 'animation-name');
-      return animationNames ? animationNames.split(' ') : [];
-    };
-    CssAnimator.prototype._performSingleAnimate = function _performSingleAnimate(element, className) {
-      var _this = this;
-      this._triggerDOMEvent(_aureliaTemplating.animationEvent.animateBegin, element);
-      return this.addClass(element, className, true).then(function(result) {
-        _this._triggerDOMEvent(_aureliaTemplating.animationEvent.animateActive, element);
-        if (result !== false) {
-          return _this.removeClass(element, className, true).then(function() {
-            _this._triggerDOMEvent(_aureliaTemplating.animationEvent.animateDone, element);
-          });
-        }
-        return false;
-      })['catch'](function() {
-        _this._triggerDOMEvent(_aureliaTemplating.animationEvent.animateTimeout, element);
-      });
-    };
-    CssAnimator.prototype._triggerDOMEvent = function _triggerDOMEvent(eventType, element) {
-      var evt = _aureliaPal.DOM.createCustomEvent(eventType, {
-        bubbles: true,
-        cancelable: true,
-        detail: element
-      });
-      _aureliaPal.DOM.dispatchEvent(evt);
-    };
-    CssAnimator.prototype._animationChangeWithValidKeyframe = function _animationChangeWithValidKeyframe(animationNames, prevAnimationNames) {
-      var newAnimationNames = animationNames.filter(function(name) {
-        return prevAnimationNames.indexOf(name) === -1;
-      });
-      if (newAnimationNames.length === 0) {
-        return false;
-      }
-      if (!this.verifyKeyframesExist) {
-        return true;
-      }
-      var keyframesRuleType = window.CSSRule.KEYFRAMES_RULE || window.CSSRule.MOZ_KEYFRAMES_RULE || window.CSSRule.WEBKIT_KEYFRAMES_RULE;
-      var styleSheets = document.styleSheets;
-      for (var i = 0; i < styleSheets.length; ++i) {
-        var cssRules = styleSheets[i].cssRules;
-        if (!cssRules) {
-          continue;
-        }
-        for (var j = 0; j < cssRules.length; ++j) {
-          var cssRule = cssRules[j];
-          if (cssRule.type === keyframesRuleType) {
-            if (newAnimationNames.indexOf(cssRule.name) !== -1) {
-              return true;
-            }
-          }
-        }
-      }
-      return false;
-    };
-    CssAnimator.prototype.animate = function animate(element, className) {
-      var _this2 = this;
-      if (Array.isArray(element)) {
-        return Promise.all(element.map(function(el) {
-          return _this2._performSingleAnimate(el, className);
-        }));
-      }
-      return this._performSingleAnimate(element, className);
-    };
-    CssAnimator.prototype.runSequence = function runSequence(animations) {
-      var _this3 = this;
-      this._triggerDOMEvent(_aureliaTemplating.animationEvent.sequenceBegin, null);
-      return animations.reduce(function(p, anim) {
-        return p.then(function() {
-          return _this3.animate(anim.element, anim.className);
-        });
-      }, Promise.resolve(true)).then(function() {
-        _this3._triggerDOMEvent(_aureliaTemplating.animationEvent.sequenceDone, null);
-      });
-    };
-    CssAnimator.prototype.enter = function enter(element) {
-      var _this4 = this;
-      return new Promise(function(resolve, reject) {
-        var classList = element.classList;
-        _this4._triggerDOMEvent(_aureliaTemplating.animationEvent.enterBegin, element);
-        if (_this4.useAnimationDoneClasses) {
-          classList.remove(_this4.animationEnteredClass);
-          classList.remove(_this4.animationLeftClass);
-        }
-        classList.add('au-enter');
-        var prevAnimationNames = _this4._getElementAnimationNames(element);
-        var animStart = undefined;
-        var animHasStarted = false;
-        _this4._addMultipleEventListener(element, 'webkitAnimationStart animationstart', animStart = function(evAnimStart) {
-          animHasStarted = true;
-          _this4.isAnimating = true;
-          _this4._triggerDOMEvent(_aureliaTemplating.animationEvent.enterActive, element);
-          evAnimStart.stopPropagation();
-          evAnimStart.target.removeEventListener(evAnimStart.type, animStart);
-        }, false);
-        var animEnd = undefined;
-        _this4._addMultipleEventListener(element, 'webkitAnimationEnd animationend', animEnd = function(evAnimEnd) {
-          if (!animHasStarted) {
-            return;
-          }
-          evAnimEnd.stopPropagation();
-          classList.remove('au-enter-active');
-          classList.remove('au-enter');
-          evAnimEnd.target.removeEventListener(evAnimEnd.type, animEnd);
-          if (_this4.useAnimationDoneClasses && _this4.animationEnteredClass !== undefined && _this4.animationEnteredClass !== null) {
-            classList.add(_this4.animationEnteredClass);
-          }
-          _this4.isAnimating = false;
-          _this4._triggerDOMEvent(_aureliaTemplating.animationEvent.enterDone, element);
-          resolve(true);
-        }, false);
-        var parent = element.parentElement;
-        var delay = 0;
-        var cleanupAnimation = function cleanupAnimation() {
-          var animationNames = _this4._getElementAnimationNames(element);
-          if (!_this4._animationChangeWithValidKeyframe(animationNames, prevAnimationNames)) {
-            classList.remove('au-enter-active');
-            classList.remove('au-enter');
-            _this4._triggerDOMEvent(_aureliaTemplating.animationEvent.enterTimeout, element);
-            resolve(false);
-          }
-        };
-        if (parent !== null && parent !== undefined && (parent.classList.contains('au-stagger') || parent.classList.contains('au-stagger-enter'))) {
-          var elemPos = Array.prototype.indexOf.call(parent.childNodes, element);
-          delay = _this4._getElementAnimationDelay(parent) * elemPos;
-          _this4._triggerDOMEvent(_aureliaTemplating.animationEvent.staggerNext, element);
-          setTimeout(function() {
-            classList.add('au-enter-active');
-            cleanupAnimation();
-          }, delay);
-        } else {
-          classList.add('au-enter-active');
-          cleanupAnimation();
-        }
-      });
-    };
-    CssAnimator.prototype.leave = function leave(element) {
-      var _this5 = this;
-      return new Promise(function(resolve, reject) {
-        var classList = element.classList;
-        _this5._triggerDOMEvent(_aureliaTemplating.animationEvent.leaveBegin, element);
-        if (_this5.useAnimationDoneClasses) {
-          classList.remove(_this5.animationEnteredClass);
-          classList.remove(_this5.animationLeftClass);
-        }
-        classList.add('au-leave');
-        var prevAnimationNames = _this5._getElementAnimationNames(element);
-        var animStart = undefined;
-        var animHasStarted = false;
-        _this5._addMultipleEventListener(element, 'webkitAnimationStart animationstart', animStart = function(evAnimStart) {
-          animHasStarted = true;
-          _this5.isAnimating = true;
-          _this5._triggerDOMEvent(_aureliaTemplating.animationEvent.leaveActive, element);
-          evAnimStart.stopPropagation();
-          evAnimStart.target.removeEventListener(evAnimStart.type, animStart);
-        }, false);
-        var animEnd = undefined;
-        _this5._addMultipleEventListener(element, 'webkitAnimationEnd animationend', animEnd = function(evAnimEnd) {
-          if (!animHasStarted) {
-            return;
-          }
-          evAnimEnd.stopPropagation();
-          classList.remove('au-leave-active');
-          classList.remove('au-leave');
-          evAnimEnd.target.removeEventListener(evAnimEnd.type, animEnd);
-          if (_this5.useAnimationDoneClasses && _this5.animationLeftClass !== undefined && _this5.animationLeftClass !== null) {
-            classList.add(_this5.animationLeftClass);
-          }
-          _this5.isAnimating = false;
-          _this5._triggerDOMEvent(_aureliaTemplating.animationEvent.leaveDone, element);
-          resolve(true);
-        }, false);
-        var parent = element.parentElement;
-        var delay = 0;
-        var cleanupAnimation = function cleanupAnimation() {
-          var animationNames = _this5._getElementAnimationNames(element);
-          if (!_this5._animationChangeWithValidKeyframe(animationNames, prevAnimationNames)) {
-            classList.remove('au-leave-active');
-            classList.remove('au-leave');
-            _this5._triggerDOMEvent(_aureliaTemplating.animationEvent.leaveTimeout, element);
-            resolve(false);
-          }
-        };
-        if (parent !== null && parent !== undefined && (parent.classList.contains('au-stagger') || parent.classList.contains('au-stagger-leave'))) {
-          var elemPos = Array.prototype.indexOf.call(parent.childNodes, element);
-          delay = _this5._getElementAnimationDelay(parent) * elemPos;
-          _this5._triggerDOMEvent(_aureliaTemplating.animationEvent.staggerNext, element);
-          setTimeout(function() {
-            classList.add('au-leave-active');
-            cleanupAnimation();
-          }, delay);
-        } else {
-          classList.add('au-leave-active');
-          cleanupAnimation();
-        }
-      });
-    };
-    CssAnimator.prototype.removeClass = function removeClass(element, className) {
-      var _this6 = this;
-      var suppressEvents = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
-      return new Promise(function(resolve, reject) {
-        var classList = element.classList;
-        if (!classList.contains(className) && !classList.contains(className + '-add')) {
-          resolve(false);
-          return;
-        }
-        if (suppressEvents !== true) {
-          _this6._triggerDOMEvent(_aureliaTemplating.animationEvent.removeClassBegin, element);
-        }
-        classList.remove(className);
-        var prevAnimationNames = _this6._getElementAnimationNames(element);
-        var animStart = undefined;
-        var animHasStarted = false;
-        _this6._addMultipleEventListener(element, 'webkitAnimationStart animationstart', animStart = function(evAnimStart) {
-          animHasStarted = true;
-          _this6.isAnimating = true;
-          if (suppressEvents !== true) {
-            _this6._triggerDOMEvent(_aureliaTemplating.animationEvent.removeClassActive, element);
-          }
-          evAnimStart.stopPropagation();
-          evAnimStart.target.removeEventListener(evAnimStart.type, animStart);
-        }, false);
-        var animEnd = undefined;
-        _this6._addMultipleEventListener(element, 'webkitAnimationEnd animationend', animEnd = function(evAnimEnd) {
-          if (!animHasStarted) {
-            return;
-          }
-          evAnimEnd.stopPropagation();
-          classList.remove(className + '-remove');
-          evAnimEnd.target.removeEventListener(evAnimEnd.type, animEnd);
-          _this6.isAnimating = false;
-          if (suppressEvents !== true) {
-            _this6._triggerDOMEvent(_aureliaTemplating.animationEvent.removeClassDone, element);
-          }
-          resolve(true);
-        }, false);
-        classList.add(className + '-remove');
-        var animationNames = _this6._getElementAnimationNames(element);
-        if (!_this6._animationChangeWithValidKeyframe(animationNames, prevAnimationNames)) {
-          classList.remove(className + '-remove');
-          classList.remove(className);
-          if (suppressEvents !== true) {
-            _this6._triggerDOMEvent(_aureliaTemplating.animationEvent.removeClassTimeout, element);
-          }
-          resolve(false);
-        }
-      });
-    };
-    CssAnimator.prototype.addClass = function addClass(element, className) {
-      var _this7 = this;
-      var suppressEvents = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
-      return new Promise(function(resolve, reject) {
-        var classList = element.classList;
-        if (suppressEvents !== true) {
-          _this7._triggerDOMEvent(_aureliaTemplating.animationEvent.addClassBegin, element);
-        }
-        var animStart = undefined;
-        var animHasStarted = false;
-        _this7._addMultipleEventListener(element, 'webkitAnimationStart animationstart', animStart = function(evAnimStart) {
-          animHasStarted = true;
-          _this7.isAnimating = true;
-          if (suppressEvents !== true) {
-            _this7._triggerDOMEvent(_aureliaTemplating.animationEvent.addClassActive, element);
-          }
-          evAnimStart.stopPropagation();
-          evAnimStart.target.removeEventListener(evAnimStart.type, animStart);
-        }, false);
-        var animEnd = undefined;
-        _this7._addMultipleEventListener(element, 'webkitAnimationEnd animationend', animEnd = function(evAnimEnd) {
-          if (!animHasStarted) {
-            return;
-          }
-          evAnimEnd.stopPropagation();
-          classList.add(className);
-          classList.remove(className + '-add');
-          evAnimEnd.target.removeEventListener(evAnimEnd.type, animEnd);
-          _this7.isAnimating = false;
-          if (suppressEvents !== true) {
-            _this7._triggerDOMEvent(_aureliaTemplating.animationEvent.addClassDone, element);
-          }
-          resolve(true);
-        }, false);
-        var prevAnimationNames = _this7._getElementAnimationNames(element);
-        classList.add(className + '-add');
-        var animationNames = _this7._getElementAnimationNames(element);
-        if (!_this7._animationChangeWithValidKeyframe(animationNames, prevAnimationNames)) {
-          classList.remove(className + '-add');
-          classList.add(className);
-          if (suppressEvents !== true) {
-            _this7._triggerDOMEvent(_aureliaTemplating.animationEvent.addClassTimeout, element);
-          }
-          resolve(false);
-        }
-      });
-    };
-    return CssAnimator;
-  })();
-  exports.CssAnimator = CssAnimator;
-  function configure(config, callback) {
-    var animator = config.container.get(CssAnimator);
-    config.container.get(_aureliaTemplating.TemplatingEngine).configureAnimator(animator);
-    if (typeof callback === 'function') {
-      callback(animator);
-    }
-  }
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-animator-css@1.0.0-beta.1.1.1", ["npm:aurelia-animator-css@1.0.0-beta.1.1.1/aurelia-animator-css"], function(main) {
-  return main;
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-pal-browser@1.0.0-beta.1.1.3/aurelia-pal-browser", ["exports", "npm:core-js@2.1.0", "npm:aurelia-pal@1.0.0-beta.1.1.1"], function(exports, _coreJs, _aureliaPal) {
-  'use strict';
-  exports.__esModule = true;
-  exports._ensureFunctionName = _ensureFunctionName;
-  exports._ensureClassList = _ensureClassList;
-  exports._ensurePerformance = _ensurePerformance;
-  exports._ensureCustomEvent = _ensureCustomEvent;
-  exports._ensureElementMatches = _ensureElementMatches;
-  exports._ensureHTMLTemplateElement = _ensureHTMLTemplateElement;
-  exports.initialize = initialize;
-  function _ensureFunctionName() {
-    function test() {}
-    if (!test.name) {
-      Object.defineProperty(Function.prototype, 'name', {get: function get() {
-          var name = this.toString().match(/^\s*function\s*(\S*)\s*\(/)[1];
-          Object.defineProperty(this, 'name', {value: name});
-          return name;
-        }});
-    }
-  }
-  function _ensureClassList() {
-    if (!('classList' in document.createElement('_')) || document.createElementNS && !('classList' in document.createElementNS('http://www.w3.org/2000/svg', 'g'))) {
-      (function() {
-        var protoProp = 'prototype';
-        var strTrim = String.prototype.trim;
-        var arrIndexOf = Array.prototype.indexOf;
-        var emptyArray = [];
-        var DOMEx = function DOMEx(type, message) {
-          this.name = type;
-          this.code = DOMException[type];
-          this.message = message;
-        };
-        var checkTokenAndGetIndex = function checkTokenAndGetIndex(classList, token) {
-          if (token === '') {
-            throw new DOMEx('SYNTAX_ERR', 'An invalid or illegal string was specified');
-          }
-          if (/\s/.test(token)) {
-            throw new DOMEx('INVALID_CHARACTER_ERR', 'String contains an invalid character');
-          }
-          return arrIndexOf.call(classList, token);
-        };
-        var ClassList = function ClassList(elem) {
-          var trimmedClasses = strTrim.call(elem.getAttribute('class') || '');
-          var classes = trimmedClasses ? trimmedClasses.split(/\s+/) : emptyArray;
-          for (var i = 0,
-              ii = classes.length; i < ii; ++i) {
-            this.push(classes[i]);
-          }
-          this._updateClassName = function() {
-            elem.setAttribute('class', this.toString());
-          };
-        };
-        var classListProto = ClassList[protoProp] = [];
-        DOMEx[protoProp] = Error[protoProp];
-        classListProto.item = function(i) {
-          return this[i] || null;
-        };
-        classListProto.contains = function(token) {
-          token += '';
-          return checkTokenAndGetIndex(this, token) !== -1;
-        };
-        classListProto.add = function() {
-          var tokens = arguments;
-          var i = 0;
-          var ii = tokens.length;
-          var token = undefined;
-          var updated = false;
-          do {
-            token = tokens[i] + '';
-            if (checkTokenAndGetIndex(this, token) === -1) {
-              this.push(token);
-              updated = true;
-            }
-          } while (++i < ii);
-          if (updated) {
-            this._updateClassName();
-          }
-        };
-        classListProto.remove = function() {
-          var tokens = arguments;
-          var i = 0;
-          var ii = tokens.length;
-          var token = undefined;
-          var updated = false;
-          var index = undefined;
-          do {
-            token = tokens[i] + '';
-            index = checkTokenAndGetIndex(this, token);
-            while (index !== -1) {
-              this.splice(index, 1);
-              updated = true;
-              index = checkTokenAndGetIndex(this, token);
-            }
-          } while (++i < ii);
-          if (updated) {
-            this._updateClassName();
-          }
-        };
-        classListProto.toggle = function(token, force) {
-          token += '';
-          var result = this.contains(token);
-          var method = result ? force !== true && 'remove' : force !== false && 'add';
-          if (method) {
-            this[method](token);
-          }
-          if (force === true || force === false) {
-            return force;
-          }
-          return !result;
-        };
-        classListProto.toString = function() {
-          return this.join(' ');
-        };
-        Object.defineProperty(Element.prototype, 'classList', {
-          get: function get() {
-            return new ClassList(this);
-          },
-          enumerable: true,
-          configurable: true
-        });
-      })();
-    } else {
-      var testElement = document.createElement('_');
-      testElement.classList.add('c1', 'c2');
-      if (!testElement.classList.contains('c2')) {
-        var createMethod = function createMethod(method) {
-          var original = DOMTokenList.prototype[method];
-          DOMTokenList.prototype[method] = function(token) {
-            for (var i = 0,
-                ii = arguments.length; i < ii; ++i) {
-              token = arguments[i];
-              original.call(this, token);
-            }
-          };
-        };
-        createMethod('add');
-        createMethod('remove');
-      }
-      testElement.classList.toggle('c3', false);
-      if (testElement.classList.contains('c3')) {
-        (function() {
-          var _toggle = DOMTokenList.prototype.toggle;
-          DOMTokenList.prototype.toggle = function(token, force) {
-            if (1 in arguments && !this.contains(token) === !force) {
-              return force;
-            }
-            return _toggle.call(this, token);
-          };
-        })();
-      }
-      testElement = null;
-    }
-  }
-  function _ensurePerformance() {
-    if ('performance' in window === false) {
-      window.performance = {};
-    }
-    Date.now = Date.now || function() {
-      return new Date().getTime();
-    };
-    if ('now' in window.performance === false) {
-      (function() {
-        var nowOffset = Date.now();
-        if (performance.timing && performance.timing.navigationStart) {
-          nowOffset = performance.timing.navigationStart;
-        }
-        window.performance.now = function now() {
-          return Date.now() - nowOffset;
-        };
-      })();
-    }
-  }
-  function _ensureCustomEvent() {
-    if (!window.CustomEvent || typeof window.CustomEvent !== 'function') {
-      var _CustomEvent = function _CustomEvent(event, params) {
-        params = params || {
-          bubbles: false,
-          cancelable: false,
-          detail: undefined
-        };
-        var evt = document.createEvent('CustomEvent');
-        evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
-        return evt;
-      };
-      _CustomEvent.prototype = window.Event.prototype;
-      window.CustomEvent = _CustomEvent;
-    }
-  }
-  function _ensureElementMatches() {
-    if (Element && !Element.prototype.matches) {
-      var proto = Element.prototype;
-      proto.matches = proto.matchesSelector || proto.mozMatchesSelector || proto.msMatchesSelector || proto.oMatchesSelector || proto.webkitMatchesSelector;
-    }
-  }
-  var _FEATURE = {};
-  exports._FEATURE = _FEATURE;
-  _FEATURE.shadowDOM = (function() {
-    return !!HTMLElement.prototype.createShadowRoot;
-  })();
-  _FEATURE.scopedCSS = (function() {
-    return 'scoped' in document.createElement('style');
-  })();
-  _FEATURE.htmlTemplateElement = (function() {
-    return 'content' in document.createElement('template');
-  })();
-  _FEATURE.mutationObserver = (function() {
-    return !!(window.MutationObserver || window.WebKitMutationObserver);
-  })();
-  function _ensureHTMLTemplateElement() {
-    function isSVGTemplate(el) {
-      return el.tagName === 'template' && el.namespaceURI === 'http://www.w3.org/2000/svg';
-    }
-    function fixSVGTemplateElement(el) {
-      var template = el.ownerDocument.createElement('template');
-      var attrs = el.attributes;
-      var length = attrs.length;
-      var attr = undefined;
-      el.parentNode.insertBefore(template, el);
-      while (length-- > 0) {
-        attr = attrs[length];
-        template.setAttribute(attr.name, attr.value);
-        el.removeAttribute(attr.name);
-      }
-      el.parentNode.removeChild(el);
-      return fixHTMLTemplateElement(template);
-    }
-    function fixHTMLTemplateElement(template) {
-      var content = template.content = document.createDocumentFragment();
-      var child = undefined;
-      while (child = template.firstChild) {
-        content.appendChild(child);
-      }
-      return template;
-    }
-    function fixHTMLTemplateElementRoot(template) {
-      var content = fixHTMLTemplateElement(template).content;
-      var childTemplates = content.querySelectorAll('template');
-      for (var i = 0,
-          ii = childTemplates.length; i < ii; ++i) {
-        var child = childTemplates[i];
-        if (isSVGTemplate(child)) {
-          fixSVGTemplateElement(child);
-        } else {
-          fixHTMLTemplateElement(child);
-        }
-      }
-      return template;
-    }
-    if (_FEATURE.htmlTemplateElement) {
-      _FEATURE.ensureHTMLTemplateElement = function(template) {
-        return template;
-      };
-    } else {
-      _FEATURE.ensureHTMLTemplateElement = fixHTMLTemplateElementRoot;
-    }
-  }
-  var shadowPoly = window.ShadowDOMPolyfill || null;
-  var _DOM = {
-    Element: Element,
-    SVGElement: SVGElement,
-    boundary: 'aurelia-dom-boundary',
-    addEventListener: function addEventListener(eventName, callback, capture) {
-      document.addEventListener(eventName, callback, capture);
-    },
-    removeEventListener: function removeEventListener(eventName, callback, capture) {
-      document.removeEventListener(eventName, callback, capture);
-    },
-    adoptNode: function adoptNode(node) {
-      return document.adoptNode(node, true);
-    },
-    createElement: function createElement(tagName) {
-      return document.createElement(tagName);
-    },
-    createTextNode: function createTextNode(text) {
-      return document.createTextNode(text);
-    },
-    createComment: function createComment(text) {
-      return document.createComment(text);
-    },
-    createDocumentFragment: function createDocumentFragment() {
-      return document.createDocumentFragment();
-    },
-    createMutationObserver: function createMutationObserver(callback) {
-      return new (window.MutationObserver || window.WebKitMutationObserver)(callback);
-    },
-    createCustomEvent: function createCustomEvent(eventType, options) {
-      return new window.CustomEvent(eventType, options);
-    },
-    dispatchEvent: function dispatchEvent(evt) {
-      document.dispatchEvent(evt);
-    },
-    getComputedStyle: function getComputedStyle(element) {
-      return window.getComputedStyle(element);
-    },
-    getElementById: function getElementById(id) {
-      return document.getElementById(id);
-    },
-    querySelectorAll: function querySelectorAll(query) {
-      return document.querySelectorAll(query);
-    },
-    nextElementSibling: function nextElementSibling(element) {
-      if (element.nextElementSibling) {
-        return element.nextElementSibling;
-      }
-      do {
-        element = element.nextSibling;
-      } while (element && element.nodeType !== 1);
-      return element;
-    },
-    createTemplateFromMarkup: function createTemplateFromMarkup(markup) {
-      var parser = document.createElement('div');
-      parser.innerHTML = markup;
-      var temp = parser.firstElementChild;
-      if (!temp || temp.nodeName !== 'TEMPLATE') {
-        throw new Error('Template markup must be wrapped in a <template> element e.g. <template> <!-- markup here --> </template>');
-      }
-      return _FEATURE.ensureHTMLTemplateElement(temp);
-    },
-    appendNode: function appendNode(newNode, parentNode) {
-      (parentNode || document.body).appendChild(newNode);
-    },
-    replaceNode: function replaceNode(newNode, node, parentNode) {
-      if (node.parentNode) {
-        node.parentNode.replaceChild(newNode, node);
-      } else if (shadowPoly !== null) {
-        shadowPoly.unwrap(parentNode).replaceChild(shadowPoly.unwrap(newNode), shadowPoly.unwrap(node));
-      } else {
-        parentNode.replaceChild(newNode, node);
-      }
-    },
-    removeNode: function removeNode(node, parentNode) {
-      if (node.parentNode) {
-        node.parentNode.removeChild(node);
-      } else if (shadowPoly !== null) {
-        shadowPoly.unwrap(parentNode).removeChild(shadowPoly.unwrap(node));
-      } else {
-        parentNode.removeChild(node);
-      }
-    },
-    injectStyles: function injectStyles(styles, destination, prepend) {
-      var node = document.createElement('style');
-      node.innerHTML = styles;
-      node.type = 'text/css';
-      destination = destination || document.head;
-      if (prepend && destination.childNodes.length > 0) {
-        destination.insertBefore(node, destination.childNodes[0]);
-      } else {
-        destination.appendChild(node);
-      }
-      return node;
-    }
-  };
-  exports._DOM = _DOM;
-  var _PLATFORM = {
-    location: window.location,
-    history: window.history,
-    addEventListener: function addEventListener(eventName, callback, capture) {
-      this.global.addEventListener(eventName, callback, capture);
-    },
-    removeEventListener: function removeEventListener(eventName, callback, capture) {
-      this.global.removeEventListener(eventName, callback, capture);
-    },
-    performance: window.performance,
-    requestAnimationFrame: function requestAnimationFrame(callback) {
-      return this.global.requestAnimationFrame(callback);
-    }
-  };
-  exports._PLATFORM = _PLATFORM;
-  var isInitialized = false;
-  function initialize() {
-    if (isInitialized) {
-      return;
-    }
-    isInitialized = true;
-    _ensureCustomEvent();
-    _ensureFunctionName();
-    _ensureHTMLTemplateElement();
-    _ensureElementMatches();
-    _ensureClassList();
-    _ensurePerformance();
-    _aureliaPal.initializePAL(function(platform, feature, dom) {
-      Object.assign(platform, _PLATFORM);
-      Object.assign(feature, _FEATURE);
-      Object.assign(dom, _DOM);
-      Object.defineProperty(dom, 'title', {
-        get: function get() {
-          return document.title;
-        },
-        set: function set(value) {
-          document.title = value;
-        }
-      });
-      Object.defineProperty(dom, 'activeElement', {get: function get() {
-          return document.activeElement;
-        }});
-      Object.defineProperty(platform, 'XMLHttpRequest', {get: function get() {
-          return platform.global.XMLHttpRequest;
-        }});
-    });
-  }
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-pal-browser@1.0.0-beta.1.1.3", ["npm:aurelia-pal-browser@1.0.0-beta.1.1.3/aurelia-pal-browser"], function(main) {
-  return main;
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-bootstrapper@1.0.0-beta.1.1.2/aurelia-bootstrapper", ["exports", "npm:core-js@2.1.0", "npm:aurelia-pal@1.0.0-beta.1.1.1", "npm:aurelia-pal-browser@1.0.0-beta.1.1.3"], function(exports, _coreJs, _aureliaPal, _aureliaPalBrowser) {
-  'use strict';
-  exports.__esModule = true;
-  exports.bootstrap = bootstrap;
-  var bootstrapQueue = [];
-  var sharedLoader = null;
-  var Aurelia = null;
-  function onBootstrap(callback) {
-    return new Promise(function(resolve, reject) {
-      if (sharedLoader) {
-        resolve(callback(sharedLoader));
-      } else {
-        bootstrapQueue.push(function() {
-          try {
-            resolve(callback(sharedLoader));
-          } catch (e) {
-            reject(e);
-          }
-        });
-      }
-    });
-  }
-  function ready(global) {
-    return new Promise(function(resolve, reject) {
-      if (global.document.readyState === 'complete') {
-        resolve(global.document);
-      } else {
-        global.document.addEventListener('DOMContentLoaded', completed);
-        global.addEventListener('load', completed);
-      }
-      function completed() {
-        global.document.removeEventListener('DOMContentLoaded', completed);
-        global.removeEventListener('load', completed);
-        resolve(global.document);
-      }
-    });
-  }
-  function createLoader() {
-    if (_aureliaPal.PLATFORM.Loader) {
-      return Promise.resolve(new _aureliaPal.PLATFORM.Loader());
-    }
-    if (window.System && typeof window.System['import'] === 'function') {
-      return System.normalize('aurelia-bootstrapper').then(function(bootstrapperName) {
-        return System.normalize('aurelia-loader-default', bootstrapperName);
-      }).then(function(loaderName) {
-        return System['import'](loaderName).then(function(m) {
-          return new m.DefaultLoader();
-        });
-      });
-    }
-    if (typeof window.require === 'function') {
-      return new Promise(function(resolve, reject) {
-        return require(['aurelia-loader-default'], function(m) {
-          return resolve(new m.DefaultLoader());
-        }, reject);
-      });
-    }
-    return Promise.reject('No PLATFORM.Loader is defined and there is neither a System API (ES6) or a Require API (AMD) globally available to load your app.');
-  }
-  function preparePlatform(loader) {
-    return loader.normalize('aurelia-bootstrapper').then(function(bootstrapperName) {
-      return loader.normalize('aurelia-framework', bootstrapperName).then(function(frameworkName) {
-        loader.map('aurelia-framework', frameworkName);
-        return Promise.all([loader.normalize('aurelia-dependency-injection', frameworkName).then(function(diName) {
-          return loader.map('aurelia-dependency-injection', diName);
-        }), loader.normalize('aurelia-router', bootstrapperName).then(function(routerName) {
-          return loader.map('aurelia-router', routerName);
-        }), loader.normalize('aurelia-logging-console', bootstrapperName).then(function(loggingConsoleName) {
-          return loader.map('aurelia-logging-console', loggingConsoleName);
-        })]).then(function() {
-          return loader.loadModule(frameworkName).then(function(m) {
-            return Aurelia = m.Aurelia;
-          });
-        });
-      });
-    });
-  }
-  function handleApp(loader, appHost) {
-    return config(loader, appHost, appHost.getAttribute('aurelia-app'));
-  }
-  function config(loader, appHost, configModuleId) {
-    var aurelia = new Aurelia(loader);
-    aurelia.host = appHost;
-    if (configModuleId) {
-      return loader.loadModule(configModuleId).then(function(customConfig) {
-        return customConfig.configure(aurelia);
-      });
-    }
-    aurelia.use.standardConfiguration().developmentLogging();
-    return aurelia.start().then(function() {
-      return aurelia.setRoot();
-    });
-  }
-  function run() {
-    return ready(window).then(function(doc) {
-      _aureliaPalBrowser.initialize();
-      var appHost = doc.querySelectorAll('[aurelia-app]');
-      return createLoader().then(function(loader) {
-        return preparePlatform(loader).then(function() {
-          for (var i = 0,
-              ii = appHost.length; i < ii; ++i) {
-            handleApp(loader, appHost[i])['catch'](console.error.bind(console));
-          }
-          sharedLoader = loader;
-          for (var i = 0,
-              ii = bootstrapQueue.length; i < ii; ++i) {
-            bootstrapQueue[i]();
-          }
-          bootstrapQueue = null;
-        });
-      });
-    });
-  }
-  function bootstrap(configure) {
-    return onBootstrap(function(loader) {
-      var aurelia = new Aurelia(loader);
-      return configure(aurelia);
-    });
-  }
-  run();
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-bootstrapper@1.0.0-beta.1.1.2", ["npm:aurelia-bootstrapper@1.0.0-beta.1.1.2/aurelia-bootstrapper"], function(main) {
-  return main;
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
 define("npm:aurelia-framework@1.0.0-beta.1.1.3/aurelia-framework", ["exports", "npm:core-js@2.1.0", "npm:aurelia-logging@1.0.0-beta.1.1.1", "npm:aurelia-templating@1.0.0-beta.1.1.1", "npm:aurelia-path@1.0.0-beta.1.1.0", "npm:aurelia-dependency-injection@1.0.0-beta.1.1.3", "npm:aurelia-loader@1.0.0-beta.1.1.1", "npm:aurelia-pal@1.0.0-beta.1.1.1", "npm:aurelia-binding@1.0.0-beta.1.1.3", "npm:aurelia-metadata@1.0.0-beta.1.1.4", "npm:aurelia-task-queue@1.0.0-beta.1.1.1"], function(exports, _coreJs, _aureliaLogging, _aureliaTemplating, _aureliaPath, _aureliaDependencyInjection, _aureliaLoader, _aureliaPal, _aureliaBinding, _aureliaMetadata, _aureliaTaskQueue) {
   'use strict';
   exports.__esModule = true;
@@ -14976,6 +14918,690 @@ _removeDefine();
 })();
 (function() {
 var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-http-client@1.0.0-beta.1.1.1/aurelia-http-client", ["exports", "npm:core-js@2.1.0", "npm:aurelia-path@1.0.0-beta.1.1.0", "npm:aurelia-pal@1.0.0-beta.1.1.1"], function(exports, _coreJs, _aureliaPath, _aureliaPal) {
+  'use strict';
+  exports.__esModule = true;
+  var _createClass = (function() {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ('value' in descriptor)
+          descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+    return function(Constructor, protoProps, staticProps) {
+      if (protoProps)
+        defineProperties(Constructor.prototype, protoProps);
+      if (staticProps)
+        defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  })();
+  exports.timeoutTransformer = timeoutTransformer;
+  exports.callbackParameterNameTransformer = callbackParameterNameTransformer;
+  exports.credentialsTransformer = credentialsTransformer;
+  exports.progressTransformer = progressTransformer;
+  exports.responseTypeTransformer = responseTypeTransformer;
+  exports.headerTransformer = headerTransformer;
+  exports.contentTransformer = contentTransformer;
+  exports.createJSONPRequestMessageProcessor = createJSONPRequestMessageProcessor;
+  exports.createHttpRequestMessageProcessor = createHttpRequestMessageProcessor;
+  function _inherits(subClass, superClass) {
+    if (typeof superClass !== 'function' && superClass !== null) {
+      throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+    }
+    subClass.prototype = Object.create(superClass && superClass.prototype, {constructor: {
+        value: subClass,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }});
+    if (superClass)
+      Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+  }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError('Cannot call a class as a function');
+    }
+  }
+  var Headers = (function() {
+    function Headers() {
+      var headers = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+      _classCallCheck(this, Headers);
+      this.headers = headers;
+    }
+    Headers.prototype.add = function add(key, value) {
+      this.headers[key] = value;
+    };
+    Headers.prototype.get = function get(key) {
+      return this.headers[key];
+    };
+    Headers.prototype.clear = function clear() {
+      this.headers = {};
+    };
+    Headers.prototype.has = function has(header) {
+      var lowered = header.toLowerCase();
+      var headers = this.headers;
+      for (var _key in headers) {
+        if (_key.toLowerCase() === lowered) {
+          return true;
+        }
+      }
+      return false;
+    };
+    Headers.prototype.configureXHR = function configureXHR(xhr) {
+      var headers = this.headers;
+      for (var _key2 in headers) {
+        xhr.setRequestHeader(_key2, headers[_key2]);
+      }
+    };
+    Headers.parse = function parse(headerStr) {
+      var headers = new Headers();
+      if (!headerStr) {
+        return headers;
+      }
+      var headerPairs = headerStr.split('\r\n');
+      for (var i = 0; i < headerPairs.length; i++) {
+        var headerPair = headerPairs[i];
+        var index = headerPair.indexOf(': ');
+        if (index > 0) {
+          var _key3 = headerPair.substring(0, index);
+          var val = headerPair.substring(index + 2);
+          headers.add(_key3, val);
+        }
+      }
+      return headers;
+    };
+    return Headers;
+  })();
+  exports.Headers = Headers;
+  var RequestMessage = (function() {
+    function RequestMessage(method, url, content, headers) {
+      _classCallCheck(this, RequestMessage);
+      this.method = method;
+      this.url = url;
+      this.content = content;
+      this.headers = headers || new Headers();
+      this.baseUrl = '';
+    }
+    RequestMessage.prototype.buildFullUrl = function buildFullUrl() {
+      var absoluteUrl = /^([a-z][a-z0-9+\-.]*:)?\/\//i;
+      var url = absoluteUrl.test(this.url) ? this.url : _aureliaPath.join(this.baseUrl, this.url);
+      if (this.params) {
+        var qs = _aureliaPath.buildQueryString(this.params);
+        url = qs ? url + '?' + qs : url;
+      }
+      return url;
+    };
+    return RequestMessage;
+  })();
+  exports.RequestMessage = RequestMessage;
+  var HttpResponseMessage = (function() {
+    function HttpResponseMessage(requestMessage, xhr, responseType, reviver) {
+      _classCallCheck(this, HttpResponseMessage);
+      this.requestMessage = requestMessage;
+      this.statusCode = xhr.status;
+      this.response = xhr.response || xhr.responseText;
+      this.isSuccess = xhr.status >= 200 && xhr.status < 400;
+      this.statusText = xhr.statusText;
+      this.reviver = reviver;
+      this.mimeType = null;
+      if (xhr.getAllResponseHeaders) {
+        try {
+          this.headers = Headers.parse(xhr.getAllResponseHeaders());
+        } catch (err) {
+          if (xhr.requestHeaders)
+            this.headers = {headers: xhr.requestHeaders};
+        }
+      } else {
+        this.headers = new Headers();
+      }
+      var contentType = undefined;
+      if (this.headers && this.headers.headers)
+        contentType = this.headers.headers['Content-Type'];
+      if (contentType) {
+        this.mimeType = responseType = contentType.split(';')[0].trim();
+        if (mimeTypes.hasOwnProperty(this.mimeType))
+          responseType = mimeTypes[this.mimeType];
+      }
+      this.responseType = responseType;
+    }
+    _createClass(HttpResponseMessage, [{
+      key: 'content',
+      get: function get() {
+        try {
+          if (this._content !== undefined) {
+            return this._content;
+          }
+          if (this.response === undefined || this.response === null) {
+            this._content = this.response;
+            return this._content;
+          }
+          if (this.responseType === 'json') {
+            this._content = JSON.parse(this.response, this.reviver);
+            return this._content;
+          }
+          if (this.reviver) {
+            this._content = this.reviver(this.response);
+            return this._content;
+          }
+          this._content = this.response;
+          return this._content;
+        } catch (e) {
+          if (this.isSuccess) {
+            throw e;
+          }
+          this._content = null;
+          return this._content;
+        }
+      }
+    }]);
+    return HttpResponseMessage;
+  })();
+  exports.HttpResponseMessage = HttpResponseMessage;
+  var mimeTypes = {
+    'text/html': 'html',
+    'text/javascript': 'js',
+    'application/javascript': 'js',
+    'text/json': 'json',
+    'application/json': 'json',
+    'application/rss+xml': 'rss',
+    'application/atom+xml': 'atom',
+    'application/xhtml+xml': 'xhtml',
+    'text/markdown': 'md',
+    'text/xml': 'xml',
+    'text/mathml': 'mml',
+    'application/xml': 'xml',
+    'text/yml': 'yml',
+    'text/csv': 'csv',
+    'text/css': 'css',
+    'text/less': 'less',
+    'text/stylus': 'styl',
+    'text/scss': 'scss',
+    'text/sass': 'sass',
+    'text/plain': 'txt'
+  };
+  exports.mimeTypes = mimeTypes;
+  function applyXhrTransformers(xhrTransformers, client, processor, message, xhr) {
+    var i = undefined;
+    var ii = undefined;
+    for (i = 0, ii = xhrTransformers.length; i < ii; ++i) {
+      xhrTransformers[i](client, processor, message, xhr);
+    }
+  }
+  var RequestMessageProcessor = (function() {
+    function RequestMessageProcessor(xhrType, xhrTransformers) {
+      _classCallCheck(this, RequestMessageProcessor);
+      this.XHRType = xhrType;
+      this.xhrTransformers = xhrTransformers;
+      this.isAborted = false;
+    }
+    RequestMessageProcessor.prototype.abort = function abort() {
+      if (this.xhr && this.xhr.readyState !== _aureliaPal.PLATFORM.XMLHttpRequest.UNSENT) {
+        this.xhr.abort();
+      }
+      this.isAborted = true;
+    };
+    RequestMessageProcessor.prototype.process = function process(client, requestMessage) {
+      var _this = this;
+      var promise = new Promise(function(resolve, reject) {
+        var xhr = _this.xhr = new _this.XHRType();
+        xhr.onload = function(e) {
+          var response = new HttpResponseMessage(requestMessage, xhr, requestMessage.responseType, requestMessage.reviver);
+          if (response.isSuccess) {
+            resolve(response);
+          } else {
+            reject(response);
+          }
+        };
+        xhr.ontimeout = function(e) {
+          reject(new HttpResponseMessage(requestMessage, {
+            response: e,
+            status: xhr.status,
+            statusText: xhr.statusText
+          }, 'timeout'));
+        };
+        xhr.onerror = function(e) {
+          reject(new HttpResponseMessage(requestMessage, {
+            response: e,
+            status: xhr.status,
+            statusText: xhr.statusText
+          }, 'error'));
+        };
+        xhr.onabort = function(e) {
+          reject(new HttpResponseMessage(requestMessage, {
+            response: e,
+            status: xhr.status,
+            statusText: xhr.statusText
+          }, 'abort'));
+        };
+      });
+      return Promise.resolve(requestMessage).then(function(message) {
+        var processRequest = function processRequest() {
+          if (_this.isAborted) {
+            _this.xhr.abort();
+          } else {
+            _this.xhr.open(message.method, message.buildFullUrl(), true, message.user, message.password);
+            applyXhrTransformers(_this.xhrTransformers, client, _this, message, _this.xhr);
+            _this.xhr.send(message.content);
+          }
+          return promise;
+        };
+        var chain = [[processRequest, undefined]];
+        var interceptors = message.interceptors || [];
+        interceptors.forEach(function(interceptor) {
+          if (interceptor.request || interceptor.requestError) {
+            chain.unshift([interceptor.request ? interceptor.request.bind(interceptor) : undefined, interceptor.requestError ? interceptor.requestError.bind(interceptor) : undefined]);
+          }
+          if (interceptor.response || interceptor.responseError) {
+            chain.push([interceptor.response ? interceptor.response.bind(interceptor) : undefined, interceptor.responseError ? interceptor.responseError.bind(interceptor) : undefined]);
+          }
+        });
+        var interceptorsPromise = Promise.resolve(message);
+        while (chain.length) {
+          var _interceptorsPromise;
+          interceptorsPromise = (_interceptorsPromise = interceptorsPromise).then.apply(_interceptorsPromise, chain.shift());
+        }
+        return interceptorsPromise;
+      });
+    };
+    return RequestMessageProcessor;
+  })();
+  exports.RequestMessageProcessor = RequestMessageProcessor;
+  function timeoutTransformer(client, processor, message, xhr) {
+    if (message.timeout !== undefined) {
+      xhr.timeout = message.timeout;
+    }
+  }
+  function callbackParameterNameTransformer(client, processor, message, xhr) {
+    if (message.callbackParameterName !== undefined) {
+      xhr.callbackParameterName = message.callbackParameterName;
+    }
+  }
+  function credentialsTransformer(client, processor, message, xhr) {
+    if (message.withCredentials !== undefined) {
+      xhr.withCredentials = message.withCredentials;
+    }
+  }
+  function progressTransformer(client, processor, message, xhr) {
+    if (message.progressCallback) {
+      xhr.upload.onprogress = message.progressCallback;
+    }
+  }
+  function responseTypeTransformer(client, processor, message, xhr) {
+    var responseType = message.responseType;
+    if (responseType === 'json') {
+      responseType = 'text';
+    }
+    xhr.responseType = responseType;
+  }
+  function headerTransformer(client, processor, message, xhr) {
+    message.headers.configureXHR(xhr);
+  }
+  function contentTransformer(client, processor, message, xhr) {
+    if (message.skipContentProcessing) {
+      return;
+    }
+    if (_aureliaPal.PLATFORM.global.FormData && message.content instanceof FormData) {
+      return;
+    }
+    if (_aureliaPal.PLATFORM.global.Blob && message.content instanceof Blob) {
+      return;
+    }
+    if (_aureliaPal.PLATFORM.global.ArrayBufferView && message.content instanceof ArrayBufferView) {
+      return;
+    }
+    if (message.content instanceof Document) {
+      return;
+    }
+    if (typeof message.content === 'string') {
+      return;
+    }
+    if (message.content === null || message.content === undefined) {
+      return;
+    }
+    message.content = JSON.stringify(message.content, message.replacer);
+    if (!message.headers.has('Content-Type')) {
+      message.headers.add('Content-Type', 'application/json');
+    }
+  }
+  var JSONPRequestMessage = (function(_RequestMessage) {
+    _inherits(JSONPRequestMessage, _RequestMessage);
+    function JSONPRequestMessage(url, callbackParameterName) {
+      _classCallCheck(this, JSONPRequestMessage);
+      _RequestMessage.call(this, 'JSONP', url);
+      this.responseType = 'jsonp';
+      this.callbackParameterName = callbackParameterName;
+    }
+    return JSONPRequestMessage;
+  })(RequestMessage);
+  exports.JSONPRequestMessage = JSONPRequestMessage;
+  var JSONPXHR = (function() {
+    function JSONPXHR() {
+      _classCallCheck(this, JSONPXHR);
+    }
+    JSONPXHR.prototype.open = function open(method, url) {
+      this.method = method;
+      this.url = url;
+      this.callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
+    };
+    JSONPXHR.prototype.send = function send() {
+      var _this2 = this;
+      var url = this.url + (this.url.indexOf('?') >= 0 ? '&' : '?') + encodeURIComponent(this.callbackParameterName) + '=' + this.callbackName;
+      var script = _aureliaPal.DOM.createElement('script');
+      script.src = url;
+      script.onerror = function(e) {
+        cleanUp();
+        _this2.status = 0;
+        _this2.onerror(new Error('error'));
+      };
+      var cleanUp = function cleanUp() {
+        delete _aureliaPal.PLATFORM.global[_this2.callbackName];
+        _aureliaPal.DOM.removeNode(script);
+      };
+      _aureliaPal.PLATFORM.global[this.callbackName] = function(data) {
+        cleanUp();
+        if (_this2.status === undefined) {
+          _this2.status = 200;
+          _this2.statusText = 'OK';
+          _this2.response = data;
+          _this2.onload(_this2);
+        }
+      };
+      _aureliaPal.DOM.appendNode(script);
+      if (this.timeout !== undefined) {
+        setTimeout(function() {
+          if (_this2.status === undefined) {
+            _this2.status = 0;
+            _this2.ontimeout(new Error('timeout'));
+          }
+        }, this.timeout);
+      }
+    };
+    JSONPXHR.prototype.abort = function abort() {
+      if (this.status === undefined) {
+        this.status = 0;
+        this.onabort(new Error('abort'));
+      }
+    };
+    JSONPXHR.prototype.setRequestHeader = function setRequestHeader() {};
+    return JSONPXHR;
+  })();
+  function createJSONPRequestMessageProcessor() {
+    return new RequestMessageProcessor(JSONPXHR, [timeoutTransformer, callbackParameterNameTransformer]);
+  }
+  var HttpRequestMessage = (function(_RequestMessage2) {
+    _inherits(HttpRequestMessage, _RequestMessage2);
+    function HttpRequestMessage(method, url, content, headers) {
+      _classCallCheck(this, HttpRequestMessage);
+      _RequestMessage2.call(this, method, url, content, headers);
+      this.responseType = 'json';
+    }
+    return HttpRequestMessage;
+  })(RequestMessage);
+  exports.HttpRequestMessage = HttpRequestMessage;
+  function createHttpRequestMessageProcessor() {
+    return new RequestMessageProcessor(_aureliaPal.PLATFORM.XMLHttpRequest, [timeoutTransformer, credentialsTransformer, progressTransformer, responseTypeTransformer, contentTransformer, headerTransformer]);
+  }
+  var RequestBuilder = (function() {
+    function RequestBuilder(client) {
+      _classCallCheck(this, RequestBuilder);
+      this.client = client;
+      this.transformers = client.requestTransformers.slice(0);
+      this.useJsonp = false;
+    }
+    RequestBuilder.prototype.asDelete = function asDelete() {
+      return this._addTransformer(function(client, processor, message) {
+        message.method = 'DELETE';
+      });
+    };
+    RequestBuilder.prototype.asGet = function asGet() {
+      return this._addTransformer(function(client, processor, message) {
+        message.method = 'GET';
+      });
+    };
+    RequestBuilder.prototype.asHead = function asHead() {
+      return this._addTransformer(function(client, processor, message) {
+        message.method = 'HEAD';
+      });
+    };
+    RequestBuilder.prototype.asOptions = function asOptions() {
+      return this._addTransformer(function(client, processor, message) {
+        message.method = 'OPTIONS';
+      });
+    };
+    RequestBuilder.prototype.asPatch = function asPatch() {
+      return this._addTransformer(function(client, processor, message) {
+        message.method = 'PATCH';
+      });
+    };
+    RequestBuilder.prototype.asPost = function asPost() {
+      return this._addTransformer(function(client, processor, message) {
+        message.method = 'POST';
+      });
+    };
+    RequestBuilder.prototype.asPut = function asPut() {
+      return this._addTransformer(function(client, processor, message) {
+        message.method = 'PUT';
+      });
+    };
+    RequestBuilder.prototype.asJsonp = function asJsonp(callbackParameterName) {
+      this.useJsonp = true;
+      return this._addTransformer(function(client, processor, message) {
+        message.callbackParameterName = callbackParameterName;
+      });
+    };
+    RequestBuilder.prototype.withUrl = function withUrl(url) {
+      return this._addTransformer(function(client, processor, message) {
+        message.url = url;
+      });
+    };
+    RequestBuilder.prototype.withContent = function withContent(content) {
+      return this._addTransformer(function(client, processor, message) {
+        message.content = content;
+      });
+    };
+    RequestBuilder.prototype.withBaseUrl = function withBaseUrl(baseUrl) {
+      return this._addTransformer(function(client, processor, message) {
+        message.baseUrl = baseUrl;
+      });
+    };
+    RequestBuilder.prototype.withParams = function withParams(params) {
+      return this._addTransformer(function(client, processor, message) {
+        message.params = params;
+      });
+    };
+    RequestBuilder.prototype.withResponseType = function withResponseType(responseType) {
+      return this._addTransformer(function(client, processor, message) {
+        message.responseType = responseType;
+      });
+    };
+    RequestBuilder.prototype.withTimeout = function withTimeout(timeout) {
+      return this._addTransformer(function(client, processor, message) {
+        message.timeout = timeout;
+      });
+    };
+    RequestBuilder.prototype.withHeader = function withHeader(key, value) {
+      return this._addTransformer(function(client, processor, message) {
+        message.headers.add(key, value);
+      });
+    };
+    RequestBuilder.prototype.withCredentials = function withCredentials(value) {
+      return this._addTransformer(function(client, processor, message) {
+        message.withCredentials = value;
+      });
+    };
+    RequestBuilder.prototype.withLogin = function withLogin(user, password) {
+      return this._addTransformer(function(client, processor, message) {
+        message.user = user;
+        message.password = password;
+      });
+    };
+    RequestBuilder.prototype.withReviver = function withReviver(reviver) {
+      return this._addTransformer(function(client, processor, message) {
+        message.reviver = reviver;
+      });
+    };
+    RequestBuilder.prototype.withReplacer = function withReplacer(replacer) {
+      return this._addTransformer(function(client, processor, message) {
+        message.replacer = replacer;
+      });
+    };
+    RequestBuilder.prototype.withProgressCallback = function withProgressCallback(progressCallback) {
+      return this._addTransformer(function(client, processor, message) {
+        message.progressCallback = progressCallback;
+      });
+    };
+    RequestBuilder.prototype.withCallbackParameterName = function withCallbackParameterName(callbackParameterName) {
+      return this._addTransformer(function(client, processor, message) {
+        message.callbackParameterName = callbackParameterName;
+      });
+    };
+    RequestBuilder.prototype.withInterceptor = function withInterceptor(interceptor) {
+      return this._addTransformer(function(client, processor, message) {
+        message.interceptors = message.interceptors || [];
+        message.interceptors.unshift(interceptor);
+      });
+    };
+    RequestBuilder.prototype.skipContentProcessing = function skipContentProcessing() {
+      return this._addTransformer(function(client, processor, message) {
+        message.skipContentProcessing = true;
+      });
+    };
+    RequestBuilder.prototype._addTransformer = function _addTransformer(fn) {
+      this.transformers.push(fn);
+      return this;
+    };
+    RequestBuilder.addHelper = function addHelper(name, fn) {
+      RequestBuilder.prototype[name] = function() {
+        return this._addTransformer(fn.apply(this, arguments));
+      };
+    };
+    RequestBuilder.prototype.send = function send() {
+      var message = this.useJsonp ? new JSONPRequestMessage() : new HttpRequestMessage();
+      return this.client.send(message, this.transformers);
+    };
+    return RequestBuilder;
+  })();
+  exports.RequestBuilder = RequestBuilder;
+  function trackRequestStart(client, processor) {
+    client.pendingRequests.push(processor);
+    client.isRequesting = true;
+  }
+  function trackRequestEnd(client, processor) {
+    var index = client.pendingRequests.indexOf(processor);
+    client.pendingRequests.splice(index, 1);
+    client.isRequesting = client.pendingRequests.length > 0;
+    if (!client.isRequesting) {
+      (function() {
+        var evt = _aureliaPal.DOM.createCustomEvent('aurelia-http-client-requests-drained', {
+          bubbles: true,
+          cancelable: true
+        });
+        setTimeout(function() {
+          return _aureliaPal.DOM.dispatchEvent(evt);
+        }, 1);
+      })();
+    }
+  }
+  var HttpClient = (function() {
+    function HttpClient() {
+      _classCallCheck(this, HttpClient);
+      this.isRequesting = false;
+      this.requestTransformers = [];
+      this.requestProcessorFactories = new Map();
+      this.requestProcessorFactories.set(HttpRequestMessage, createHttpRequestMessageProcessor);
+      this.requestProcessorFactories.set(JSONPRequestMessage, createJSONPRequestMessageProcessor);
+      this.pendingRequests = [];
+    }
+    HttpClient.prototype.configure = function configure(fn) {
+      var builder = new RequestBuilder(this);
+      fn(builder);
+      this.requestTransformers = builder.transformers;
+      return this;
+    };
+    HttpClient.prototype.createRequest = function createRequest(url) {
+      var builder = new RequestBuilder(this);
+      if (url) {
+        builder.withUrl(url);
+      }
+      return builder;
+    };
+    HttpClient.prototype.send = function send(requestMessage, transformers) {
+      var _this3 = this;
+      var createProcessor = this.requestProcessorFactories.get(requestMessage.constructor);
+      var processor = undefined;
+      var promise = undefined;
+      var i = undefined;
+      var ii = undefined;
+      if (!createProcessor) {
+        throw new Error('No request message processor factory for ' + requestMessage.constructor + '.');
+      }
+      processor = createProcessor();
+      trackRequestStart(this, processor);
+      transformers = transformers || this.requestTransformers;
+      promise = Promise.resolve(requestMessage).then(function(message) {
+        for (i = 0, ii = transformers.length; i < ii; ++i) {
+          transformers[i](_this3, processor, message);
+        }
+        return processor.process(_this3, message).then(function(response) {
+          trackRequestEnd(_this3, processor);
+          return response;
+        })['catch'](function(response) {
+          trackRequestEnd(_this3, processor);
+          throw response;
+        });
+      });
+      promise.abort = promise.cancel = function() {
+        processor.abort();
+      };
+      return promise;
+    };
+    HttpClient.prototype['delete'] = function _delete(url) {
+      return this.createRequest(url).asDelete().send();
+    };
+    HttpClient.prototype.get = function get(url) {
+      return this.createRequest(url).asGet().send();
+    };
+    HttpClient.prototype.head = function head(url) {
+      return this.createRequest(url).asHead().send();
+    };
+    HttpClient.prototype.jsonp = function jsonp(url) {
+      var callbackParameterName = arguments.length <= 1 || arguments[1] === undefined ? 'jsoncallback' : arguments[1];
+      return this.createRequest(url).asJsonp(callbackParameterName).send();
+    };
+    HttpClient.prototype.options = function options(url) {
+      return this.createRequest(url).asOptions().send();
+    };
+    HttpClient.prototype.put = function put(url, content) {
+      return this.createRequest(url).asPut().withContent(content).send();
+    };
+    HttpClient.prototype.patch = function patch(url, content) {
+      return this.createRequest(url).asPatch().withContent(content).send();
+    };
+    HttpClient.prototype.post = function post(url, content) {
+      return this.createRequest(url).asPost().withContent(content).send();
+    };
+    return HttpClient;
+  })();
+  exports.HttpClient = HttpClient;
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-http-client@1.0.0-beta.1.1.1", ["npm:aurelia-http-client@1.0.0-beta.1.1.1/aurelia-http-client"], function(main) {
+  return main;
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
 define("npm:aurelia-loader-default@1.0.0-beta.1.1.2/aurelia-loader-default", ["exports", "npm:aurelia-loader@1.0.0-beta.1.1.1", "npm:aurelia-pal@1.0.0-beta.1.1.1", "npm:aurelia-metadata@1.0.0-beta.1.1.4"], function(exports, _aureliaLoader, _aureliaPal, _aureliaMetadata) {
   'use strict';
   exports.__esModule = true;
@@ -15256,6 +15882,1812 @@ _removeDefine();
 (function() {
 var _removeDefine = System.get("@@amd-helpers").createDefine();
 define("npm:aurelia-logging-console@1.0.0-beta.1.1.4", ["npm:aurelia-logging-console@1.0.0-beta.1.1.4/aurelia-logging-console"], function(main) {
+  return main;
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-route-recognizer@1.0.0-beta.1.1.1/aurelia-route-recognizer", ["exports", "npm:core-js@2.1.0", "npm:aurelia-path@1.0.0-beta.1.1.0"], function(exports, _coreJs, _aureliaPath) {
+  'use strict';
+  exports.__esModule = true;
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError('Cannot call a class as a function');
+    }
+  }
+  var State = (function() {
+    function State(charSpec) {
+      _classCallCheck(this, State);
+      this.charSpec = charSpec;
+      this.nextStates = [];
+    }
+    State.prototype.get = function get(charSpec) {
+      for (var _iterator = this.nextStates,
+          _isArray = Array.isArray(_iterator),
+          _i = 0,
+          _iterator = _isArray ? _iterator : _iterator[Symbol.iterator](); ; ) {
+        var _ref;
+        if (_isArray) {
+          if (_i >= _iterator.length)
+            break;
+          _ref = _iterator[_i++];
+        } else {
+          _i = _iterator.next();
+          if (_i.done)
+            break;
+          _ref = _i.value;
+        }
+        var child = _ref;
+        var isEqual = child.charSpec.validChars === charSpec.validChars && child.charSpec.invalidChars === charSpec.invalidChars;
+        if (isEqual) {
+          return child;
+        }
+      }
+    };
+    State.prototype.put = function put(charSpec) {
+      var state = this.get(charSpec);
+      if (state) {
+        return state;
+      }
+      state = new State(charSpec);
+      this.nextStates.push(state);
+      if (charSpec.repeat) {
+        state.nextStates.push(state);
+      }
+      return state;
+    };
+    State.prototype.match = function match(ch) {
+      var nextStates = this.nextStates;
+      var results = [];
+      for (var i = 0,
+          l = nextStates.length; i < l; i++) {
+        var child = nextStates[i];
+        var charSpec = child.charSpec;
+        if (charSpec.validChars !== undefined) {
+          if (charSpec.validChars.indexOf(ch) !== -1) {
+            results.push(child);
+          }
+        } else if (charSpec.invalidChars !== undefined) {
+          if (charSpec.invalidChars.indexOf(ch) === -1) {
+            results.push(child);
+          }
+        }
+      }
+      return results;
+    };
+    return State;
+  })();
+  exports.State = State;
+  var specials = ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'];
+  var escapeRegex = new RegExp('(\\' + specials.join('|\\') + ')', 'g');
+  var StaticSegment = (function() {
+    function StaticSegment(string) {
+      _classCallCheck(this, StaticSegment);
+      this.string = string;
+    }
+    StaticSegment.prototype.eachChar = function eachChar(callback) {
+      for (var _iterator2 = this.string,
+          _isArray2 = Array.isArray(_iterator2),
+          _i2 = 0,
+          _iterator2 = _isArray2 ? _iterator2 : _iterator2[Symbol.iterator](); ; ) {
+        var _ref2;
+        if (_isArray2) {
+          if (_i2 >= _iterator2.length)
+            break;
+          _ref2 = _iterator2[_i2++];
+        } else {
+          _i2 = _iterator2.next();
+          if (_i2.done)
+            break;
+          _ref2 = _i2.value;
+        }
+        var ch = _ref2;
+        callback({validChars: ch});
+      }
+    };
+    StaticSegment.prototype.regex = function regex() {
+      return this.string.replace(escapeRegex, '\\$1');
+    };
+    StaticSegment.prototype.generate = function generate() {
+      return this.string;
+    };
+    return StaticSegment;
+  })();
+  exports.StaticSegment = StaticSegment;
+  var DynamicSegment = (function() {
+    function DynamicSegment(name) {
+      _classCallCheck(this, DynamicSegment);
+      this.name = name;
+    }
+    DynamicSegment.prototype.eachChar = function eachChar(callback) {
+      callback({
+        invalidChars: '/',
+        repeat: true
+      });
+    };
+    DynamicSegment.prototype.regex = function regex() {
+      return '([^/]+)';
+    };
+    DynamicSegment.prototype.generate = function generate(params, consumed) {
+      consumed[this.name] = true;
+      return params[this.name];
+    };
+    return DynamicSegment;
+  })();
+  exports.DynamicSegment = DynamicSegment;
+  var StarSegment = (function() {
+    function StarSegment(name) {
+      _classCallCheck(this, StarSegment);
+      this.name = name;
+    }
+    StarSegment.prototype.eachChar = function eachChar(callback) {
+      callback({
+        invalidChars: '',
+        repeat: true
+      });
+    };
+    StarSegment.prototype.regex = function regex() {
+      return '(.+)';
+    };
+    StarSegment.prototype.generate = function generate(params, consumed) {
+      consumed[this.name] = true;
+      return params[this.name];
+    };
+    return StarSegment;
+  })();
+  exports.StarSegment = StarSegment;
+  var EpsilonSegment = (function() {
+    function EpsilonSegment() {
+      _classCallCheck(this, EpsilonSegment);
+    }
+    EpsilonSegment.prototype.eachChar = function eachChar() {};
+    EpsilonSegment.prototype.regex = function regex() {
+      return '';
+    };
+    EpsilonSegment.prototype.generate = function generate() {
+      return '';
+    };
+    return EpsilonSegment;
+  })();
+  exports.EpsilonSegment = EpsilonSegment;
+  var RouteRecognizer = (function() {
+    function RouteRecognizer() {
+      _classCallCheck(this, RouteRecognizer);
+      this.rootState = new State();
+      this.names = {};
+    }
+    RouteRecognizer.prototype.add = function add(route) {
+      var _this = this;
+      if (Array.isArray(route)) {
+        route.forEach(function(r) {
+          return _this.add(r);
+        });
+        return undefined;
+      }
+      var currentState = this.rootState;
+      var regex = '^';
+      var types = {
+        statics: 0,
+        dynamics: 0,
+        stars: 0
+      };
+      var names = [];
+      var routeName = route.handler.name;
+      var isEmpty = true;
+      var segments = parse(route.path, names, types);
+      for (var i = 0,
+          ii = segments.length; i < ii; i++) {
+        var segment = segments[i];
+        if (segment instanceof EpsilonSegment) {
+          continue;
+        }
+        isEmpty = false;
+        currentState = currentState.put({validChars: '/'});
+        regex += '/';
+        currentState = addSegment(currentState, segment);
+        regex += segment.regex();
+      }
+      if (isEmpty) {
+        currentState = currentState.put({validChars: '/'});
+        regex += '/';
+      }
+      var handlers = [{
+        handler: route.handler,
+        names: names
+      }];
+      if (routeName) {
+        this.names[routeName] = {
+          segments: segments,
+          handlers: handlers
+        };
+      }
+      currentState.handlers = handlers;
+      currentState.regex = new RegExp(regex + '$');
+      currentState.types = types;
+      return currentState;
+    };
+    RouteRecognizer.prototype.handlersFor = function handlersFor(name) {
+      var route = this.names[name];
+      if (!route) {
+        throw new Error('There is no route named ' + name);
+      }
+      return [].concat(route.handlers);
+    };
+    RouteRecognizer.prototype.hasRoute = function hasRoute(name) {
+      return !!this.names[name];
+    };
+    RouteRecognizer.prototype.generate = function generate(name, params) {
+      var routeParams = Object.assign({}, params);
+      var route = this.names[name];
+      if (!route) {
+        throw new Error('There is no route named ' + name);
+      }
+      var segments = route.segments;
+      var consumed = {};
+      var output = '';
+      for (var i = 0,
+          l = segments.length; i < l; i++) {
+        var segment = segments[i];
+        if (segment instanceof EpsilonSegment) {
+          continue;
+        }
+        output += '/';
+        var segmentValue = segment.generate(routeParams, consumed);
+        if (segmentValue === null || segmentValue === undefined) {
+          throw new Error('A value is required for route parameter \'' + segment.name + '\' in route \'' + name + '\'.');
+        }
+        output += segmentValue;
+      }
+      if (output.charAt(0) !== '/') {
+        output = '/' + output;
+      }
+      for (var param in consumed) {
+        delete routeParams[param];
+      }
+      var queryString = _aureliaPath.buildQueryString(routeParams);
+      output += queryString ? '?' + queryString : '';
+      return output;
+    };
+    RouteRecognizer.prototype.recognize = function recognize(path) {
+      var states = [this.rootState];
+      var queryParams = {};
+      var isSlashDropped = false;
+      var normalizedPath = path;
+      var queryStart = normalizedPath.indexOf('?');
+      if (queryStart !== -1) {
+        var queryString = normalizedPath.substr(queryStart + 1, normalizedPath.length);
+        normalizedPath = normalizedPath.substr(0, queryStart);
+        queryParams = _aureliaPath.parseQueryString(queryString);
+      }
+      normalizedPath = decodeURI(normalizedPath);
+      if (normalizedPath.charAt(0) !== '/') {
+        normalizedPath = '/' + normalizedPath;
+      }
+      var pathLen = normalizedPath.length;
+      if (pathLen > 1 && normalizedPath.charAt(pathLen - 1) === '/') {
+        normalizedPath = normalizedPath.substr(0, pathLen - 1);
+        isSlashDropped = true;
+      }
+      for (var i = 0,
+          l = normalizedPath.length; i < l; i++) {
+        states = recognizeChar(states, normalizedPath.charAt(i));
+        if (!states.length) {
+          break;
+        }
+      }
+      var solutions = [];
+      for (var i = 0,
+          l = states.length; i < l; i++) {
+        if (states[i].handlers) {
+          solutions.push(states[i]);
+        }
+      }
+      states = sortSolutions(solutions);
+      var state = solutions[0];
+      if (state && state.handlers) {
+        if (isSlashDropped && state.regex.source.slice(-5) === '(.+)$') {
+          normalizedPath = normalizedPath + '/';
+        }
+        return findHandler(state, normalizedPath, queryParams);
+      }
+    };
+    return RouteRecognizer;
+  })();
+  exports.RouteRecognizer = RouteRecognizer;
+  var RecognizeResults = function RecognizeResults(queryParams) {
+    _classCallCheck(this, RecognizeResults);
+    this.splice = Array.prototype.splice;
+    this.slice = Array.prototype.slice;
+    this.push = Array.prototype.push;
+    this.length = 0;
+    this.queryParams = queryParams || {};
+  };
+  function parse(route, names, types) {
+    var normalizedRoute = route;
+    if (route.charAt(0) === '/') {
+      normalizedRoute = route.substr(1);
+    }
+    var results = [];
+    for (var _iterator3 = normalizedRoute.split('/'),
+        _isArray3 = Array.isArray(_iterator3),
+        _i3 = 0,
+        _iterator3 = _isArray3 ? _iterator3 : _iterator3[Symbol.iterator](); ; ) {
+      var _ref3;
+      if (_isArray3) {
+        if (_i3 >= _iterator3.length)
+          break;
+        _ref3 = _iterator3[_i3++];
+      } else {
+        _i3 = _iterator3.next();
+        if (_i3.done)
+          break;
+        _ref3 = _i3.value;
+      }
+      var segment = _ref3;
+      var match = segment.match(/^:([^\/]+)$/);
+      if (match) {
+        results.push(new DynamicSegment(match[1]));
+        names.push(match[1]);
+        types.dynamics++;
+        continue;
+      }
+      match = segment.match(/^\*([^\/]+)$/);
+      if (match) {
+        results.push(new StarSegment(match[1]));
+        names.push(match[1]);
+        types.stars++;
+      } else if (segment === '') {
+        results.push(new EpsilonSegment());
+      } else {
+        results.push(new StaticSegment(segment));
+        types.statics++;
+      }
+    }
+    return results;
+  }
+  function sortSolutions(states) {
+    return states.sort(function(a, b) {
+      if (a.types.stars !== b.types.stars) {
+        return a.types.stars - b.types.stars;
+      }
+      if (a.types.stars) {
+        if (a.types.statics !== b.types.statics) {
+          return b.types.statics - a.types.statics;
+        }
+        if (a.types.dynamics !== b.types.dynamics) {
+          return b.types.dynamics - a.types.dynamics;
+        }
+      }
+      if (a.types.dynamics !== b.types.dynamics) {
+        return a.types.dynamics - b.types.dynamics;
+      }
+      if (a.types.statics !== b.types.statics) {
+        return b.types.statics - a.types.statics;
+      }
+      return 0;
+    });
+  }
+  function recognizeChar(states, ch) {
+    var nextStates = [];
+    for (var i = 0,
+        l = states.length; i < l; i++) {
+      var state = states[i];
+      nextStates.push.apply(nextStates, state.match(ch));
+    }
+    return nextStates;
+  }
+  function findHandler(state, path, queryParams) {
+    var handlers = state.handlers;
+    var regex = state.regex;
+    var captures = path.match(regex);
+    var currentCapture = 1;
+    var result = new RecognizeResults(queryParams);
+    for (var i = 0,
+        l = handlers.length; i < l; i++) {
+      var _handler = handlers[i];
+      var _names = _handler.names;
+      var _params = {};
+      for (var j = 0,
+          m = _names.length; j < m; j++) {
+        _params[_names[j]] = captures[currentCapture++];
+      }
+      result.push({
+        handler: _handler.handler,
+        params: _params,
+        isDynamic: !!_names.length
+      });
+    }
+    return result;
+  }
+  function addSegment(currentState, segment) {
+    var state = currentState;
+    segment.eachChar(function(ch) {
+      state = state.put(ch);
+    });
+    return state;
+  }
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-route-recognizer@1.0.0-beta.1.1.1", ["npm:aurelia-route-recognizer@1.0.0-beta.1.1.1/aurelia-route-recognizer"], function(main) {
+  return main;
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-router@1.0.0-beta.1.1.1/aurelia-router", ["exports", "npm:core-js@2.1.0", "npm:aurelia-logging@1.0.0-beta.1.1.1", "npm:aurelia-dependency-injection@1.0.0-beta.1.1.3", "npm:aurelia-route-recognizer@1.0.0-beta.1.1.1", "npm:aurelia-history@1.0.0-beta.1.1.1", "npm:aurelia-event-aggregator@1.0.0-beta.1.1.1"], function(exports, _coreJs, _aureliaLogging, _aureliaDependencyInjection, _aureliaRouteRecognizer, _aureliaHistory, _aureliaEventAggregator) {
+  'use strict';
+  exports.__esModule = true;
+  var _createClass = (function() {
+    function defineProperties(target, props) {
+      for (var i = 0; i < props.length; i++) {
+        var descriptor = props[i];
+        descriptor.enumerable = descriptor.enumerable || false;
+        descriptor.configurable = true;
+        if ('value' in descriptor)
+          descriptor.writable = true;
+        Object.defineProperty(target, descriptor.key, descriptor);
+      }
+    }
+    return function(Constructor, protoProps, staticProps) {
+      if (protoProps)
+        defineProperties(Constructor.prototype, protoProps);
+      if (staticProps)
+        defineProperties(Constructor, staticProps);
+      return Constructor;
+    };
+  })();
+  exports._normalizeAbsolutePath = _normalizeAbsolutePath;
+  exports._createRootedPath = _createRootedPath;
+  exports._resolveUrl = _resolveUrl;
+  exports.createRouteFilterStep = createRouteFilterStep;
+  exports.isNavigationCommand = isNavigationCommand;
+  exports._buildNavigationPlan = _buildNavigationPlan;
+  function _inherits(subClass, superClass) {
+    if (typeof superClass !== 'function' && superClass !== null) {
+      throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
+    }
+    subClass.prototype = Object.create(superClass && superClass.prototype, {constructor: {
+        value: subClass,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }});
+    if (superClass)
+      Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+  }
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError('Cannot call a class as a function');
+    }
+  }
+  function _normalizeAbsolutePath(path, hasPushState) {
+    if (!hasPushState && path[0] !== '#') {
+      path = '#' + path;
+    }
+    return path;
+  }
+  function _createRootedPath(fragment, baseUrl, hasPushState) {
+    if (isAbsoluteUrl.test(fragment)) {
+      return fragment;
+    }
+    var path = '';
+    if (baseUrl.length && baseUrl[0] !== '/') {
+      path += '/';
+    }
+    path += baseUrl;
+    if ((!path.length || path[path.length - 1] !== '/') && fragment[0] !== '/') {
+      path += '/';
+    }
+    if (path.length && path[path.length - 1] === '/' && fragment[0] === '/') {
+      path = path.substring(0, path.length - 1);
+    }
+    return _normalizeAbsolutePath(path + fragment, hasPushState);
+  }
+  function _resolveUrl(fragment, baseUrl, hasPushState) {
+    if (isRootedPath.test(fragment)) {
+      return _normalizeAbsolutePath(fragment, hasPushState);
+    }
+    return _createRootedPath(fragment, baseUrl, hasPushState);
+  }
+  var isRootedPath = /^#?\//;
+  var isAbsoluteUrl = /^([a-z][a-z0-9+\-.]*:)?\/\//i;
+  var RouteFilterContainer = (function() {
+    RouteFilterContainer.inject = function inject() {
+      return [_aureliaDependencyInjection.Container];
+    };
+    function RouteFilterContainer(container) {
+      _classCallCheck(this, RouteFilterContainer);
+      this.container = container;
+      this.filters = {};
+      this.filterCache = {};
+    }
+    RouteFilterContainer.prototype.addStep = function addStep(name, step) {
+      var index = arguments.length <= 2 || arguments[2] === undefined ? -1 : arguments[2];
+      var filter = this.filters[name];
+      if (!filter) {
+        filter = this.filters[name] = [];
+      }
+      if (index === -1) {
+        index = filter.length;
+      }
+      filter.splice(index, 0, step);
+      this.filterCache = {};
+    };
+    RouteFilterContainer.prototype.getFilterSteps = function getFilterSteps(name) {
+      if (this.filterCache[name]) {
+        return this.filterCache[name];
+      }
+      var steps = [];
+      var filter = this.filters[name];
+      if (!filter) {
+        return steps;
+      }
+      for (var i = 0,
+          l = filter.length; i < l; i++) {
+        if (typeof filter[i] === 'string') {
+          steps.push.apply(steps, this.getFilterSteps(filter[i]));
+        } else {
+          steps.push(this.container.get(filter[i]));
+        }
+      }
+      this.filterCache[name] = steps;
+      return steps;
+    };
+    return RouteFilterContainer;
+  })();
+  exports.RouteFilterContainer = RouteFilterContainer;
+  function createRouteFilterStep(name) {
+    function create(routeFilterContainer) {
+      return new RouteFilterStep(name, routeFilterContainer);
+    }
+    create.inject = function() {
+      return [RouteFilterContainer];
+    };
+    return create;
+  }
+  var RouteFilterStep = (function() {
+    function RouteFilterStep(name, routeFilterContainer) {
+      _classCallCheck(this, RouteFilterStep);
+      this.isMultiStep = true;
+      this.name = name;
+      this.routeFilterContainer = routeFilterContainer;
+    }
+    RouteFilterStep.prototype.getSteps = function getSteps() {
+      return this.routeFilterContainer.getFilterSteps(this.name);
+    };
+    return RouteFilterStep;
+  })();
+  var pipelineStatus = {
+    completed: 'completed',
+    canceled: 'canceled',
+    rejected: 'rejected',
+    running: 'running'
+  };
+  exports.pipelineStatus = pipelineStatus;
+  var Pipeline = (function() {
+    function Pipeline() {
+      _classCallCheck(this, Pipeline);
+      this.steps = [];
+    }
+    Pipeline.prototype.addStep = function addStep(step) {
+      var run = undefined;
+      if (typeof step === 'function') {
+        run = step;
+      } else if (step.isMultiStep) {
+        var steps = step.getSteps();
+        for (var i = 0,
+            l = steps.length; i < l; i++) {
+          this.addStep(steps[i]);
+        }
+        return this;
+      } else {
+        run = step.run.bind(step);
+      }
+      this.steps.push(run);
+      return this;
+    };
+    Pipeline.prototype.run = function run(instruction) {
+      var index = -1;
+      var steps = this.steps;
+      function next() {
+        index++;
+        if (index < steps.length) {
+          var currentStep = steps[index];
+          try {
+            return currentStep(instruction, next);
+          } catch (e) {
+            return next.reject(e);
+          }
+        } else {
+          return next.complete();
+        }
+      }
+      next.complete = createCompletionHandler(next, pipelineStatus.completed);
+      next.cancel = createCompletionHandler(next, pipelineStatus.canceled);
+      next.reject = createCompletionHandler(next, pipelineStatus.rejected);
+      return next();
+    };
+    return Pipeline;
+  })();
+  exports.Pipeline = Pipeline;
+  function createCompletionHandler(next, status) {
+    return function(output) {
+      return Promise.resolve({
+        status: status,
+        output: output,
+        completed: status === pipelineStatus.completed
+      });
+    };
+  }
+  var CommitChangesStep = (function() {
+    function CommitChangesStep() {
+      _classCallCheck(this, CommitChangesStep);
+    }
+    CommitChangesStep.prototype.run = function run(navigationInstruction, next) {
+      return navigationInstruction._commitChanges(true).then(function() {
+        navigationInstruction._updateTitle();
+        return next();
+      });
+    };
+    return CommitChangesStep;
+  })();
+  exports.CommitChangesStep = CommitChangesStep;
+  var NavigationInstruction = (function() {
+    function NavigationInstruction(init) {
+      _classCallCheck(this, NavigationInstruction);
+      this.plan = null;
+      Object.assign(this, init);
+      this.params = this.params || {};
+      this.viewPortInstructions = {};
+      var ancestorParams = [];
+      var current = this;
+      do {
+        var currentParams = Object.assign({}, current.params);
+        if (current.config && current.config.hasChildRouter) {
+          delete currentParams[current.getWildCardName()];
+        }
+        ancestorParams.unshift(currentParams);
+        current = current.parentInstruction;
+      } while (current);
+      var allParams = Object.assign.apply(Object, [{}, this.queryParams].concat(ancestorParams));
+      this.lifecycleArgs = [allParams, this.config, this];
+    }
+    NavigationInstruction.prototype.getAllInstructions = function getAllInstructions() {
+      var instructions = [this];
+      for (var key in this.viewPortInstructions) {
+        var childInstruction = this.viewPortInstructions[key].childNavigationInstruction;
+        if (childInstruction) {
+          instructions.push.apply(instructions, childInstruction.getAllInstructions());
+        }
+      }
+      return instructions;
+    };
+    NavigationInstruction.prototype.getAllPreviousInstructions = function getAllPreviousInstructions() {
+      return this.getAllInstructions().map(function(c) {
+        return c.previousInstruction;
+      }).filter(function(c) {
+        return c;
+      });
+    };
+    NavigationInstruction.prototype.addViewPortInstruction = function addViewPortInstruction(viewPortName, strategy, moduleId, component) {
+      var viewportInstruction = this.viewPortInstructions[viewPortName] = {
+        name: viewPortName,
+        strategy: strategy,
+        moduleId: moduleId,
+        component: component,
+        childRouter: component.childRouter,
+        lifecycleArgs: this.lifecycleArgs.slice()
+      };
+      return viewportInstruction;
+    };
+    NavigationInstruction.prototype.getWildCardName = function getWildCardName() {
+      var wildcardIndex = this.config.route.lastIndexOf('*');
+      return this.config.route.substr(wildcardIndex + 1);
+    };
+    NavigationInstruction.prototype.getWildcardPath = function getWildcardPath() {
+      var wildcardName = this.getWildCardName();
+      var path = this.params[wildcardName] || '';
+      if (this.queryString) {
+        path += '?' + this.queryString;
+      }
+      return path;
+    };
+    NavigationInstruction.prototype.getBaseUrl = function getBaseUrl() {
+      if (!this.params) {
+        return this.fragment;
+      }
+      var wildcardName = this.getWildCardName();
+      var path = this.params[wildcardName] || '';
+      if (!path) {
+        return this.fragment;
+      }
+      return this.fragment.substr(0, this.fragment.lastIndexOf(path));
+    };
+    NavigationInstruction.prototype._commitChanges = function _commitChanges(waitToSwap) {
+      var _this = this;
+      var router = this.router;
+      router.currentInstruction = this;
+      if (this.previousInstruction) {
+        this.previousInstruction.config.navModel.isActive = false;
+      }
+      this.config.navModel.isActive = true;
+      router._refreshBaseUrl();
+      router.refreshNavigation();
+      var loads = [];
+      var delaySwaps = [];
+      var _loop = function(viewPortName) {
+        var viewPortInstruction = _this.viewPortInstructions[viewPortName];
+        var viewPort = router.viewPorts[viewPortName];
+        if (!viewPort) {
+          throw new Error('There was no router-view found in the view for ' + viewPortInstruction.moduleId + '.');
+        }
+        if (viewPortInstruction.strategy === activationStrategy.replace) {
+          if (waitToSwap) {
+            delaySwaps.push({
+              viewPort: viewPort,
+              viewPortInstruction: viewPortInstruction
+            });
+          }
+          loads.push(viewPort.process(viewPortInstruction, waitToSwap).then(function(x) {
+            if (viewPortInstruction.childNavigationInstruction) {
+              return viewPortInstruction.childNavigationInstruction._commitChanges();
+            }
+          }));
+        } else {
+          if (viewPortInstruction.childNavigationInstruction) {
+            loads.push(viewPortInstruction.childNavigationInstruction._commitChanges(waitToSwap));
+          }
+        }
+      };
+      for (var viewPortName in this.viewPortInstructions) {
+        _loop(viewPortName);
+      }
+      return Promise.all(loads).then(function() {
+        delaySwaps.forEach(function(x) {
+          return x.viewPort.swap(x.viewPortInstruction);
+        });
+        return null;
+      }).then(function() {
+        return prune(_this);
+      });
+    };
+    NavigationInstruction.prototype._updateTitle = function _updateTitle() {
+      var title = this._buildTitle();
+      if (title) {
+        this.router.history.setTitle(title);
+      }
+    };
+    NavigationInstruction.prototype._buildTitle = function _buildTitle() {
+      var separator = arguments.length <= 0 || arguments[0] === undefined ? ' | ' : arguments[0];
+      var title = this.config.navModel.title || '';
+      var childTitles = [];
+      for (var viewPortName in this.viewPortInstructions) {
+        var viewPortInstruction = this.viewPortInstructions[viewPortName];
+        if (viewPortInstruction.childNavigationInstruction) {
+          var childTitle = viewPortInstruction.childNavigationInstruction._buildTitle(separator);
+          if (childTitle) {
+            childTitles.push(childTitle);
+          }
+        }
+      }
+      if (childTitles.length) {
+        title = childTitles.join(separator) + (title ? separator : '') + title;
+      }
+      if (this.router.title) {
+        title += (title ? separator : '') + this.router.title;
+      }
+      return title;
+    };
+    return NavigationInstruction;
+  })();
+  exports.NavigationInstruction = NavigationInstruction;
+  function prune(instruction) {
+    instruction.previousInstruction = null;
+    instruction.plan = null;
+  }
+  var NavModel = (function() {
+    function NavModel(router, relativeHref) {
+      _classCallCheck(this, NavModel);
+      this.isActive = false;
+      this.title = null;
+      this.href = null;
+      this.relativeHref = null;
+      this.settings = {};
+      this.config = null;
+      this.router = router;
+      this.relativeHref = relativeHref;
+    }
+    NavModel.prototype.setTitle = function setTitle(title) {
+      this.title = title;
+      if (this.isActive) {
+        this.router.updateTitle();
+      }
+    };
+    return NavModel;
+  })();
+  exports.NavModel = NavModel;
+  function isNavigationCommand(obj) {
+    return obj && typeof obj.navigate === 'function';
+  }
+  var Redirect = (function() {
+    function Redirect(url) {
+      var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+      _classCallCheck(this, Redirect);
+      this.url = url;
+      this.options = Object.assign({
+        trigger: true,
+        replace: true
+      }, options);
+      this.shouldContinueProcessing = false;
+    }
+    Redirect.prototype.setRouter = function setRouter(router) {
+      this.router = router;
+    };
+    Redirect.prototype.navigate = function navigate(appRouter) {
+      var navigatingRouter = this.options.useAppRouter ? appRouter : this.router || appRouter;
+      navigatingRouter.navigate(this.url, this.options);
+    };
+    return Redirect;
+  })();
+  exports.Redirect = Redirect;
+  var RouterConfiguration = (function() {
+    function RouterConfiguration() {
+      _classCallCheck(this, RouterConfiguration);
+      this.instructions = [];
+      this.options = {};
+      this.pipelineSteps = [];
+    }
+    RouterConfiguration.prototype.addPipelineStep = function addPipelineStep(name, step) {
+      this.pipelineSteps.push({
+        name: name,
+        step: step
+      });
+      return this;
+    };
+    RouterConfiguration.prototype.map = function map(route) {
+      if (Array.isArray(route)) {
+        route.forEach(this.map.bind(this));
+        return this;
+      }
+      return this.mapRoute(route);
+    };
+    RouterConfiguration.prototype.mapRoute = function mapRoute(config) {
+      this.instructions.push(function(router) {
+        var routeConfigs = [];
+        if (Array.isArray(config.route)) {
+          for (var i = 0,
+              ii = config.route.length; i < ii; ++i) {
+            var current = Object.assign({}, config);
+            current.route = config.route[i];
+            routeConfigs.push(current);
+          }
+        } else {
+          routeConfigs.push(Object.assign({}, config));
+        }
+        var navModel = undefined;
+        for (var i = 0,
+            ii = routeConfigs.length; i < ii; ++i) {
+          var routeConfig = routeConfigs[i];
+          routeConfig.settings = routeConfig.settings || {};
+          if (!navModel) {
+            navModel = router.createNavModel(routeConfig);
+          }
+          router.addRoute(routeConfig, navModel);
+        }
+      });
+      return this;
+    };
+    RouterConfiguration.prototype.mapUnknownRoutes = function mapUnknownRoutes(config) {
+      this.unknownRouteConfig = config;
+      return this;
+    };
+    RouterConfiguration.prototype.exportToRouter = function exportToRouter(router) {
+      var instructions = this.instructions;
+      for (var i = 0,
+          ii = instructions.length; i < ii; ++i) {
+        instructions[i](router);
+      }
+      if (this.title) {
+        router.title = this.title;
+      }
+      if (this.unknownRouteConfig) {
+        router.handleUnknownRoutes(this.unknownRouteConfig);
+      }
+      router.options = this.options;
+      var pipelineSteps = this.pipelineSteps;
+      if (pipelineSteps.length) {
+        if (!router.isRoot) {
+          throw new Error('Pipeline steps can only be added to the root router');
+        }
+        var filterContainer = router.container.get(RouteFilterContainer);
+        for (var i = 0,
+            ii = pipelineSteps.length; i < ii; ++i) {
+          var _pipelineSteps$i = pipelineSteps[i];
+          var _name = _pipelineSteps$i.name;
+          var step = _pipelineSteps$i.step;
+          filterContainer.addStep(_name, step);
+        }
+      }
+    };
+    return RouterConfiguration;
+  })();
+  exports.RouterConfiguration = RouterConfiguration;
+  var activationStrategy = {
+    noChange: 'no-change',
+    invokeLifecycle: 'invoke-lifecycle',
+    replace: 'replace'
+  };
+  exports.activationStrategy = activationStrategy;
+  var BuildNavigationPlanStep = (function() {
+    function BuildNavigationPlanStep() {
+      _classCallCheck(this, BuildNavigationPlanStep);
+    }
+    BuildNavigationPlanStep.prototype.run = function run(navigationInstruction, next) {
+      return _buildNavigationPlan(navigationInstruction).then(function(plan) {
+        navigationInstruction.plan = plan;
+        return next();
+      })['catch'](next.cancel);
+    };
+    return BuildNavigationPlanStep;
+  })();
+  exports.BuildNavigationPlanStep = BuildNavigationPlanStep;
+  function _buildNavigationPlan(instruction, forceLifecycleMinimum) {
+    var prev = instruction.previousInstruction;
+    var config = instruction.config;
+    var plan = {};
+    if ('redirect' in config) {
+      var redirectLocation = _resolveUrl(config.redirect, getInstructionBaseUrl(instruction));
+      if (instruction.queryString) {
+        redirectLocation += '?' + instruction.queryString;
+      }
+      return Promise.reject(new Redirect(redirectLocation));
+    }
+    if (prev) {
+      var newParams = hasDifferentParameterValues(prev, instruction);
+      var pending = [];
+      var _loop2 = function(viewPortName) {
+        var prevViewPortInstruction = prev.viewPortInstructions[viewPortName];
+        var nextViewPortConfig = config.viewPorts[viewPortName];
+        var viewPortPlan = plan[viewPortName] = {
+          name: viewPortName,
+          config: nextViewPortConfig,
+          prevComponent: prevViewPortInstruction.component,
+          prevModuleId: prevViewPortInstruction.moduleId
+        };
+        if (prevViewPortInstruction.moduleId !== nextViewPortConfig.moduleId) {
+          viewPortPlan.strategy = activationStrategy.replace;
+        } else if ('determineActivationStrategy' in prevViewPortInstruction.component.viewModel) {
+          var _prevViewPortInstruction$component$viewModel;
+          viewPortPlan.strategy = (_prevViewPortInstruction$component$viewModel = prevViewPortInstruction.component.viewModel).determineActivationStrategy.apply(_prevViewPortInstruction$component$viewModel, instruction.lifecycleArgs);
+        } else if (config.activationStrategy) {
+          viewPortPlan.strategy = config.activationStrategy;
+        } else if (newParams || forceLifecycleMinimum) {
+          viewPortPlan.strategy = activationStrategy.invokeLifecycle;
+        } else {
+          viewPortPlan.strategy = activationStrategy.noChange;
+        }
+        if (viewPortPlan.strategy !== activationStrategy.replace && prevViewPortInstruction.childRouter) {
+          var path = instruction.getWildcardPath();
+          var task = prevViewPortInstruction.childRouter._createNavigationInstruction(path, instruction).then(function(childInstruction) {
+            viewPortPlan.childNavigationInstruction = childInstruction;
+            return _buildNavigationPlan(childInstruction, viewPortPlan.strategy === activationStrategy.invokeLifecycle).then(function(childPlan) {
+              childInstruction.plan = childPlan;
+            });
+          });
+          pending.push(task);
+        }
+      };
+      for (var viewPortName in prev.viewPortInstructions) {
+        _loop2(viewPortName);
+      }
+      return Promise.all(pending).then(function() {
+        return plan;
+      });
+    }
+    for (var viewPortName in config.viewPorts) {
+      plan[viewPortName] = {
+        name: viewPortName,
+        strategy: activationStrategy.replace,
+        config: instruction.config.viewPorts[viewPortName]
+      };
+    }
+    return Promise.resolve(plan);
+  }
+  function hasDifferentParameterValues(prev, next) {
+    var prevParams = prev.params;
+    var nextParams = next.params;
+    var nextWildCardName = next.config.hasChildRouter ? next.getWildCardName() : null;
+    for (var key in nextParams) {
+      if (key === nextWildCardName) {
+        continue;
+      }
+      if (prevParams[key] !== nextParams[key]) {
+        return true;
+      }
+    }
+    for (var key in prevParams) {
+      if (key === nextWildCardName) {
+        continue;
+      }
+      if (prevParams[key] !== nextParams[key]) {
+        return true;
+      }
+    }
+    return false;
+  }
+  function getInstructionBaseUrl(instruction) {
+    var instructionBaseUrlParts = [];
+    instruction = instruction.parentInstruction;
+    while (instruction) {
+      instructionBaseUrlParts.unshift(instruction.getBaseUrl());
+      instruction = instruction.parentInstruction;
+    }
+    instructionBaseUrlParts.unshift('/');
+    return instructionBaseUrlParts.join('');
+  }
+  var Router = (function() {
+    function Router(container, history) {
+      _classCallCheck(this, Router);
+      this.parent = null;
+      this.container = container;
+      this.history = history;
+      this.reset();
+    }
+    Router.prototype.reset = function reset() {
+      var _this2 = this;
+      this.viewPorts = {};
+      this.routes = [];
+      this.baseUrl = '';
+      this.isConfigured = false;
+      this.isNavigating = false;
+      this.navigation = [];
+      this.currentInstruction = null;
+      this._fallbackOrder = 100;
+      this._recognizer = new _aureliaRouteRecognizer.RouteRecognizer();
+      this._childRecognizer = new _aureliaRouteRecognizer.RouteRecognizer();
+      this._configuredPromise = new Promise(function(resolve) {
+        _this2._resolveConfiguredPromise = resolve;
+      });
+    };
+    Router.prototype.registerViewPort = function registerViewPort(viewPort, name) {
+      name = name || 'default';
+      this.viewPorts[name] = viewPort;
+    };
+    Router.prototype.ensureConfigured = function ensureConfigured() {
+      return this._configuredPromise;
+    };
+    Router.prototype.configure = function configure(callbackOrConfig) {
+      var _this3 = this;
+      this.isConfigured = true;
+      var result = callbackOrConfig;
+      var config = undefined;
+      if (typeof callbackOrConfig === 'function') {
+        config = new RouterConfiguration();
+        result = callbackOrConfig(config);
+      }
+      return Promise.resolve(result).then(function(c) {
+        if (c && c.exportToRouter) {
+          config = c;
+        }
+        config.exportToRouter(_this3);
+        _this3.isConfigured = true;
+        _this3._resolveConfiguredPromise();
+      });
+    };
+    Router.prototype.navigate = function navigate(fragment, options) {
+      if (!this.isConfigured && this.parent) {
+        return this.parent.navigate(fragment, options);
+      }
+      return this.history.navigate(_resolveUrl(fragment, this.baseUrl, this.history._hasPushState), options);
+    };
+    Router.prototype.navigateToRoute = function navigateToRoute(route, params, options) {
+      var path = this.generate(route, params);
+      return this.navigate(path, options);
+    };
+    Router.prototype.navigateBack = function navigateBack() {
+      this.history.navigateBack();
+    };
+    Router.prototype.createChild = function createChild(container) {
+      var childRouter = new Router(container || this.container.createChild(), this.history);
+      childRouter.parent = this;
+      return childRouter;
+    };
+    Router.prototype.generate = function generate(name, params) {
+      var hasRoute = this._recognizer.hasRoute(name);
+      if ((!this.isConfigured || !hasRoute) && this.parent) {
+        return this.parent.generate(name, params);
+      }
+      if (!hasRoute) {
+        throw new Error('A route with name \'' + name + '\' could not be found. Check that `name: \'' + name + '\'` was specified in the route\'s config.');
+      }
+      var path = this._recognizer.generate(name, params);
+      return _createRootedPath(path, this.baseUrl, this.history._hasPushState);
+    };
+    Router.prototype.createNavModel = function createNavModel(config) {
+      var navModel = new NavModel(this, 'href' in config ? config.href : config.route);
+      navModel.title = config.title;
+      navModel.order = config.nav;
+      navModel.href = config.href;
+      navModel.settings = config.settings;
+      navModel.config = config;
+      return navModel;
+    };
+    Router.prototype.addRoute = function addRoute(config, navModel) {
+      validateRouteConfig(config);
+      if (!('viewPorts' in config) && !config.navigationStrategy) {
+        config.viewPorts = {'default': {
+            moduleId: config.moduleId,
+            view: config.view
+          }};
+      }
+      if (!navModel) {
+        navModel = this.createNavModel(config);
+      }
+      this.routes.push(config);
+      var path = config.route;
+      if (path.charAt(0) === '/') {
+        path = path.substr(1);
+      }
+      var state = this._recognizer.add({
+        path: path,
+        handler: config
+      });
+      if (path) {
+        var _settings = config.settings;
+        delete config.settings;
+        var withChild = JSON.parse(JSON.stringify(config));
+        config.settings = _settings;
+        withChild.route = path + '/*childRoute';
+        withChild.hasChildRouter = true;
+        this._childRecognizer.add({
+          path: withChild.route,
+          handler: withChild
+        });
+        withChild.navModel = navModel;
+        withChild.settings = config.settings;
+      }
+      config.navModel = navModel;
+      if ((navModel.order || navModel.order === 0) && this.navigation.indexOf(navModel) === -1) {
+        if (!navModel.href && navModel.href !== '' && (state.types.dynamics || state.types.stars)) {
+          throw new Error('Invalid route config: dynamic routes must specify an href to be included in the navigation model.');
+        }
+        if (typeof navModel.order !== 'number') {
+          navModel.order = ++this._fallbackOrder;
+        }
+        this.navigation.push(navModel);
+        this.navigation = this.navigation.sort(function(a, b) {
+          return a.order - b.order;
+        });
+      }
+    };
+    Router.prototype.hasRoute = function hasRoute(name) {
+      return !!(this._recognizer.hasRoute(name) || this.parent && this.parent.hasRoute(name));
+    };
+    Router.prototype.hasOwnRoute = function hasOwnRoute(name) {
+      return this._recognizer.hasRoute(name);
+    };
+    Router.prototype.handleUnknownRoutes = function handleUnknownRoutes(config) {
+      var _this4 = this;
+      if (!config) {
+        throw new Error('Invalid unknown route handler');
+      }
+      this.catchAllHandler = function(instruction) {
+        return _this4._createRouteConfig(config, instruction).then(function(c) {
+          instruction.config = c;
+          return instruction;
+        });
+      };
+    };
+    Router.prototype.updateTitle = function updateTitle() {
+      if (this.parent) {
+        return this.parent.updateTitle();
+      }
+      this.currentInstruction._updateTitle();
+    };
+    Router.prototype.refreshNavigation = function refreshNavigation() {
+      var nav = this.navigation;
+      for (var i = 0,
+          _length = nav.length; i < _length; i++) {
+        var current = nav[i];
+        if (!current.href) {
+          current.href = _createRootedPath(current.relativeHref, this.baseUrl, this.history._hasPushState);
+        }
+      }
+    };
+    Router.prototype._refreshBaseUrl = function _refreshBaseUrl() {
+      if (this.parent) {
+        var baseUrl = this.parent.currentInstruction.getBaseUrl();
+        this.baseUrl = this.parent.baseUrl + baseUrl;
+      }
+    };
+    Router.prototype._createNavigationInstruction = function _createNavigationInstruction() {
+      var url = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+      var parentInstruction = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+      var fragment = url;
+      var queryString = '';
+      var queryIndex = url.indexOf('?');
+      if (queryIndex !== -1) {
+        fragment = url.substr(0, queryIndex);
+        queryString = url.substr(queryIndex + 1);
+      }
+      var results = this._recognizer.recognize(url);
+      if (!results || !results.length) {
+        results = this._childRecognizer.recognize(url);
+      }
+      var instructionInit = {
+        fragment: fragment,
+        queryString: queryString,
+        config: null,
+        parentInstruction: parentInstruction,
+        previousInstruction: this.currentInstruction,
+        router: this
+      };
+      if (results && results.length) {
+        var first = results[0];
+        var _instruction = new NavigationInstruction(Object.assign({}, instructionInit, {
+          params: first.params,
+          queryParams: first.queryParams || results.queryParams,
+          config: first.config || first.handler
+        }));
+        if (typeof first.handler === 'function') {
+          return evaluateNavigationStrategy(_instruction, first.handler, first);
+        } else if (first.handler && 'navigationStrategy' in first.handler) {
+          return evaluateNavigationStrategy(_instruction, first.handler.navigationStrategy, first.handler);
+        }
+        return Promise.resolve(_instruction);
+      } else if (this.catchAllHandler) {
+        var _instruction2 = new NavigationInstruction(Object.assign({}, instructionInit, {
+          params: {path: fragment},
+          queryParams: results && results.queryParams,
+          config: null
+        }));
+        return evaluateNavigationStrategy(_instruction2, this.catchAllHandler);
+      }
+      return Promise.reject(new Error('Route not found: ' + url));
+    };
+    Router.prototype._createRouteConfig = function _createRouteConfig(config, instruction) {
+      var _this5 = this;
+      return Promise.resolve(config).then(function(c) {
+        if (typeof c === 'string') {
+          return {moduleId: c};
+        } else if (typeof c === 'function') {
+          return c(instruction);
+        }
+        return c;
+      }).then(function(c) {
+        return typeof c === 'string' ? {moduleId: c} : c;
+      }).then(function(c) {
+        c.route = instruction.params.path;
+        validateRouteConfig(c);
+        if (!c.navModel) {
+          c.navModel = _this5.createNavModel(c);
+        }
+        return c;
+      });
+    };
+    _createClass(Router, [{
+      key: 'isRoot',
+      get: function get() {
+        return !this.parent;
+      }
+    }]);
+    return Router;
+  })();
+  exports.Router = Router;
+  function validateRouteConfig(config) {
+    if (typeof config !== 'object') {
+      throw new Error('Invalid Route Config');
+    }
+    if (typeof config.route !== 'string') {
+      throw new Error('Invalid Route Config: You must specify a route pattern.');
+    }
+    if (!('redirect' in config || config.moduleId || config.navigationStrategy || config.viewPorts)) {
+      throw new Error('Invalid Route Config: You must specify a moduleId, redirect, navigationStrategy, or viewPorts.');
+    }
+  }
+  function evaluateNavigationStrategy(instruction, evaluator, context) {
+    return Promise.resolve(evaluator.call(context, instruction)).then(function() {
+      if (!('viewPorts' in instruction.config)) {
+        instruction.config.viewPorts = {'default': {moduleId: instruction.config.moduleId}};
+      }
+      return instruction;
+    });
+  }
+  var CanDeactivatePreviousStep = (function() {
+    function CanDeactivatePreviousStep() {
+      _classCallCheck(this, CanDeactivatePreviousStep);
+    }
+    CanDeactivatePreviousStep.prototype.run = function run(navigationInstruction, next) {
+      return processDeactivatable(navigationInstruction.plan, 'canDeactivate', next);
+    };
+    return CanDeactivatePreviousStep;
+  })();
+  exports.CanDeactivatePreviousStep = CanDeactivatePreviousStep;
+  var CanActivateNextStep = (function() {
+    function CanActivateNextStep() {
+      _classCallCheck(this, CanActivateNextStep);
+    }
+    CanActivateNextStep.prototype.run = function run(navigationInstruction, next) {
+      return processActivatable(navigationInstruction, 'canActivate', next);
+    };
+    return CanActivateNextStep;
+  })();
+  exports.CanActivateNextStep = CanActivateNextStep;
+  var DeactivatePreviousStep = (function() {
+    function DeactivatePreviousStep() {
+      _classCallCheck(this, DeactivatePreviousStep);
+    }
+    DeactivatePreviousStep.prototype.run = function run(navigationInstruction, next) {
+      return processDeactivatable(navigationInstruction.plan, 'deactivate', next, true);
+    };
+    return DeactivatePreviousStep;
+  })();
+  exports.DeactivatePreviousStep = DeactivatePreviousStep;
+  var ActivateNextStep = (function() {
+    function ActivateNextStep() {
+      _classCallCheck(this, ActivateNextStep);
+    }
+    ActivateNextStep.prototype.run = function run(navigationInstruction, next) {
+      return processActivatable(navigationInstruction, 'activate', next, true);
+    };
+    return ActivateNextStep;
+  })();
+  exports.ActivateNextStep = ActivateNextStep;
+  function processDeactivatable(plan, callbackName, next, ignoreResult) {
+    var infos = findDeactivatable(plan, callbackName);
+    var i = infos.length;
+    function inspect(val) {
+      if (ignoreResult || shouldContinue(val)) {
+        return iterate();
+      }
+      return next.cancel(val);
+    }
+    function iterate() {
+      if (i--) {
+        try {
+          var viewModel = infos[i];
+          var _result = viewModel[callbackName]();
+          return processPotential(_result, inspect, next.cancel);
+        } catch (error) {
+          return next.cancel(error);
+        }
+      }
+      return next();
+    }
+    return iterate();
+  }
+  function findDeactivatable(plan, callbackName) {
+    var list = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
+    for (var viewPortName in plan) {
+      var viewPortPlan = plan[viewPortName];
+      var prevComponent = viewPortPlan.prevComponent;
+      if ((viewPortPlan.strategy === activationStrategy.invokeLifecycle || viewPortPlan.strategy === activationStrategy.replace) && prevComponent) {
+        var viewModel = prevComponent.viewModel;
+        if (callbackName in viewModel) {
+          list.push(viewModel);
+        }
+      }
+      if (viewPortPlan.childNavigationInstruction) {
+        findDeactivatable(viewPortPlan.childNavigationInstruction.plan, callbackName, list);
+      } else if (prevComponent) {
+        addPreviousDeactivatable(prevComponent, callbackName, list);
+      }
+    }
+    return list;
+  }
+  function addPreviousDeactivatable(component, callbackName, list) {
+    var childRouter = component.childRouter;
+    if (childRouter && childRouter.currentInstruction) {
+      var viewPortInstructions = childRouter.currentInstruction.viewPortInstructions;
+      for (var viewPortName in viewPortInstructions) {
+        var viewPortInstruction = viewPortInstructions[viewPortName];
+        var prevComponent = viewPortInstruction.component;
+        var prevViewModel = prevComponent.viewModel;
+        if (callbackName in prevViewModel) {
+          list.push(prevViewModel);
+        }
+        addPreviousDeactivatable(prevComponent, callbackName, list);
+      }
+    }
+  }
+  function processActivatable(navigationInstruction, callbackName, next, ignoreResult) {
+    var infos = findActivatable(navigationInstruction, callbackName);
+    var length = infos.length;
+    var i = -1;
+    function inspect(val, router) {
+      if (ignoreResult || shouldContinue(val, router)) {
+        return iterate();
+      }
+      return next.cancel(val);
+    }
+    function iterate() {
+      i++;
+      if (i < length) {
+        try {
+          var _ret3 = (function() {
+            var _current$viewModel;
+            var current = infos[i];
+            var result = (_current$viewModel = current.viewModel)[callbackName].apply(_current$viewModel, current.lifecycleArgs);
+            return {v: processPotential(result, function(val) {
+                return inspect(val, current.router);
+              }, next.cancel)};
+          })();
+          if (typeof _ret3 === 'object')
+            return _ret3.v;
+        } catch (error) {
+          return next.cancel(error);
+        }
+      }
+      return next();
+    }
+    return iterate();
+  }
+  function findActivatable(navigationInstruction, callbackName, list, router) {
+    if (list === undefined)
+      list = [];
+    var plan = navigationInstruction.plan;
+    Object.keys(plan).filter(function(viewPortName) {
+      var viewPortPlan = plan[viewPortName];
+      var viewPortInstruction = navigationInstruction.viewPortInstructions[viewPortName];
+      var viewModel = viewPortInstruction.component.viewModel;
+      if ((viewPortPlan.strategy === activationStrategy.invokeLifecycle || viewPortPlan.strategy === activationStrategy.replace) && callbackName in viewModel) {
+        list.push({
+          viewModel: viewModel,
+          lifecycleArgs: viewPortInstruction.lifecycleArgs,
+          router: router
+        });
+      }
+      if (viewPortPlan.childNavigationInstruction) {
+        findActivatable(viewPortPlan.childNavigationInstruction, callbackName, list, viewPortInstruction.component.childRouter || router);
+      }
+    });
+    return list;
+  }
+  function shouldContinue(output, router) {
+    if (output instanceof Error) {
+      return false;
+    }
+    if (isNavigationCommand(output)) {
+      if (typeof output.setRouter === 'function') {
+        output.setRouter(router);
+      }
+      return !!output.shouldContinueProcessing;
+    }
+    if (output === undefined) {
+      return true;
+    }
+    return output;
+  }
+  function processPotential(obj, resolve, reject) {
+    if (obj && typeof obj.then === 'function') {
+      return Promise.resolve(obj).then(resolve)['catch'](reject);
+    }
+    try {
+      return resolve(obj);
+    } catch (error) {
+      return reject(error);
+    }
+  }
+  var RouteLoader = (function() {
+    function RouteLoader() {
+      _classCallCheck(this, RouteLoader);
+    }
+    RouteLoader.prototype.loadRoute = function loadRoute(router, config, navigationInstruction) {
+      throw Error('Route loaders must implement "loadRoute(router, config, navigationInstruction)".');
+    };
+    return RouteLoader;
+  })();
+  exports.RouteLoader = RouteLoader;
+  var LoadRouteStep = (function() {
+    LoadRouteStep.inject = function inject() {
+      return [RouteLoader];
+    };
+    function LoadRouteStep(routeLoader) {
+      _classCallCheck(this, LoadRouteStep);
+      this.routeLoader = routeLoader;
+    }
+    LoadRouteStep.prototype.run = function run(navigationInstruction, next) {
+      return loadNewRoute(this.routeLoader, navigationInstruction).then(next)['catch'](next.cancel);
+    };
+    return LoadRouteStep;
+  })();
+  exports.LoadRouteStep = LoadRouteStep;
+  function loadNewRoute(routeLoader, navigationInstruction) {
+    var toLoad = determineWhatToLoad(navigationInstruction);
+    var loadPromises = toLoad.map(function(current) {
+      return loadRoute(routeLoader, current.navigationInstruction, current.viewPortPlan);
+    });
+    return Promise.all(loadPromises);
+  }
+  function determineWhatToLoad(navigationInstruction) {
+    var toLoad = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+    var plan = navigationInstruction.plan;
+    for (var viewPortName in plan) {
+      var viewPortPlan = plan[viewPortName];
+      if (viewPortPlan.strategy === activationStrategy.replace) {
+        toLoad.push({
+          viewPortPlan: viewPortPlan,
+          navigationInstruction: navigationInstruction
+        });
+        if (viewPortPlan.childNavigationInstruction) {
+          determineWhatToLoad(viewPortPlan.childNavigationInstruction, toLoad);
+        }
+      } else {
+        var viewPortInstruction = navigationInstruction.addViewPortInstruction(viewPortName, viewPortPlan.strategy, viewPortPlan.prevModuleId, viewPortPlan.prevComponent);
+        if (viewPortPlan.childNavigationInstruction) {
+          viewPortInstruction.childNavigationInstruction = viewPortPlan.childNavigationInstruction;
+          determineWhatToLoad(viewPortPlan.childNavigationInstruction, toLoad);
+        }
+      }
+    }
+    return toLoad;
+  }
+  function loadRoute(routeLoader, navigationInstruction, viewPortPlan) {
+    var moduleId = viewPortPlan.config.moduleId;
+    return loadComponent(routeLoader, navigationInstruction, viewPortPlan.config).then(function(component) {
+      var viewPortInstruction = navigationInstruction.addViewPortInstruction(viewPortPlan.name, viewPortPlan.strategy, moduleId, component);
+      var childRouter = component.childRouter;
+      if (childRouter) {
+        var path = navigationInstruction.getWildcardPath();
+        return childRouter._createNavigationInstruction(path, navigationInstruction).then(function(childInstruction) {
+          viewPortPlan.childNavigationInstruction = childInstruction;
+          return _buildNavigationPlan(childInstruction).then(function(childPlan) {
+            childInstruction.plan = childPlan;
+            viewPortInstruction.childNavigationInstruction = childInstruction;
+            return loadNewRoute(routeLoader, childInstruction);
+          });
+        });
+      }
+    });
+  }
+  function loadComponent(routeLoader, navigationInstruction, config) {
+    var router = navigationInstruction.router;
+    var lifecycleArgs = navigationInstruction.lifecycleArgs;
+    return routeLoader.loadRoute(router, config, navigationInstruction).then(function(component) {
+      var viewModel = component.viewModel;
+      var childContainer = component.childContainer;
+      component.router = router;
+      component.config = config;
+      if ('configureRouter' in viewModel) {
+        var _ret4 = (function() {
+          var childRouter = childContainer.getChildRouter();
+          component.childRouter = childRouter;
+          return {v: childRouter.configure(function(c) {
+              return viewModel.configureRouter.apply(viewModel, [c, childRouter].concat(lifecycleArgs));
+            }).then(function() {
+              return component;
+            })};
+        })();
+        if (typeof _ret4 === 'object')
+          return _ret4.v;
+      }
+      return component;
+    });
+  }
+  var PipelineProvider = (function() {
+    PipelineProvider.inject = function inject() {
+      return [_aureliaDependencyInjection.Container];
+    };
+    function PipelineProvider(container) {
+      _classCallCheck(this, PipelineProvider);
+      this.container = container;
+      this.steps = [BuildNavigationPlanStep, CanDeactivatePreviousStep, LoadRouteStep, createRouteFilterStep('authorize'), createRouteFilterStep('modelbind'), CanActivateNextStep, DeactivatePreviousStep, ActivateNextStep, createRouteFilterStep('precommit'), CommitChangesStep, createRouteFilterStep('postcomplete')];
+    }
+    PipelineProvider.prototype.createPipeline = function createPipeline() {
+      var _this6 = this;
+      var pipeline = new Pipeline();
+      this.steps.forEach(function(step) {
+        return pipeline.addStep(_this6.container.get(step));
+      });
+      return pipeline;
+    };
+    return PipelineProvider;
+  })();
+  exports.PipelineProvider = PipelineProvider;
+  var logger = _aureliaLogging.getLogger('app-router');
+  var AppRouter = (function(_Router) {
+    _inherits(AppRouter, _Router);
+    AppRouter.inject = function inject() {
+      return [_aureliaDependencyInjection.Container, _aureliaHistory.History, PipelineProvider, _aureliaEventAggregator.EventAggregator];
+    };
+    function AppRouter(container, history, pipelineProvider, events) {
+      _classCallCheck(this, AppRouter);
+      _Router.call(this, container, history);
+      this.pipelineProvider = pipelineProvider;
+      this.events = events;
+    }
+    AppRouter.prototype.reset = function reset() {
+      _Router.prototype.reset.call(this);
+      this.maxInstructionCount = 10;
+      if (!this._queue) {
+        this._queue = [];
+      } else {
+        this._queue.length = 0;
+      }
+    };
+    AppRouter.prototype.loadUrl = function loadUrl(url) {
+      var _this7 = this;
+      return this._createNavigationInstruction(url).then(function(instruction) {
+        return _this7._queueInstruction(instruction);
+      })['catch'](function(error) {
+        logger.error(error);
+        restorePreviousLocation(_this7);
+      });
+    };
+    AppRouter.prototype.registerViewPort = function registerViewPort(viewPort, name) {
+      var _this8 = this;
+      _Router.prototype.registerViewPort.call(this, viewPort, name);
+      if (!this.isActive) {
+        var _ret5 = (function() {
+          var viewModel = _this8._findViewModel(viewPort);
+          if ('configureRouter' in viewModel) {
+            if (!_this8.isConfigured) {
+              var _ret6 = (function() {
+                var resolveConfiguredPromise = _this8._resolveConfiguredPromise;
+                _this8._resolveConfiguredPromise = function() {};
+                return {v: {v: _this8.configure(function(config) {
+                      return viewModel.configureRouter(config, _this8);
+                    }).then(function() {
+                      _this8.activate();
+                      resolveConfiguredPromise();
+                    })}};
+              })();
+              if (typeof _ret6 === 'object')
+                return _ret6.v;
+            }
+          } else {
+            _this8.activate();
+          }
+        })();
+        if (typeof _ret5 === 'object')
+          return _ret5.v;
+      } else {
+        this._dequeueInstruction();
+      }
+      return Promise.resolve();
+    };
+    AppRouter.prototype.activate = function activate(options) {
+      if (this.isActive) {
+        return;
+      }
+      this.isActive = true;
+      this.options = Object.assign({routeHandler: this.loadUrl.bind(this)}, this.options, options);
+      this.history.activate(this.options);
+      this._dequeueInstruction();
+    };
+    AppRouter.prototype.deactivate = function deactivate() {
+      this.isActive = false;
+      this.history.deactivate();
+    };
+    AppRouter.prototype._queueInstruction = function _queueInstruction(instruction) {
+      var _this9 = this;
+      return new Promise(function(resolve) {
+        instruction.resolve = resolve;
+        _this9._queue.unshift(instruction);
+        _this9._dequeueInstruction();
+      });
+    };
+    AppRouter.prototype._dequeueInstruction = function _dequeueInstruction() {
+      var _this10 = this;
+      var instructionCount = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
+      return Promise.resolve().then(function() {
+        if (_this10.isNavigating && !instructionCount) {
+          return undefined;
+        }
+        var instruction = _this10._queue.shift();
+        _this10._queue.length = 0;
+        if (!instruction) {
+          return undefined;
+        }
+        _this10.isNavigating = true;
+        instruction.previousInstruction = _this10.currentInstruction;
+        if (!instructionCount) {
+          _this10.events.publish('router:navigation:processing', {instruction: instruction});
+        } else if (instructionCount === _this10.maxInstructionCount - 1) {
+          logger.error(instructionCount + 1 + ' navigation instructions have been attempted without success. Restoring last known good location.');
+          restorePreviousLocation(_this10);
+          return _this10._dequeueInstruction(instructionCount + 1);
+        } else if (instructionCount > _this10.maxInstructionCount) {
+          throw new Error('Maximum navigation attempts exceeded. Giving up.');
+        }
+        var pipeline = _this10.pipelineProvider.createPipeline();
+        return pipeline.run(instruction).then(function(result) {
+          return processResult(instruction, result, instructionCount, _this10);
+        })['catch'](function(error) {
+          return {output: error instanceof Error ? error : new Error(error)};
+        }).then(function(result) {
+          return resolveInstruction(instruction, result, !!instructionCount, _this10);
+        });
+      });
+    };
+    AppRouter.prototype._findViewModel = function _findViewModel(viewPort) {
+      if (this.container.viewModel) {
+        return this.container.viewModel;
+      }
+      if (viewPort.container) {
+        var container = viewPort.container;
+        while (container) {
+          if (container.viewModel) {
+            this.container.viewModel = container.viewModel;
+            return container.viewModel;
+          }
+          container = container.parent;
+        }
+      }
+    };
+    return AppRouter;
+  })(Router);
+  exports.AppRouter = AppRouter;
+  function processResult(instruction, result, instructionCount, router) {
+    if (!(result && 'completed' in result && 'output' in result)) {
+      result = result || {};
+      result.output = new Error('Expected router pipeline to return a navigation result, but got [' + JSON.stringify(result) + '] instead.');
+    }
+    var finalResult = null;
+    if (isNavigationCommand(result.output)) {
+      result.output.navigate(router);
+    } else {
+      finalResult = result;
+      if (!result.completed) {
+        if (result.output instanceof Error) {
+          logger.error(result.output);
+        }
+        restorePreviousLocation(router);
+      }
+    }
+    return router._dequeueInstruction(instructionCount + 1).then(function(innerResult) {
+      return finalResult || innerResult || result;
+    });
+  }
+  function resolveInstruction(instruction, result, isInnerInstruction, router) {
+    instruction.resolve(result);
+    if (!isInnerInstruction) {
+      router.isNavigating = false;
+      var eventArgs = {
+        instruction: instruction,
+        result: result
+      };
+      var eventName = undefined;
+      if (result.output instanceof Error) {
+        eventName = 'error';
+      } else if (!result.completed) {
+        eventName = 'canceled';
+      } else {
+        var _queryString = instruction.queryString ? '?' + instruction.queryString : '';
+        router.history.previousLocation = instruction.fragment + _queryString;
+        eventName = 'success';
+      }
+      router.events.publish('router:navigation:' + eventName, eventArgs);
+      router.events.publish('router:navigation:complete', eventArgs);
+    }
+    return result;
+  }
+  function restorePreviousLocation(router) {
+    var previousLocation = router.history.previousLocation;
+    if (previousLocation) {
+      router.navigate(router.history.previousLocation, {
+        trigger: false,
+        replace: true
+      });
+    } else {
+      logger.error('Router navigation failed, and no previous location could be restored.');
+    }
+  }
+});
+
+_removeDefine();
+})();
+(function() {
+var _removeDefine = System.get("@@amd-helpers").createDefine();
+define("npm:aurelia-router@1.0.0-beta.1.1.1", ["npm:aurelia-router@1.0.0-beta.1.1.1/aurelia-router"], function(main) {
   return main;
 });
 
@@ -17730,1934 +20162,6 @@ _removeDefine();
 })();
 (function() {
 var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-route-recognizer@1.0.0-beta.1.1.1/aurelia-route-recognizer", ["exports", "npm:core-js@2.1.0", "npm:aurelia-path@1.0.0-beta.1.1.0"], function(exports, _coreJs, _aureliaPath) {
-  'use strict';
-  exports.__esModule = true;
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError('Cannot call a class as a function');
-    }
-  }
-  var State = (function() {
-    function State(charSpec) {
-      _classCallCheck(this, State);
-      this.charSpec = charSpec;
-      this.nextStates = [];
-    }
-    State.prototype.get = function get(charSpec) {
-      for (var _iterator = this.nextStates,
-          _isArray = Array.isArray(_iterator),
-          _i = 0,
-          _iterator = _isArray ? _iterator : _iterator[Symbol.iterator](); ; ) {
-        var _ref;
-        if (_isArray) {
-          if (_i >= _iterator.length)
-            break;
-          _ref = _iterator[_i++];
-        } else {
-          _i = _iterator.next();
-          if (_i.done)
-            break;
-          _ref = _i.value;
-        }
-        var child = _ref;
-        var isEqual = child.charSpec.validChars === charSpec.validChars && child.charSpec.invalidChars === charSpec.invalidChars;
-        if (isEqual) {
-          return child;
-        }
-      }
-    };
-    State.prototype.put = function put(charSpec) {
-      var state = this.get(charSpec);
-      if (state) {
-        return state;
-      }
-      state = new State(charSpec);
-      this.nextStates.push(state);
-      if (charSpec.repeat) {
-        state.nextStates.push(state);
-      }
-      return state;
-    };
-    State.prototype.match = function match(ch) {
-      var nextStates = this.nextStates;
-      var results = [];
-      for (var i = 0,
-          l = nextStates.length; i < l; i++) {
-        var child = nextStates[i];
-        var charSpec = child.charSpec;
-        if (charSpec.validChars !== undefined) {
-          if (charSpec.validChars.indexOf(ch) !== -1) {
-            results.push(child);
-          }
-        } else if (charSpec.invalidChars !== undefined) {
-          if (charSpec.invalidChars.indexOf(ch) === -1) {
-            results.push(child);
-          }
-        }
-      }
-      return results;
-    };
-    return State;
-  })();
-  exports.State = State;
-  var specials = ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'];
-  var escapeRegex = new RegExp('(\\' + specials.join('|\\') + ')', 'g');
-  var StaticSegment = (function() {
-    function StaticSegment(string) {
-      _classCallCheck(this, StaticSegment);
-      this.string = string;
-    }
-    StaticSegment.prototype.eachChar = function eachChar(callback) {
-      for (var _iterator2 = this.string,
-          _isArray2 = Array.isArray(_iterator2),
-          _i2 = 0,
-          _iterator2 = _isArray2 ? _iterator2 : _iterator2[Symbol.iterator](); ; ) {
-        var _ref2;
-        if (_isArray2) {
-          if (_i2 >= _iterator2.length)
-            break;
-          _ref2 = _iterator2[_i2++];
-        } else {
-          _i2 = _iterator2.next();
-          if (_i2.done)
-            break;
-          _ref2 = _i2.value;
-        }
-        var ch = _ref2;
-        callback({validChars: ch});
-      }
-    };
-    StaticSegment.prototype.regex = function regex() {
-      return this.string.replace(escapeRegex, '\\$1');
-    };
-    StaticSegment.prototype.generate = function generate() {
-      return this.string;
-    };
-    return StaticSegment;
-  })();
-  exports.StaticSegment = StaticSegment;
-  var DynamicSegment = (function() {
-    function DynamicSegment(name) {
-      _classCallCheck(this, DynamicSegment);
-      this.name = name;
-    }
-    DynamicSegment.prototype.eachChar = function eachChar(callback) {
-      callback({
-        invalidChars: '/',
-        repeat: true
-      });
-    };
-    DynamicSegment.prototype.regex = function regex() {
-      return '([^/]+)';
-    };
-    DynamicSegment.prototype.generate = function generate(params, consumed) {
-      consumed[this.name] = true;
-      return params[this.name];
-    };
-    return DynamicSegment;
-  })();
-  exports.DynamicSegment = DynamicSegment;
-  var StarSegment = (function() {
-    function StarSegment(name) {
-      _classCallCheck(this, StarSegment);
-      this.name = name;
-    }
-    StarSegment.prototype.eachChar = function eachChar(callback) {
-      callback({
-        invalidChars: '',
-        repeat: true
-      });
-    };
-    StarSegment.prototype.regex = function regex() {
-      return '(.+)';
-    };
-    StarSegment.prototype.generate = function generate(params, consumed) {
-      consumed[this.name] = true;
-      return params[this.name];
-    };
-    return StarSegment;
-  })();
-  exports.StarSegment = StarSegment;
-  var EpsilonSegment = (function() {
-    function EpsilonSegment() {
-      _classCallCheck(this, EpsilonSegment);
-    }
-    EpsilonSegment.prototype.eachChar = function eachChar() {};
-    EpsilonSegment.prototype.regex = function regex() {
-      return '';
-    };
-    EpsilonSegment.prototype.generate = function generate() {
-      return '';
-    };
-    return EpsilonSegment;
-  })();
-  exports.EpsilonSegment = EpsilonSegment;
-  var RouteRecognizer = (function() {
-    function RouteRecognizer() {
-      _classCallCheck(this, RouteRecognizer);
-      this.rootState = new State();
-      this.names = {};
-    }
-    RouteRecognizer.prototype.add = function add(route) {
-      var _this = this;
-      if (Array.isArray(route)) {
-        route.forEach(function(r) {
-          return _this.add(r);
-        });
-        return undefined;
-      }
-      var currentState = this.rootState;
-      var regex = '^';
-      var types = {
-        statics: 0,
-        dynamics: 0,
-        stars: 0
-      };
-      var names = [];
-      var routeName = route.handler.name;
-      var isEmpty = true;
-      var segments = parse(route.path, names, types);
-      for (var i = 0,
-          ii = segments.length; i < ii; i++) {
-        var segment = segments[i];
-        if (segment instanceof EpsilonSegment) {
-          continue;
-        }
-        isEmpty = false;
-        currentState = currentState.put({validChars: '/'});
-        regex += '/';
-        currentState = addSegment(currentState, segment);
-        regex += segment.regex();
-      }
-      if (isEmpty) {
-        currentState = currentState.put({validChars: '/'});
-        regex += '/';
-      }
-      var handlers = [{
-        handler: route.handler,
-        names: names
-      }];
-      if (routeName) {
-        this.names[routeName] = {
-          segments: segments,
-          handlers: handlers
-        };
-      }
-      currentState.handlers = handlers;
-      currentState.regex = new RegExp(regex + '$');
-      currentState.types = types;
-      return currentState;
-    };
-    RouteRecognizer.prototype.handlersFor = function handlersFor(name) {
-      var route = this.names[name];
-      if (!route) {
-        throw new Error('There is no route named ' + name);
-      }
-      return [].concat(route.handlers);
-    };
-    RouteRecognizer.prototype.hasRoute = function hasRoute(name) {
-      return !!this.names[name];
-    };
-    RouteRecognizer.prototype.generate = function generate(name, params) {
-      var routeParams = Object.assign({}, params);
-      var route = this.names[name];
-      if (!route) {
-        throw new Error('There is no route named ' + name);
-      }
-      var segments = route.segments;
-      var consumed = {};
-      var output = '';
-      for (var i = 0,
-          l = segments.length; i < l; i++) {
-        var segment = segments[i];
-        if (segment instanceof EpsilonSegment) {
-          continue;
-        }
-        output += '/';
-        var segmentValue = segment.generate(routeParams, consumed);
-        if (segmentValue === null || segmentValue === undefined) {
-          throw new Error('A value is required for route parameter \'' + segment.name + '\' in route \'' + name + '\'.');
-        }
-        output += segmentValue;
-      }
-      if (output.charAt(0) !== '/') {
-        output = '/' + output;
-      }
-      for (var param in consumed) {
-        delete routeParams[param];
-      }
-      var queryString = _aureliaPath.buildQueryString(routeParams);
-      output += queryString ? '?' + queryString : '';
-      return output;
-    };
-    RouteRecognizer.prototype.recognize = function recognize(path) {
-      var states = [this.rootState];
-      var queryParams = {};
-      var isSlashDropped = false;
-      var normalizedPath = path;
-      var queryStart = normalizedPath.indexOf('?');
-      if (queryStart !== -1) {
-        var queryString = normalizedPath.substr(queryStart + 1, normalizedPath.length);
-        normalizedPath = normalizedPath.substr(0, queryStart);
-        queryParams = _aureliaPath.parseQueryString(queryString);
-      }
-      normalizedPath = decodeURI(normalizedPath);
-      if (normalizedPath.charAt(0) !== '/') {
-        normalizedPath = '/' + normalizedPath;
-      }
-      var pathLen = normalizedPath.length;
-      if (pathLen > 1 && normalizedPath.charAt(pathLen - 1) === '/') {
-        normalizedPath = normalizedPath.substr(0, pathLen - 1);
-        isSlashDropped = true;
-      }
-      for (var i = 0,
-          l = normalizedPath.length; i < l; i++) {
-        states = recognizeChar(states, normalizedPath.charAt(i));
-        if (!states.length) {
-          break;
-        }
-      }
-      var solutions = [];
-      for (var i = 0,
-          l = states.length; i < l; i++) {
-        if (states[i].handlers) {
-          solutions.push(states[i]);
-        }
-      }
-      states = sortSolutions(solutions);
-      var state = solutions[0];
-      if (state && state.handlers) {
-        if (isSlashDropped && state.regex.source.slice(-5) === '(.+)$') {
-          normalizedPath = normalizedPath + '/';
-        }
-        return findHandler(state, normalizedPath, queryParams);
-      }
-    };
-    return RouteRecognizer;
-  })();
-  exports.RouteRecognizer = RouteRecognizer;
-  var RecognizeResults = function RecognizeResults(queryParams) {
-    _classCallCheck(this, RecognizeResults);
-    this.splice = Array.prototype.splice;
-    this.slice = Array.prototype.slice;
-    this.push = Array.prototype.push;
-    this.length = 0;
-    this.queryParams = queryParams || {};
-  };
-  function parse(route, names, types) {
-    var normalizedRoute = route;
-    if (route.charAt(0) === '/') {
-      normalizedRoute = route.substr(1);
-    }
-    var results = [];
-    for (var _iterator3 = normalizedRoute.split('/'),
-        _isArray3 = Array.isArray(_iterator3),
-        _i3 = 0,
-        _iterator3 = _isArray3 ? _iterator3 : _iterator3[Symbol.iterator](); ; ) {
-      var _ref3;
-      if (_isArray3) {
-        if (_i3 >= _iterator3.length)
-          break;
-        _ref3 = _iterator3[_i3++];
-      } else {
-        _i3 = _iterator3.next();
-        if (_i3.done)
-          break;
-        _ref3 = _i3.value;
-      }
-      var segment = _ref3;
-      var match = segment.match(/^:([^\/]+)$/);
-      if (match) {
-        results.push(new DynamicSegment(match[1]));
-        names.push(match[1]);
-        types.dynamics++;
-        continue;
-      }
-      match = segment.match(/^\*([^\/]+)$/);
-      if (match) {
-        results.push(new StarSegment(match[1]));
-        names.push(match[1]);
-        types.stars++;
-      } else if (segment === '') {
-        results.push(new EpsilonSegment());
-      } else {
-        results.push(new StaticSegment(segment));
-        types.statics++;
-      }
-    }
-    return results;
-  }
-  function sortSolutions(states) {
-    return states.sort(function(a, b) {
-      if (a.types.stars !== b.types.stars) {
-        return a.types.stars - b.types.stars;
-      }
-      if (a.types.stars) {
-        if (a.types.statics !== b.types.statics) {
-          return b.types.statics - a.types.statics;
-        }
-        if (a.types.dynamics !== b.types.dynamics) {
-          return b.types.dynamics - a.types.dynamics;
-        }
-      }
-      if (a.types.dynamics !== b.types.dynamics) {
-        return a.types.dynamics - b.types.dynamics;
-      }
-      if (a.types.statics !== b.types.statics) {
-        return b.types.statics - a.types.statics;
-      }
-      return 0;
-    });
-  }
-  function recognizeChar(states, ch) {
-    var nextStates = [];
-    for (var i = 0,
-        l = states.length; i < l; i++) {
-      var state = states[i];
-      nextStates.push.apply(nextStates, state.match(ch));
-    }
-    return nextStates;
-  }
-  function findHandler(state, path, queryParams) {
-    var handlers = state.handlers;
-    var regex = state.regex;
-    var captures = path.match(regex);
-    var currentCapture = 1;
-    var result = new RecognizeResults(queryParams);
-    for (var i = 0,
-        l = handlers.length; i < l; i++) {
-      var _handler = handlers[i];
-      var _names = _handler.names;
-      var _params = {};
-      for (var j = 0,
-          m = _names.length; j < m; j++) {
-        _params[_names[j]] = captures[currentCapture++];
-      }
-      result.push({
-        handler: _handler.handler,
-        params: _params,
-        isDynamic: !!_names.length
-      });
-    }
-    return result;
-  }
-  function addSegment(currentState, segment) {
-    var state = currentState;
-    segment.eachChar(function(ch) {
-      state = state.put(ch);
-    });
-    return state;
-  }
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-route-recognizer@1.0.0-beta.1.1.1", ["npm:aurelia-route-recognizer@1.0.0-beta.1.1.1/aurelia-route-recognizer"], function(main) {
-  return main;
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-event-aggregator@1.0.0-beta.1.1.1/aurelia-event-aggregator", ["exports", "npm:aurelia-logging@1.0.0-beta.1.1.1"], function(exports, _aureliaLogging) {
-  'use strict';
-  exports.__esModule = true;
-  exports.includeEventsIn = includeEventsIn;
-  exports.configure = configure;
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError('Cannot call a class as a function');
-    }
-  }
-  var logger = _aureliaLogging.getLogger('event-aggregator');
-  var Handler = (function() {
-    function Handler(messageType, callback) {
-      _classCallCheck(this, Handler);
-      this.messageType = messageType;
-      this.callback = callback;
-    }
-    Handler.prototype.handle = function handle(message) {
-      if (message instanceof this.messageType) {
-        this.callback.call(null, message);
-      }
-    };
-    return Handler;
-  })();
-  var EventAggregator = (function() {
-    function EventAggregator() {
-      _classCallCheck(this, EventAggregator);
-      this.eventLookup = {};
-      this.messageHandlers = [];
-    }
-    EventAggregator.prototype.publish = function publish(event, data) {
-      var subscribers = undefined;
-      var i = undefined;
-      if (!event) {
-        throw new Error('Event was invalid.');
-      }
-      if (typeof event === 'string') {
-        subscribers = this.eventLookup[event];
-        if (subscribers) {
-          subscribers = subscribers.slice();
-          i = subscribers.length;
-          try {
-            while (i--) {
-              subscribers[i](data, event);
-            }
-          } catch (e) {
-            logger.error(e);
-          }
-        }
-      } else {
-        subscribers = this.messageHandlers.slice();
-        i = subscribers.length;
-        try {
-          while (i--) {
-            subscribers[i].handle(event);
-          }
-        } catch (e) {
-          logger.error(e);
-        }
-      }
-    };
-    EventAggregator.prototype.subscribe = function subscribe(event, callback) {
-      var handler = undefined;
-      var subscribers = undefined;
-      if (!event) {
-        throw new Error('Event channel/type was invalid.');
-      }
-      if (typeof event === 'string') {
-        handler = callback;
-        subscribers = this.eventLookup[event] || (this.eventLookup[event] = []);
-      } else {
-        handler = new Handler(event, callback);
-        subscribers = this.messageHandlers;
-      }
-      subscribers.push(handler);
-      return {dispose: function dispose() {
-          var idx = subscribers.indexOf(handler);
-          if (idx !== -1) {
-            subscribers.splice(idx, 1);
-          }
-        }};
-    };
-    EventAggregator.prototype.subscribeOnce = function subscribeOnce(event, callback) {
-      var sub = this.subscribe(event, function(a, b) {
-        sub.dispose();
-        return callback(a, b);
-      });
-      return sub;
-    };
-    return EventAggregator;
-  })();
-  exports.EventAggregator = EventAggregator;
-  function includeEventsIn(obj) {
-    var ea = new EventAggregator();
-    obj.subscribeOnce = function(event, callback) {
-      return ea.subscribeOnce(event, callback);
-    };
-    obj.subscribe = function(event, callback) {
-      return ea.subscribe(event, callback);
-    };
-    obj.publish = function(event, data) {
-      ea.publish(event, data);
-    };
-    return ea;
-  }
-  function configure(config) {
-    config.instance(EventAggregator, includeEventsIn(config.aurelia));
-  }
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-event-aggregator@1.0.0-beta.1.1.1", ["npm:aurelia-event-aggregator@1.0.0-beta.1.1.1/aurelia-event-aggregator"], function(main) {
-  return main;
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-router@1.0.0-beta.1.1.1/aurelia-router", ["exports", "npm:core-js@2.1.0", "npm:aurelia-logging@1.0.0-beta.1.1.1", "npm:aurelia-dependency-injection@1.0.0-beta.1.1.3", "npm:aurelia-route-recognizer@1.0.0-beta.1.1.1", "npm:aurelia-history@1.0.0-beta.1.1.1", "npm:aurelia-event-aggregator@1.0.0-beta.1.1.1"], function(exports, _coreJs, _aureliaLogging, _aureliaDependencyInjection, _aureliaRouteRecognizer, _aureliaHistory, _aureliaEventAggregator) {
-  'use strict';
-  exports.__esModule = true;
-  var _createClass = (function() {
-    function defineProperties(target, props) {
-      for (var i = 0; i < props.length; i++) {
-        var descriptor = props[i];
-        descriptor.enumerable = descriptor.enumerable || false;
-        descriptor.configurable = true;
-        if ('value' in descriptor)
-          descriptor.writable = true;
-        Object.defineProperty(target, descriptor.key, descriptor);
-      }
-    }
-    return function(Constructor, protoProps, staticProps) {
-      if (protoProps)
-        defineProperties(Constructor.prototype, protoProps);
-      if (staticProps)
-        defineProperties(Constructor, staticProps);
-      return Constructor;
-    };
-  })();
-  exports._normalizeAbsolutePath = _normalizeAbsolutePath;
-  exports._createRootedPath = _createRootedPath;
-  exports._resolveUrl = _resolveUrl;
-  exports.createRouteFilterStep = createRouteFilterStep;
-  exports.isNavigationCommand = isNavigationCommand;
-  exports._buildNavigationPlan = _buildNavigationPlan;
-  function _inherits(subClass, superClass) {
-    if (typeof superClass !== 'function' && superClass !== null) {
-      throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);
-    }
-    subClass.prototype = Object.create(superClass && superClass.prototype, {constructor: {
-        value: subClass,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }});
-    if (superClass)
-      Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
-  }
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError('Cannot call a class as a function');
-    }
-  }
-  function _normalizeAbsolutePath(path, hasPushState) {
-    if (!hasPushState && path[0] !== '#') {
-      path = '#' + path;
-    }
-    return path;
-  }
-  function _createRootedPath(fragment, baseUrl, hasPushState) {
-    if (isAbsoluteUrl.test(fragment)) {
-      return fragment;
-    }
-    var path = '';
-    if (baseUrl.length && baseUrl[0] !== '/') {
-      path += '/';
-    }
-    path += baseUrl;
-    if ((!path.length || path[path.length - 1] !== '/') && fragment[0] !== '/') {
-      path += '/';
-    }
-    if (path.length && path[path.length - 1] === '/' && fragment[0] === '/') {
-      path = path.substring(0, path.length - 1);
-    }
-    return _normalizeAbsolutePath(path + fragment, hasPushState);
-  }
-  function _resolveUrl(fragment, baseUrl, hasPushState) {
-    if (isRootedPath.test(fragment)) {
-      return _normalizeAbsolutePath(fragment, hasPushState);
-    }
-    return _createRootedPath(fragment, baseUrl, hasPushState);
-  }
-  var isRootedPath = /^#?\//;
-  var isAbsoluteUrl = /^([a-z][a-z0-9+\-.]*:)?\/\//i;
-  var RouteFilterContainer = (function() {
-    RouteFilterContainer.inject = function inject() {
-      return [_aureliaDependencyInjection.Container];
-    };
-    function RouteFilterContainer(container) {
-      _classCallCheck(this, RouteFilterContainer);
-      this.container = container;
-      this.filters = {};
-      this.filterCache = {};
-    }
-    RouteFilterContainer.prototype.addStep = function addStep(name, step) {
-      var index = arguments.length <= 2 || arguments[2] === undefined ? -1 : arguments[2];
-      var filter = this.filters[name];
-      if (!filter) {
-        filter = this.filters[name] = [];
-      }
-      if (index === -1) {
-        index = filter.length;
-      }
-      filter.splice(index, 0, step);
-      this.filterCache = {};
-    };
-    RouteFilterContainer.prototype.getFilterSteps = function getFilterSteps(name) {
-      if (this.filterCache[name]) {
-        return this.filterCache[name];
-      }
-      var steps = [];
-      var filter = this.filters[name];
-      if (!filter) {
-        return steps;
-      }
-      for (var i = 0,
-          l = filter.length; i < l; i++) {
-        if (typeof filter[i] === 'string') {
-          steps.push.apply(steps, this.getFilterSteps(filter[i]));
-        } else {
-          steps.push(this.container.get(filter[i]));
-        }
-      }
-      this.filterCache[name] = steps;
-      return steps;
-    };
-    return RouteFilterContainer;
-  })();
-  exports.RouteFilterContainer = RouteFilterContainer;
-  function createRouteFilterStep(name) {
-    function create(routeFilterContainer) {
-      return new RouteFilterStep(name, routeFilterContainer);
-    }
-    create.inject = function() {
-      return [RouteFilterContainer];
-    };
-    return create;
-  }
-  var RouteFilterStep = (function() {
-    function RouteFilterStep(name, routeFilterContainer) {
-      _classCallCheck(this, RouteFilterStep);
-      this.isMultiStep = true;
-      this.name = name;
-      this.routeFilterContainer = routeFilterContainer;
-    }
-    RouteFilterStep.prototype.getSteps = function getSteps() {
-      return this.routeFilterContainer.getFilterSteps(this.name);
-    };
-    return RouteFilterStep;
-  })();
-  var pipelineStatus = {
-    completed: 'completed',
-    canceled: 'canceled',
-    rejected: 'rejected',
-    running: 'running'
-  };
-  exports.pipelineStatus = pipelineStatus;
-  var Pipeline = (function() {
-    function Pipeline() {
-      _classCallCheck(this, Pipeline);
-      this.steps = [];
-    }
-    Pipeline.prototype.addStep = function addStep(step) {
-      var run = undefined;
-      if (typeof step === 'function') {
-        run = step;
-      } else if (step.isMultiStep) {
-        var steps = step.getSteps();
-        for (var i = 0,
-            l = steps.length; i < l; i++) {
-          this.addStep(steps[i]);
-        }
-        return this;
-      } else {
-        run = step.run.bind(step);
-      }
-      this.steps.push(run);
-      return this;
-    };
-    Pipeline.prototype.run = function run(instruction) {
-      var index = -1;
-      var steps = this.steps;
-      function next() {
-        index++;
-        if (index < steps.length) {
-          var currentStep = steps[index];
-          try {
-            return currentStep(instruction, next);
-          } catch (e) {
-            return next.reject(e);
-          }
-        } else {
-          return next.complete();
-        }
-      }
-      next.complete = createCompletionHandler(next, pipelineStatus.completed);
-      next.cancel = createCompletionHandler(next, pipelineStatus.canceled);
-      next.reject = createCompletionHandler(next, pipelineStatus.rejected);
-      return next();
-    };
-    return Pipeline;
-  })();
-  exports.Pipeline = Pipeline;
-  function createCompletionHandler(next, status) {
-    return function(output) {
-      return Promise.resolve({
-        status: status,
-        output: output,
-        completed: status === pipelineStatus.completed
-      });
-    };
-  }
-  var CommitChangesStep = (function() {
-    function CommitChangesStep() {
-      _classCallCheck(this, CommitChangesStep);
-    }
-    CommitChangesStep.prototype.run = function run(navigationInstruction, next) {
-      return navigationInstruction._commitChanges(true).then(function() {
-        navigationInstruction._updateTitle();
-        return next();
-      });
-    };
-    return CommitChangesStep;
-  })();
-  exports.CommitChangesStep = CommitChangesStep;
-  var NavigationInstruction = (function() {
-    function NavigationInstruction(init) {
-      _classCallCheck(this, NavigationInstruction);
-      this.plan = null;
-      Object.assign(this, init);
-      this.params = this.params || {};
-      this.viewPortInstructions = {};
-      var ancestorParams = [];
-      var current = this;
-      do {
-        var currentParams = Object.assign({}, current.params);
-        if (current.config && current.config.hasChildRouter) {
-          delete currentParams[current.getWildCardName()];
-        }
-        ancestorParams.unshift(currentParams);
-        current = current.parentInstruction;
-      } while (current);
-      var allParams = Object.assign.apply(Object, [{}, this.queryParams].concat(ancestorParams));
-      this.lifecycleArgs = [allParams, this.config, this];
-    }
-    NavigationInstruction.prototype.getAllInstructions = function getAllInstructions() {
-      var instructions = [this];
-      for (var key in this.viewPortInstructions) {
-        var childInstruction = this.viewPortInstructions[key].childNavigationInstruction;
-        if (childInstruction) {
-          instructions.push.apply(instructions, childInstruction.getAllInstructions());
-        }
-      }
-      return instructions;
-    };
-    NavigationInstruction.prototype.getAllPreviousInstructions = function getAllPreviousInstructions() {
-      return this.getAllInstructions().map(function(c) {
-        return c.previousInstruction;
-      }).filter(function(c) {
-        return c;
-      });
-    };
-    NavigationInstruction.prototype.addViewPortInstruction = function addViewPortInstruction(viewPortName, strategy, moduleId, component) {
-      var viewportInstruction = this.viewPortInstructions[viewPortName] = {
-        name: viewPortName,
-        strategy: strategy,
-        moduleId: moduleId,
-        component: component,
-        childRouter: component.childRouter,
-        lifecycleArgs: this.lifecycleArgs.slice()
-      };
-      return viewportInstruction;
-    };
-    NavigationInstruction.prototype.getWildCardName = function getWildCardName() {
-      var wildcardIndex = this.config.route.lastIndexOf('*');
-      return this.config.route.substr(wildcardIndex + 1);
-    };
-    NavigationInstruction.prototype.getWildcardPath = function getWildcardPath() {
-      var wildcardName = this.getWildCardName();
-      var path = this.params[wildcardName] || '';
-      if (this.queryString) {
-        path += '?' + this.queryString;
-      }
-      return path;
-    };
-    NavigationInstruction.prototype.getBaseUrl = function getBaseUrl() {
-      if (!this.params) {
-        return this.fragment;
-      }
-      var wildcardName = this.getWildCardName();
-      var path = this.params[wildcardName] || '';
-      if (!path) {
-        return this.fragment;
-      }
-      return this.fragment.substr(0, this.fragment.lastIndexOf(path));
-    };
-    NavigationInstruction.prototype._commitChanges = function _commitChanges(waitToSwap) {
-      var _this = this;
-      var router = this.router;
-      router.currentInstruction = this;
-      if (this.previousInstruction) {
-        this.previousInstruction.config.navModel.isActive = false;
-      }
-      this.config.navModel.isActive = true;
-      router._refreshBaseUrl();
-      router.refreshNavigation();
-      var loads = [];
-      var delaySwaps = [];
-      var _loop = function(viewPortName) {
-        var viewPortInstruction = _this.viewPortInstructions[viewPortName];
-        var viewPort = router.viewPorts[viewPortName];
-        if (!viewPort) {
-          throw new Error('There was no router-view found in the view for ' + viewPortInstruction.moduleId + '.');
-        }
-        if (viewPortInstruction.strategy === activationStrategy.replace) {
-          if (waitToSwap) {
-            delaySwaps.push({
-              viewPort: viewPort,
-              viewPortInstruction: viewPortInstruction
-            });
-          }
-          loads.push(viewPort.process(viewPortInstruction, waitToSwap).then(function(x) {
-            if (viewPortInstruction.childNavigationInstruction) {
-              return viewPortInstruction.childNavigationInstruction._commitChanges();
-            }
-          }));
-        } else {
-          if (viewPortInstruction.childNavigationInstruction) {
-            loads.push(viewPortInstruction.childNavigationInstruction._commitChanges(waitToSwap));
-          }
-        }
-      };
-      for (var viewPortName in this.viewPortInstructions) {
-        _loop(viewPortName);
-      }
-      return Promise.all(loads).then(function() {
-        delaySwaps.forEach(function(x) {
-          return x.viewPort.swap(x.viewPortInstruction);
-        });
-        return null;
-      }).then(function() {
-        return prune(_this);
-      });
-    };
-    NavigationInstruction.prototype._updateTitle = function _updateTitle() {
-      var title = this._buildTitle();
-      if (title) {
-        this.router.history.setTitle(title);
-      }
-    };
-    NavigationInstruction.prototype._buildTitle = function _buildTitle() {
-      var separator = arguments.length <= 0 || arguments[0] === undefined ? ' | ' : arguments[0];
-      var title = this.config.navModel.title || '';
-      var childTitles = [];
-      for (var viewPortName in this.viewPortInstructions) {
-        var viewPortInstruction = this.viewPortInstructions[viewPortName];
-        if (viewPortInstruction.childNavigationInstruction) {
-          var childTitle = viewPortInstruction.childNavigationInstruction._buildTitle(separator);
-          if (childTitle) {
-            childTitles.push(childTitle);
-          }
-        }
-      }
-      if (childTitles.length) {
-        title = childTitles.join(separator) + (title ? separator : '') + title;
-      }
-      if (this.router.title) {
-        title += (title ? separator : '') + this.router.title;
-      }
-      return title;
-    };
-    return NavigationInstruction;
-  })();
-  exports.NavigationInstruction = NavigationInstruction;
-  function prune(instruction) {
-    instruction.previousInstruction = null;
-    instruction.plan = null;
-  }
-  var NavModel = (function() {
-    function NavModel(router, relativeHref) {
-      _classCallCheck(this, NavModel);
-      this.isActive = false;
-      this.title = null;
-      this.href = null;
-      this.relativeHref = null;
-      this.settings = {};
-      this.config = null;
-      this.router = router;
-      this.relativeHref = relativeHref;
-    }
-    NavModel.prototype.setTitle = function setTitle(title) {
-      this.title = title;
-      if (this.isActive) {
-        this.router.updateTitle();
-      }
-    };
-    return NavModel;
-  })();
-  exports.NavModel = NavModel;
-  function isNavigationCommand(obj) {
-    return obj && typeof obj.navigate === 'function';
-  }
-  var Redirect = (function() {
-    function Redirect(url) {
-      var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-      _classCallCheck(this, Redirect);
-      this.url = url;
-      this.options = Object.assign({
-        trigger: true,
-        replace: true
-      }, options);
-      this.shouldContinueProcessing = false;
-    }
-    Redirect.prototype.setRouter = function setRouter(router) {
-      this.router = router;
-    };
-    Redirect.prototype.navigate = function navigate(appRouter) {
-      var navigatingRouter = this.options.useAppRouter ? appRouter : this.router || appRouter;
-      navigatingRouter.navigate(this.url, this.options);
-    };
-    return Redirect;
-  })();
-  exports.Redirect = Redirect;
-  var RouterConfiguration = (function() {
-    function RouterConfiguration() {
-      _classCallCheck(this, RouterConfiguration);
-      this.instructions = [];
-      this.options = {};
-      this.pipelineSteps = [];
-    }
-    RouterConfiguration.prototype.addPipelineStep = function addPipelineStep(name, step) {
-      this.pipelineSteps.push({
-        name: name,
-        step: step
-      });
-      return this;
-    };
-    RouterConfiguration.prototype.map = function map(route) {
-      if (Array.isArray(route)) {
-        route.forEach(this.map.bind(this));
-        return this;
-      }
-      return this.mapRoute(route);
-    };
-    RouterConfiguration.prototype.mapRoute = function mapRoute(config) {
-      this.instructions.push(function(router) {
-        var routeConfigs = [];
-        if (Array.isArray(config.route)) {
-          for (var i = 0,
-              ii = config.route.length; i < ii; ++i) {
-            var current = Object.assign({}, config);
-            current.route = config.route[i];
-            routeConfigs.push(current);
-          }
-        } else {
-          routeConfigs.push(Object.assign({}, config));
-        }
-        var navModel = undefined;
-        for (var i = 0,
-            ii = routeConfigs.length; i < ii; ++i) {
-          var routeConfig = routeConfigs[i];
-          routeConfig.settings = routeConfig.settings || {};
-          if (!navModel) {
-            navModel = router.createNavModel(routeConfig);
-          }
-          router.addRoute(routeConfig, navModel);
-        }
-      });
-      return this;
-    };
-    RouterConfiguration.prototype.mapUnknownRoutes = function mapUnknownRoutes(config) {
-      this.unknownRouteConfig = config;
-      return this;
-    };
-    RouterConfiguration.prototype.exportToRouter = function exportToRouter(router) {
-      var instructions = this.instructions;
-      for (var i = 0,
-          ii = instructions.length; i < ii; ++i) {
-        instructions[i](router);
-      }
-      if (this.title) {
-        router.title = this.title;
-      }
-      if (this.unknownRouteConfig) {
-        router.handleUnknownRoutes(this.unknownRouteConfig);
-      }
-      router.options = this.options;
-      var pipelineSteps = this.pipelineSteps;
-      if (pipelineSteps.length) {
-        if (!router.isRoot) {
-          throw new Error('Pipeline steps can only be added to the root router');
-        }
-        var filterContainer = router.container.get(RouteFilterContainer);
-        for (var i = 0,
-            ii = pipelineSteps.length; i < ii; ++i) {
-          var _pipelineSteps$i = pipelineSteps[i];
-          var _name = _pipelineSteps$i.name;
-          var step = _pipelineSteps$i.step;
-          filterContainer.addStep(_name, step);
-        }
-      }
-    };
-    return RouterConfiguration;
-  })();
-  exports.RouterConfiguration = RouterConfiguration;
-  var activationStrategy = {
-    noChange: 'no-change',
-    invokeLifecycle: 'invoke-lifecycle',
-    replace: 'replace'
-  };
-  exports.activationStrategy = activationStrategy;
-  var BuildNavigationPlanStep = (function() {
-    function BuildNavigationPlanStep() {
-      _classCallCheck(this, BuildNavigationPlanStep);
-    }
-    BuildNavigationPlanStep.prototype.run = function run(navigationInstruction, next) {
-      return _buildNavigationPlan(navigationInstruction).then(function(plan) {
-        navigationInstruction.plan = plan;
-        return next();
-      })['catch'](next.cancel);
-    };
-    return BuildNavigationPlanStep;
-  })();
-  exports.BuildNavigationPlanStep = BuildNavigationPlanStep;
-  function _buildNavigationPlan(instruction, forceLifecycleMinimum) {
-    var prev = instruction.previousInstruction;
-    var config = instruction.config;
-    var plan = {};
-    if ('redirect' in config) {
-      var redirectLocation = _resolveUrl(config.redirect, getInstructionBaseUrl(instruction));
-      if (instruction.queryString) {
-        redirectLocation += '?' + instruction.queryString;
-      }
-      return Promise.reject(new Redirect(redirectLocation));
-    }
-    if (prev) {
-      var newParams = hasDifferentParameterValues(prev, instruction);
-      var pending = [];
-      var _loop2 = function(viewPortName) {
-        var prevViewPortInstruction = prev.viewPortInstructions[viewPortName];
-        var nextViewPortConfig = config.viewPorts[viewPortName];
-        var viewPortPlan = plan[viewPortName] = {
-          name: viewPortName,
-          config: nextViewPortConfig,
-          prevComponent: prevViewPortInstruction.component,
-          prevModuleId: prevViewPortInstruction.moduleId
-        };
-        if (prevViewPortInstruction.moduleId !== nextViewPortConfig.moduleId) {
-          viewPortPlan.strategy = activationStrategy.replace;
-        } else if ('determineActivationStrategy' in prevViewPortInstruction.component.viewModel) {
-          var _prevViewPortInstruction$component$viewModel;
-          viewPortPlan.strategy = (_prevViewPortInstruction$component$viewModel = prevViewPortInstruction.component.viewModel).determineActivationStrategy.apply(_prevViewPortInstruction$component$viewModel, instruction.lifecycleArgs);
-        } else if (config.activationStrategy) {
-          viewPortPlan.strategy = config.activationStrategy;
-        } else if (newParams || forceLifecycleMinimum) {
-          viewPortPlan.strategy = activationStrategy.invokeLifecycle;
-        } else {
-          viewPortPlan.strategy = activationStrategy.noChange;
-        }
-        if (viewPortPlan.strategy !== activationStrategy.replace && prevViewPortInstruction.childRouter) {
-          var path = instruction.getWildcardPath();
-          var task = prevViewPortInstruction.childRouter._createNavigationInstruction(path, instruction).then(function(childInstruction) {
-            viewPortPlan.childNavigationInstruction = childInstruction;
-            return _buildNavigationPlan(childInstruction, viewPortPlan.strategy === activationStrategy.invokeLifecycle).then(function(childPlan) {
-              childInstruction.plan = childPlan;
-            });
-          });
-          pending.push(task);
-        }
-      };
-      for (var viewPortName in prev.viewPortInstructions) {
-        _loop2(viewPortName);
-      }
-      return Promise.all(pending).then(function() {
-        return plan;
-      });
-    }
-    for (var viewPortName in config.viewPorts) {
-      plan[viewPortName] = {
-        name: viewPortName,
-        strategy: activationStrategy.replace,
-        config: instruction.config.viewPorts[viewPortName]
-      };
-    }
-    return Promise.resolve(plan);
-  }
-  function hasDifferentParameterValues(prev, next) {
-    var prevParams = prev.params;
-    var nextParams = next.params;
-    var nextWildCardName = next.config.hasChildRouter ? next.getWildCardName() : null;
-    for (var key in nextParams) {
-      if (key === nextWildCardName) {
-        continue;
-      }
-      if (prevParams[key] !== nextParams[key]) {
-        return true;
-      }
-    }
-    for (var key in prevParams) {
-      if (key === nextWildCardName) {
-        continue;
-      }
-      if (prevParams[key] !== nextParams[key]) {
-        return true;
-      }
-    }
-    return false;
-  }
-  function getInstructionBaseUrl(instruction) {
-    var instructionBaseUrlParts = [];
-    instruction = instruction.parentInstruction;
-    while (instruction) {
-      instructionBaseUrlParts.unshift(instruction.getBaseUrl());
-      instruction = instruction.parentInstruction;
-    }
-    instructionBaseUrlParts.unshift('/');
-    return instructionBaseUrlParts.join('');
-  }
-  var Router = (function() {
-    function Router(container, history) {
-      _classCallCheck(this, Router);
-      this.parent = null;
-      this.container = container;
-      this.history = history;
-      this.reset();
-    }
-    Router.prototype.reset = function reset() {
-      var _this2 = this;
-      this.viewPorts = {};
-      this.routes = [];
-      this.baseUrl = '';
-      this.isConfigured = false;
-      this.isNavigating = false;
-      this.navigation = [];
-      this.currentInstruction = null;
-      this._fallbackOrder = 100;
-      this._recognizer = new _aureliaRouteRecognizer.RouteRecognizer();
-      this._childRecognizer = new _aureliaRouteRecognizer.RouteRecognizer();
-      this._configuredPromise = new Promise(function(resolve) {
-        _this2._resolveConfiguredPromise = resolve;
-      });
-    };
-    Router.prototype.registerViewPort = function registerViewPort(viewPort, name) {
-      name = name || 'default';
-      this.viewPorts[name] = viewPort;
-    };
-    Router.prototype.ensureConfigured = function ensureConfigured() {
-      return this._configuredPromise;
-    };
-    Router.prototype.configure = function configure(callbackOrConfig) {
-      var _this3 = this;
-      this.isConfigured = true;
-      var result = callbackOrConfig;
-      var config = undefined;
-      if (typeof callbackOrConfig === 'function') {
-        config = new RouterConfiguration();
-        result = callbackOrConfig(config);
-      }
-      return Promise.resolve(result).then(function(c) {
-        if (c && c.exportToRouter) {
-          config = c;
-        }
-        config.exportToRouter(_this3);
-        _this3.isConfigured = true;
-        _this3._resolveConfiguredPromise();
-      });
-    };
-    Router.prototype.navigate = function navigate(fragment, options) {
-      if (!this.isConfigured && this.parent) {
-        return this.parent.navigate(fragment, options);
-      }
-      return this.history.navigate(_resolveUrl(fragment, this.baseUrl, this.history._hasPushState), options);
-    };
-    Router.prototype.navigateToRoute = function navigateToRoute(route, params, options) {
-      var path = this.generate(route, params);
-      return this.navigate(path, options);
-    };
-    Router.prototype.navigateBack = function navigateBack() {
-      this.history.navigateBack();
-    };
-    Router.prototype.createChild = function createChild(container) {
-      var childRouter = new Router(container || this.container.createChild(), this.history);
-      childRouter.parent = this;
-      return childRouter;
-    };
-    Router.prototype.generate = function generate(name, params) {
-      var hasRoute = this._recognizer.hasRoute(name);
-      if ((!this.isConfigured || !hasRoute) && this.parent) {
-        return this.parent.generate(name, params);
-      }
-      if (!hasRoute) {
-        throw new Error('A route with name \'' + name + '\' could not be found. Check that `name: \'' + name + '\'` was specified in the route\'s config.');
-      }
-      var path = this._recognizer.generate(name, params);
-      return _createRootedPath(path, this.baseUrl, this.history._hasPushState);
-    };
-    Router.prototype.createNavModel = function createNavModel(config) {
-      var navModel = new NavModel(this, 'href' in config ? config.href : config.route);
-      navModel.title = config.title;
-      navModel.order = config.nav;
-      navModel.href = config.href;
-      navModel.settings = config.settings;
-      navModel.config = config;
-      return navModel;
-    };
-    Router.prototype.addRoute = function addRoute(config, navModel) {
-      validateRouteConfig(config);
-      if (!('viewPorts' in config) && !config.navigationStrategy) {
-        config.viewPorts = {'default': {
-            moduleId: config.moduleId,
-            view: config.view
-          }};
-      }
-      if (!navModel) {
-        navModel = this.createNavModel(config);
-      }
-      this.routes.push(config);
-      var path = config.route;
-      if (path.charAt(0) === '/') {
-        path = path.substr(1);
-      }
-      var state = this._recognizer.add({
-        path: path,
-        handler: config
-      });
-      if (path) {
-        var _settings = config.settings;
-        delete config.settings;
-        var withChild = JSON.parse(JSON.stringify(config));
-        config.settings = _settings;
-        withChild.route = path + '/*childRoute';
-        withChild.hasChildRouter = true;
-        this._childRecognizer.add({
-          path: withChild.route,
-          handler: withChild
-        });
-        withChild.navModel = navModel;
-        withChild.settings = config.settings;
-      }
-      config.navModel = navModel;
-      if ((navModel.order || navModel.order === 0) && this.navigation.indexOf(navModel) === -1) {
-        if (!navModel.href && navModel.href !== '' && (state.types.dynamics || state.types.stars)) {
-          throw new Error('Invalid route config: dynamic routes must specify an href to be included in the navigation model.');
-        }
-        if (typeof navModel.order !== 'number') {
-          navModel.order = ++this._fallbackOrder;
-        }
-        this.navigation.push(navModel);
-        this.navigation = this.navigation.sort(function(a, b) {
-          return a.order - b.order;
-        });
-      }
-    };
-    Router.prototype.hasRoute = function hasRoute(name) {
-      return !!(this._recognizer.hasRoute(name) || this.parent && this.parent.hasRoute(name));
-    };
-    Router.prototype.hasOwnRoute = function hasOwnRoute(name) {
-      return this._recognizer.hasRoute(name);
-    };
-    Router.prototype.handleUnknownRoutes = function handleUnknownRoutes(config) {
-      var _this4 = this;
-      if (!config) {
-        throw new Error('Invalid unknown route handler');
-      }
-      this.catchAllHandler = function(instruction) {
-        return _this4._createRouteConfig(config, instruction).then(function(c) {
-          instruction.config = c;
-          return instruction;
-        });
-      };
-    };
-    Router.prototype.updateTitle = function updateTitle() {
-      if (this.parent) {
-        return this.parent.updateTitle();
-      }
-      this.currentInstruction._updateTitle();
-    };
-    Router.prototype.refreshNavigation = function refreshNavigation() {
-      var nav = this.navigation;
-      for (var i = 0,
-          _length = nav.length; i < _length; i++) {
-        var current = nav[i];
-        if (!current.href) {
-          current.href = _createRootedPath(current.relativeHref, this.baseUrl, this.history._hasPushState);
-        }
-      }
-    };
-    Router.prototype._refreshBaseUrl = function _refreshBaseUrl() {
-      if (this.parent) {
-        var baseUrl = this.parent.currentInstruction.getBaseUrl();
-        this.baseUrl = this.parent.baseUrl + baseUrl;
-      }
-    };
-    Router.prototype._createNavigationInstruction = function _createNavigationInstruction() {
-      var url = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
-      var parentInstruction = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-      var fragment = url;
-      var queryString = '';
-      var queryIndex = url.indexOf('?');
-      if (queryIndex !== -1) {
-        fragment = url.substr(0, queryIndex);
-        queryString = url.substr(queryIndex + 1);
-      }
-      var results = this._recognizer.recognize(url);
-      if (!results || !results.length) {
-        results = this._childRecognizer.recognize(url);
-      }
-      var instructionInit = {
-        fragment: fragment,
-        queryString: queryString,
-        config: null,
-        parentInstruction: parentInstruction,
-        previousInstruction: this.currentInstruction,
-        router: this
-      };
-      if (results && results.length) {
-        var first = results[0];
-        var _instruction = new NavigationInstruction(Object.assign({}, instructionInit, {
-          params: first.params,
-          queryParams: first.queryParams || results.queryParams,
-          config: first.config || first.handler
-        }));
-        if (typeof first.handler === 'function') {
-          return evaluateNavigationStrategy(_instruction, first.handler, first);
-        } else if (first.handler && 'navigationStrategy' in first.handler) {
-          return evaluateNavigationStrategy(_instruction, first.handler.navigationStrategy, first.handler);
-        }
-        return Promise.resolve(_instruction);
-      } else if (this.catchAllHandler) {
-        var _instruction2 = new NavigationInstruction(Object.assign({}, instructionInit, {
-          params: {path: fragment},
-          queryParams: results && results.queryParams,
-          config: null
-        }));
-        return evaluateNavigationStrategy(_instruction2, this.catchAllHandler);
-      }
-      return Promise.reject(new Error('Route not found: ' + url));
-    };
-    Router.prototype._createRouteConfig = function _createRouteConfig(config, instruction) {
-      var _this5 = this;
-      return Promise.resolve(config).then(function(c) {
-        if (typeof c === 'string') {
-          return {moduleId: c};
-        } else if (typeof c === 'function') {
-          return c(instruction);
-        }
-        return c;
-      }).then(function(c) {
-        return typeof c === 'string' ? {moduleId: c} : c;
-      }).then(function(c) {
-        c.route = instruction.params.path;
-        validateRouteConfig(c);
-        if (!c.navModel) {
-          c.navModel = _this5.createNavModel(c);
-        }
-        return c;
-      });
-    };
-    _createClass(Router, [{
-      key: 'isRoot',
-      get: function get() {
-        return !this.parent;
-      }
-    }]);
-    return Router;
-  })();
-  exports.Router = Router;
-  function validateRouteConfig(config) {
-    if (typeof config !== 'object') {
-      throw new Error('Invalid Route Config');
-    }
-    if (typeof config.route !== 'string') {
-      throw new Error('Invalid Route Config: You must specify a route pattern.');
-    }
-    if (!('redirect' in config || config.moduleId || config.navigationStrategy || config.viewPorts)) {
-      throw new Error('Invalid Route Config: You must specify a moduleId, redirect, navigationStrategy, or viewPorts.');
-    }
-  }
-  function evaluateNavigationStrategy(instruction, evaluator, context) {
-    return Promise.resolve(evaluator.call(context, instruction)).then(function() {
-      if (!('viewPorts' in instruction.config)) {
-        instruction.config.viewPorts = {'default': {moduleId: instruction.config.moduleId}};
-      }
-      return instruction;
-    });
-  }
-  var CanDeactivatePreviousStep = (function() {
-    function CanDeactivatePreviousStep() {
-      _classCallCheck(this, CanDeactivatePreviousStep);
-    }
-    CanDeactivatePreviousStep.prototype.run = function run(navigationInstruction, next) {
-      return processDeactivatable(navigationInstruction.plan, 'canDeactivate', next);
-    };
-    return CanDeactivatePreviousStep;
-  })();
-  exports.CanDeactivatePreviousStep = CanDeactivatePreviousStep;
-  var CanActivateNextStep = (function() {
-    function CanActivateNextStep() {
-      _classCallCheck(this, CanActivateNextStep);
-    }
-    CanActivateNextStep.prototype.run = function run(navigationInstruction, next) {
-      return processActivatable(navigationInstruction, 'canActivate', next);
-    };
-    return CanActivateNextStep;
-  })();
-  exports.CanActivateNextStep = CanActivateNextStep;
-  var DeactivatePreviousStep = (function() {
-    function DeactivatePreviousStep() {
-      _classCallCheck(this, DeactivatePreviousStep);
-    }
-    DeactivatePreviousStep.prototype.run = function run(navigationInstruction, next) {
-      return processDeactivatable(navigationInstruction.plan, 'deactivate', next, true);
-    };
-    return DeactivatePreviousStep;
-  })();
-  exports.DeactivatePreviousStep = DeactivatePreviousStep;
-  var ActivateNextStep = (function() {
-    function ActivateNextStep() {
-      _classCallCheck(this, ActivateNextStep);
-    }
-    ActivateNextStep.prototype.run = function run(navigationInstruction, next) {
-      return processActivatable(navigationInstruction, 'activate', next, true);
-    };
-    return ActivateNextStep;
-  })();
-  exports.ActivateNextStep = ActivateNextStep;
-  function processDeactivatable(plan, callbackName, next, ignoreResult) {
-    var infos = findDeactivatable(plan, callbackName);
-    var i = infos.length;
-    function inspect(val) {
-      if (ignoreResult || shouldContinue(val)) {
-        return iterate();
-      }
-      return next.cancel(val);
-    }
-    function iterate() {
-      if (i--) {
-        try {
-          var viewModel = infos[i];
-          var _result = viewModel[callbackName]();
-          return processPotential(_result, inspect, next.cancel);
-        } catch (error) {
-          return next.cancel(error);
-        }
-      }
-      return next();
-    }
-    return iterate();
-  }
-  function findDeactivatable(plan, callbackName) {
-    var list = arguments.length <= 2 || arguments[2] === undefined ? [] : arguments[2];
-    for (var viewPortName in plan) {
-      var viewPortPlan = plan[viewPortName];
-      var prevComponent = viewPortPlan.prevComponent;
-      if ((viewPortPlan.strategy === activationStrategy.invokeLifecycle || viewPortPlan.strategy === activationStrategy.replace) && prevComponent) {
-        var viewModel = prevComponent.viewModel;
-        if (callbackName in viewModel) {
-          list.push(viewModel);
-        }
-      }
-      if (viewPortPlan.childNavigationInstruction) {
-        findDeactivatable(viewPortPlan.childNavigationInstruction.plan, callbackName, list);
-      } else if (prevComponent) {
-        addPreviousDeactivatable(prevComponent, callbackName, list);
-      }
-    }
-    return list;
-  }
-  function addPreviousDeactivatable(component, callbackName, list) {
-    var childRouter = component.childRouter;
-    if (childRouter && childRouter.currentInstruction) {
-      var viewPortInstructions = childRouter.currentInstruction.viewPortInstructions;
-      for (var viewPortName in viewPortInstructions) {
-        var viewPortInstruction = viewPortInstructions[viewPortName];
-        var prevComponent = viewPortInstruction.component;
-        var prevViewModel = prevComponent.viewModel;
-        if (callbackName in prevViewModel) {
-          list.push(prevViewModel);
-        }
-        addPreviousDeactivatable(prevComponent, callbackName, list);
-      }
-    }
-  }
-  function processActivatable(navigationInstruction, callbackName, next, ignoreResult) {
-    var infos = findActivatable(navigationInstruction, callbackName);
-    var length = infos.length;
-    var i = -1;
-    function inspect(val, router) {
-      if (ignoreResult || shouldContinue(val, router)) {
-        return iterate();
-      }
-      return next.cancel(val);
-    }
-    function iterate() {
-      i++;
-      if (i < length) {
-        try {
-          var _ret3 = (function() {
-            var _current$viewModel;
-            var current = infos[i];
-            var result = (_current$viewModel = current.viewModel)[callbackName].apply(_current$viewModel, current.lifecycleArgs);
-            return {v: processPotential(result, function(val) {
-                return inspect(val, current.router);
-              }, next.cancel)};
-          })();
-          if (typeof _ret3 === 'object')
-            return _ret3.v;
-        } catch (error) {
-          return next.cancel(error);
-        }
-      }
-      return next();
-    }
-    return iterate();
-  }
-  function findActivatable(navigationInstruction, callbackName, list, router) {
-    if (list === undefined)
-      list = [];
-    var plan = navigationInstruction.plan;
-    Object.keys(plan).filter(function(viewPortName) {
-      var viewPortPlan = plan[viewPortName];
-      var viewPortInstruction = navigationInstruction.viewPortInstructions[viewPortName];
-      var viewModel = viewPortInstruction.component.viewModel;
-      if ((viewPortPlan.strategy === activationStrategy.invokeLifecycle || viewPortPlan.strategy === activationStrategy.replace) && callbackName in viewModel) {
-        list.push({
-          viewModel: viewModel,
-          lifecycleArgs: viewPortInstruction.lifecycleArgs,
-          router: router
-        });
-      }
-      if (viewPortPlan.childNavigationInstruction) {
-        findActivatable(viewPortPlan.childNavigationInstruction, callbackName, list, viewPortInstruction.component.childRouter || router);
-      }
-    });
-    return list;
-  }
-  function shouldContinue(output, router) {
-    if (output instanceof Error) {
-      return false;
-    }
-    if (isNavigationCommand(output)) {
-      if (typeof output.setRouter === 'function') {
-        output.setRouter(router);
-      }
-      return !!output.shouldContinueProcessing;
-    }
-    if (output === undefined) {
-      return true;
-    }
-    return output;
-  }
-  function processPotential(obj, resolve, reject) {
-    if (obj && typeof obj.then === 'function') {
-      return Promise.resolve(obj).then(resolve)['catch'](reject);
-    }
-    try {
-      return resolve(obj);
-    } catch (error) {
-      return reject(error);
-    }
-  }
-  var RouteLoader = (function() {
-    function RouteLoader() {
-      _classCallCheck(this, RouteLoader);
-    }
-    RouteLoader.prototype.loadRoute = function loadRoute(router, config, navigationInstruction) {
-      throw Error('Route loaders must implement "loadRoute(router, config, navigationInstruction)".');
-    };
-    return RouteLoader;
-  })();
-  exports.RouteLoader = RouteLoader;
-  var LoadRouteStep = (function() {
-    LoadRouteStep.inject = function inject() {
-      return [RouteLoader];
-    };
-    function LoadRouteStep(routeLoader) {
-      _classCallCheck(this, LoadRouteStep);
-      this.routeLoader = routeLoader;
-    }
-    LoadRouteStep.prototype.run = function run(navigationInstruction, next) {
-      return loadNewRoute(this.routeLoader, navigationInstruction).then(next)['catch'](next.cancel);
-    };
-    return LoadRouteStep;
-  })();
-  exports.LoadRouteStep = LoadRouteStep;
-  function loadNewRoute(routeLoader, navigationInstruction) {
-    var toLoad = determineWhatToLoad(navigationInstruction);
-    var loadPromises = toLoad.map(function(current) {
-      return loadRoute(routeLoader, current.navigationInstruction, current.viewPortPlan);
-    });
-    return Promise.all(loadPromises);
-  }
-  function determineWhatToLoad(navigationInstruction) {
-    var toLoad = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
-    var plan = navigationInstruction.plan;
-    for (var viewPortName in plan) {
-      var viewPortPlan = plan[viewPortName];
-      if (viewPortPlan.strategy === activationStrategy.replace) {
-        toLoad.push({
-          viewPortPlan: viewPortPlan,
-          navigationInstruction: navigationInstruction
-        });
-        if (viewPortPlan.childNavigationInstruction) {
-          determineWhatToLoad(viewPortPlan.childNavigationInstruction, toLoad);
-        }
-      } else {
-        var viewPortInstruction = navigationInstruction.addViewPortInstruction(viewPortName, viewPortPlan.strategy, viewPortPlan.prevModuleId, viewPortPlan.prevComponent);
-        if (viewPortPlan.childNavigationInstruction) {
-          viewPortInstruction.childNavigationInstruction = viewPortPlan.childNavigationInstruction;
-          determineWhatToLoad(viewPortPlan.childNavigationInstruction, toLoad);
-        }
-      }
-    }
-    return toLoad;
-  }
-  function loadRoute(routeLoader, navigationInstruction, viewPortPlan) {
-    var moduleId = viewPortPlan.config.moduleId;
-    return loadComponent(routeLoader, navigationInstruction, viewPortPlan.config).then(function(component) {
-      var viewPortInstruction = navigationInstruction.addViewPortInstruction(viewPortPlan.name, viewPortPlan.strategy, moduleId, component);
-      var childRouter = component.childRouter;
-      if (childRouter) {
-        var path = navigationInstruction.getWildcardPath();
-        return childRouter._createNavigationInstruction(path, navigationInstruction).then(function(childInstruction) {
-          viewPortPlan.childNavigationInstruction = childInstruction;
-          return _buildNavigationPlan(childInstruction).then(function(childPlan) {
-            childInstruction.plan = childPlan;
-            viewPortInstruction.childNavigationInstruction = childInstruction;
-            return loadNewRoute(routeLoader, childInstruction);
-          });
-        });
-      }
-    });
-  }
-  function loadComponent(routeLoader, navigationInstruction, config) {
-    var router = navigationInstruction.router;
-    var lifecycleArgs = navigationInstruction.lifecycleArgs;
-    return routeLoader.loadRoute(router, config, navigationInstruction).then(function(component) {
-      var viewModel = component.viewModel;
-      var childContainer = component.childContainer;
-      component.router = router;
-      component.config = config;
-      if ('configureRouter' in viewModel) {
-        var _ret4 = (function() {
-          var childRouter = childContainer.getChildRouter();
-          component.childRouter = childRouter;
-          return {v: childRouter.configure(function(c) {
-              return viewModel.configureRouter.apply(viewModel, [c, childRouter].concat(lifecycleArgs));
-            }).then(function() {
-              return component;
-            })};
-        })();
-        if (typeof _ret4 === 'object')
-          return _ret4.v;
-      }
-      return component;
-    });
-  }
-  var PipelineProvider = (function() {
-    PipelineProvider.inject = function inject() {
-      return [_aureliaDependencyInjection.Container];
-    };
-    function PipelineProvider(container) {
-      _classCallCheck(this, PipelineProvider);
-      this.container = container;
-      this.steps = [BuildNavigationPlanStep, CanDeactivatePreviousStep, LoadRouteStep, createRouteFilterStep('authorize'), createRouteFilterStep('modelbind'), CanActivateNextStep, DeactivatePreviousStep, ActivateNextStep, createRouteFilterStep('precommit'), CommitChangesStep, createRouteFilterStep('postcomplete')];
-    }
-    PipelineProvider.prototype.createPipeline = function createPipeline() {
-      var _this6 = this;
-      var pipeline = new Pipeline();
-      this.steps.forEach(function(step) {
-        return pipeline.addStep(_this6.container.get(step));
-      });
-      return pipeline;
-    };
-    return PipelineProvider;
-  })();
-  exports.PipelineProvider = PipelineProvider;
-  var logger = _aureliaLogging.getLogger('app-router');
-  var AppRouter = (function(_Router) {
-    _inherits(AppRouter, _Router);
-    AppRouter.inject = function inject() {
-      return [_aureliaDependencyInjection.Container, _aureliaHistory.History, PipelineProvider, _aureliaEventAggregator.EventAggregator];
-    };
-    function AppRouter(container, history, pipelineProvider, events) {
-      _classCallCheck(this, AppRouter);
-      _Router.call(this, container, history);
-      this.pipelineProvider = pipelineProvider;
-      this.events = events;
-    }
-    AppRouter.prototype.reset = function reset() {
-      _Router.prototype.reset.call(this);
-      this.maxInstructionCount = 10;
-      if (!this._queue) {
-        this._queue = [];
-      } else {
-        this._queue.length = 0;
-      }
-    };
-    AppRouter.prototype.loadUrl = function loadUrl(url) {
-      var _this7 = this;
-      return this._createNavigationInstruction(url).then(function(instruction) {
-        return _this7._queueInstruction(instruction);
-      })['catch'](function(error) {
-        logger.error(error);
-        restorePreviousLocation(_this7);
-      });
-    };
-    AppRouter.prototype.registerViewPort = function registerViewPort(viewPort, name) {
-      var _this8 = this;
-      _Router.prototype.registerViewPort.call(this, viewPort, name);
-      if (!this.isActive) {
-        var _ret5 = (function() {
-          var viewModel = _this8._findViewModel(viewPort);
-          if ('configureRouter' in viewModel) {
-            if (!_this8.isConfigured) {
-              var _ret6 = (function() {
-                var resolveConfiguredPromise = _this8._resolveConfiguredPromise;
-                _this8._resolveConfiguredPromise = function() {};
-                return {v: {v: _this8.configure(function(config) {
-                      return viewModel.configureRouter(config, _this8);
-                    }).then(function() {
-                      _this8.activate();
-                      resolveConfiguredPromise();
-                    })}};
-              })();
-              if (typeof _ret6 === 'object')
-                return _ret6.v;
-            }
-          } else {
-            _this8.activate();
-          }
-        })();
-        if (typeof _ret5 === 'object')
-          return _ret5.v;
-      } else {
-        this._dequeueInstruction();
-      }
-      return Promise.resolve();
-    };
-    AppRouter.prototype.activate = function activate(options) {
-      if (this.isActive) {
-        return;
-      }
-      this.isActive = true;
-      this.options = Object.assign({routeHandler: this.loadUrl.bind(this)}, this.options, options);
-      this.history.activate(this.options);
-      this._dequeueInstruction();
-    };
-    AppRouter.prototype.deactivate = function deactivate() {
-      this.isActive = false;
-      this.history.deactivate();
-    };
-    AppRouter.prototype._queueInstruction = function _queueInstruction(instruction) {
-      var _this9 = this;
-      return new Promise(function(resolve) {
-        instruction.resolve = resolve;
-        _this9._queue.unshift(instruction);
-        _this9._dequeueInstruction();
-      });
-    };
-    AppRouter.prototype._dequeueInstruction = function _dequeueInstruction() {
-      var _this10 = this;
-      var instructionCount = arguments.length <= 0 || arguments[0] === undefined ? 0 : arguments[0];
-      return Promise.resolve().then(function() {
-        if (_this10.isNavigating && !instructionCount) {
-          return undefined;
-        }
-        var instruction = _this10._queue.shift();
-        _this10._queue.length = 0;
-        if (!instruction) {
-          return undefined;
-        }
-        _this10.isNavigating = true;
-        instruction.previousInstruction = _this10.currentInstruction;
-        if (!instructionCount) {
-          _this10.events.publish('router:navigation:processing', {instruction: instruction});
-        } else if (instructionCount === _this10.maxInstructionCount - 1) {
-          logger.error(instructionCount + 1 + ' navigation instructions have been attempted without success. Restoring last known good location.');
-          restorePreviousLocation(_this10);
-          return _this10._dequeueInstruction(instructionCount + 1);
-        } else if (instructionCount > _this10.maxInstructionCount) {
-          throw new Error('Maximum navigation attempts exceeded. Giving up.');
-        }
-        var pipeline = _this10.pipelineProvider.createPipeline();
-        return pipeline.run(instruction).then(function(result) {
-          return processResult(instruction, result, instructionCount, _this10);
-        })['catch'](function(error) {
-          return {output: error instanceof Error ? error : new Error(error)};
-        }).then(function(result) {
-          return resolveInstruction(instruction, result, !!instructionCount, _this10);
-        });
-      });
-    };
-    AppRouter.prototype._findViewModel = function _findViewModel(viewPort) {
-      if (this.container.viewModel) {
-        return this.container.viewModel;
-      }
-      if (viewPort.container) {
-        var container = viewPort.container;
-        while (container) {
-          if (container.viewModel) {
-            this.container.viewModel = container.viewModel;
-            return container.viewModel;
-          }
-          container = container.parent;
-        }
-      }
-    };
-    return AppRouter;
-  })(Router);
-  exports.AppRouter = AppRouter;
-  function processResult(instruction, result, instructionCount, router) {
-    if (!(result && 'completed' in result && 'output' in result)) {
-      result = result || {};
-      result.output = new Error('Expected router pipeline to return a navigation result, but got [' + JSON.stringify(result) + '] instead.');
-    }
-    var finalResult = null;
-    if (isNavigationCommand(result.output)) {
-      result.output.navigate(router);
-    } else {
-      finalResult = result;
-      if (!result.completed) {
-        if (result.output instanceof Error) {
-          logger.error(result.output);
-        }
-        restorePreviousLocation(router);
-      }
-    }
-    return router._dequeueInstruction(instructionCount + 1).then(function(innerResult) {
-      return finalResult || innerResult || result;
-    });
-  }
-  function resolveInstruction(instruction, result, isInnerInstruction, router) {
-    instruction.resolve(result);
-    if (!isInnerInstruction) {
-      router.isNavigating = false;
-      var eventArgs = {
-        instruction: instruction,
-        result: result
-      };
-      var eventName = undefined;
-      if (result.output instanceof Error) {
-        eventName = 'error';
-      } else if (!result.completed) {
-        eventName = 'canceled';
-      } else {
-        var _queryString = instruction.queryString ? '?' + instruction.queryString : '';
-        router.history.previousLocation = instruction.fragment + _queryString;
-        eventName = 'success';
-      }
-      router.events.publish('router:navigation:' + eventName, eventArgs);
-      router.events.publish('router:navigation:complete', eventArgs);
-    }
-    return result;
-  }
-  function restorePreviousLocation(router) {
-    var previousLocation = router.history.previousLocation;
-    if (previousLocation) {
-      router.navigate(router.history.previousLocation, {
-        trigger: false,
-        replace: true
-      });
-    } else {
-      logger.error('Router navigation failed, and no previous location could be restored.');
-    }
-  }
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
-define("npm:aurelia-router@1.0.0-beta.1.1.1", ["npm:aurelia-router@1.0.0-beta.1.1.1/aurelia-router"], function(main) {
-  return main;
-});
-
-_removeDefine();
-})();
-(function() {
-var _removeDefine = System.get("@@amd-helpers").createDefine();
 define("npm:aurelia-templating-router@1.0.0-beta.1.1.1/route-loader", ["exports", "npm:aurelia-dependency-injection@1.0.0-beta.1.1.3", "npm:aurelia-templating@1.0.0-beta.1.1.1", "npm:aurelia-router@1.0.0-beta.1.1.1", "npm:aurelia-path@1.0.0-beta.1.1.0", "npm:aurelia-metadata@1.0.0-beta.1.1.4"], function(exports, _aureliaDependencyInjection, _aureliaTemplating, _aureliaRouter, _aureliaPath, _aureliaMetadata) {
   'use strict';
   exports.__esModule = true;
@@ -19951,7412 +20455,3607 @@ define("npm:aurelia-templating-router@1.0.0-beta.1.1.1", ["npm:aurelia-templatin
 
 _removeDefine();
 })();
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_core", [], true, function(require, exports, module) {
+System.registerDynamic("github:systemjs/plugin-css@0.1.20/css", [], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  var core = module.exports = {version: '2.1.0'};
-  if (typeof __e == 'number')
-    __e = core;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_entry-virtual", ["npm:core-js@2.1.0/library/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var core = require("npm:core-js@2.1.0/library/modules/_core");
-  module.exports = function(CONSTRUCTOR) {
-    var C = core[CONSTRUCTOR];
-    return (C.virtual || C.prototype);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_is-object", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = function(it) {
-    return typeof it === 'object' ? it !== null : typeof it === 'function';
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_an-object", ["npm:core-js@2.1.0/library/modules/_is-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isObject = require("npm:core-js@2.1.0/library/modules/_is-object");
-  module.exports = function(it) {
-    if (!isObject(it))
-      throw TypeError(it + ' is not an object!');
-    return it;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_fails", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = function(exec) {
-    try {
-      return !!exec();
-    } catch (e) {
-      return true;
+  if (typeof window !== 'undefined') {
+    var waitSeconds = 100;
+    var head = document.getElementsByTagName('head')[0];
+    var links = document.getElementsByTagName('link');
+    var linkHrefs = [];
+    for (var i = 0; i < links.length; i++) {
+      linkHrefs.push(links[i].href);
     }
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_descriptors", ["npm:core-js@2.1.0/library/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = !require("npm:core-js@2.1.0/library/modules/_fails")(function() {
-    return Object.defineProperty({}, 'a', {get: function() {
-        return 7;
-      }}).a != 7;
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_global", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var global = module.exports = typeof window != 'undefined' && window.Math == Math ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
-  if (typeof __g == 'number')
-    __g = global;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_dom-create", ["npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_global"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      document = require("npm:core-js@2.1.0/library/modules/_global").document,
-      is = isObject(document) && isObject(document.createElement);
-  module.exports = function(it) {
-    return is ? document.createElement(it) : {};
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_ie8-dom-define", ["npm:core-js@2.1.0/library/modules/_descriptors", "npm:core-js@2.1.0/library/modules/_fails", "npm:core-js@2.1.0/library/modules/_dom-create"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = !require("npm:core-js@2.1.0/library/modules/_descriptors") && !require("npm:core-js@2.1.0/library/modules/_fails")(function() {
-    return Object.defineProperty(require("npm:core-js@2.1.0/library/modules/_dom-create")('div'), 'a', {get: function() {
-        return 7;
-      }}).a != 7;
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_to-primitive", ["npm:core-js@2.1.0/library/modules/_is-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isObject = require("npm:core-js@2.1.0/library/modules/_is-object");
-  module.exports = function(it, S) {
-    if (!isObject(it))
-      return it;
-    var fn,
-        val;
-    if (S && typeof(fn = it.toString) == 'function' && !isObject(val = fn.call(it)))
-      return val;
-    if (typeof(fn = it.valueOf) == 'function' && !isObject(val = fn.call(it)))
-      return val;
-    if (!S && typeof(fn = it.toString) == 'function' && !isObject(val = fn.call(it)))
-      return val;
-    throw TypeError("Can't convert object to primitive value");
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_object-dp", ["npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_ie8-dom-define", "npm:core-js@2.1.0/library/modules/_to-primitive", "npm:core-js@2.1.0/library/modules/_descriptors"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      IE8_DOM_DEFINE = require("npm:core-js@2.1.0/library/modules/_ie8-dom-define"),
-      toPrimitive = require("npm:core-js@2.1.0/library/modules/_to-primitive"),
-      dP = Object.defineProperty;
-  exports.f = require("npm:core-js@2.1.0/library/modules/_descriptors") ? Object.defineProperty : function defineProperty(O, P, Attributes) {
-    anObject(O);
-    P = toPrimitive(P, true);
-    anObject(Attributes);
-    if (IE8_DOM_DEFINE)
-      try {
-        return dP(O, P, Attributes);
-      } catch (e) {}
-    if ('get' in Attributes || 'set' in Attributes)
-      throw TypeError('Accessors not supported!');
-    if ('value' in Attributes)
-      O[P] = Attributes.value;
-    return O;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_property-desc", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = function(bitmap, value) {
-    return {
-      enumerable: !(bitmap & 1),
-      configurable: !(bitmap & 2),
-      writable: !(bitmap & 4),
-      value: value
-    };
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_hide", ["npm:core-js@2.1.0/library/modules/_object-dp", "npm:core-js@2.1.0/library/modules/_property-desc", "npm:core-js@2.1.0/library/modules/_descriptors"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var dP = require("npm:core-js@2.1.0/library/modules/_object-dp"),
-      createDesc = require("npm:core-js@2.1.0/library/modules/_property-desc");
-  module.exports = require("npm:core-js@2.1.0/library/modules/_descriptors") ? function(object, key, value) {
-    return dP.f(object, key, createDesc(1, value));
-  } : function(object, key, value) {
-    object[key] = value;
-    return object;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_redefine", ["npm:core-js@2.1.0/library/modules/_hide"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = require("npm:core-js@2.1.0/library/modules/_hide");
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_defined", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = function(it) {
-    if (it == undefined)
-      throw TypeError("Can't call method on  " + it);
-    return it;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_shared", ["npm:core-js@2.1.0/library/modules/_global"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var global = require("npm:core-js@2.1.0/library/modules/_global"),
-      SHARED = '__core-js_shared__',
-      store = global[SHARED] || (global[SHARED] = {});
-  module.exports = function(key) {
-    return store[key] || (store[key] = {});
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_uid", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var id = 0,
-      px = Math.random();
-  module.exports = function(key) {
-    return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_wks", ["npm:core-js@2.1.0/library/modules/_shared", "npm:core-js@2.1.0/library/modules/_uid", "npm:core-js@2.1.0/library/modules/_global"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var store = require("npm:core-js@2.1.0/library/modules/_shared")('wks'),
-      uid = require("npm:core-js@2.1.0/library/modules/_uid"),
-      Symbol = require("npm:core-js@2.1.0/library/modules/_global").Symbol,
-      USE_SYMBOL = typeof Symbol == 'function';
-  module.exports = function(name) {
-    return store[name] || (store[name] = USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : uid)('Symbol.' + name));
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_fix-re-wks", ["npm:core-js@2.1.0/library/modules/_hide", "npm:core-js@2.1.0/library/modules/_redefine", "npm:core-js@2.1.0/library/modules/_fails", "npm:core-js@2.1.0/library/modules/_defined", "npm:core-js@2.1.0/library/modules/_wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var hide = require("npm:core-js@2.1.0/library/modules/_hide"),
-      redefine = require("npm:core-js@2.1.0/library/modules/_redefine"),
-      fails = require("npm:core-js@2.1.0/library/modules/_fails"),
-      defined = require("npm:core-js@2.1.0/library/modules/_defined"),
-      wks = require("npm:core-js@2.1.0/library/modules/_wks");
-  module.exports = function(KEY, length, exec) {
-    var SYMBOL = wks(KEY),
-        fns = exec(defined, SYMBOL, ''[KEY]),
-        strfn = fns[0],
-        rxfn = fns[1];
-    if (fails(function() {
-      var O = {};
-      O[SYMBOL] = function() {
-        return 7;
-      };
-      return ''[KEY](O) != 7;
-    })) {
-      redefine(String.prototype, KEY, strfn);
-      hide(RegExp.prototype, SYMBOL, length == 2 ? function(string, arg) {
-        return rxfn.call(string, this, arg);
-      } : function(string) {
-        return rxfn.call(string, this);
-      });
-    }
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_flags", ["npm:core-js@2.1.0/library/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var anObject = require("npm:core-js@2.1.0/library/modules/_an-object");
-  module.exports = function() {
-    var that = anObject(this),
-        result = '';
-    if (that.global)
-      result += 'g';
-    if (that.ignoreCase)
-      result += 'i';
-    if (that.multiline)
-      result += 'm';
-    if (that.unicode)
-      result += 'u';
-    if (that.sticky)
-      result += 'y';
-    return result;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_a-function", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = function(it) {
-    if (typeof it != 'function')
-      throw TypeError(it + ' is not a function!');
-    return it;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_ctx", ["npm:core-js@2.1.0/library/modules/_a-function"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var aFunction = require("npm:core-js@2.1.0/library/modules/_a-function");
-  module.exports = function(fn, that, length) {
-    aFunction(fn);
-    if (that === undefined)
-      return fn;
-    switch (length) {
-      case 1:
-        return function(a) {
-          return fn.call(that, a);
-        };
-      case 2:
-        return function(a, b) {
-          return fn.call(that, a, b);
-        };
-      case 3:
-        return function(a, b, c) {
-          return fn.call(that, a, b, c);
-        };
-    }
-    return function() {
-      return fn.apply(that, arguments);
-    };
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_object-pie", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  exports.f = {}.propertyIsEnumerable;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_cof", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var toString = {}.toString;
-  module.exports = function(it) {
-    return toString.call(it).slice(8, -1);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_iobject", ["npm:core-js@2.1.0/library/modules/_cof"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var cof = require("npm:core-js@2.1.0/library/modules/_cof");
-  module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it) {
-    return cof(it) == 'String' ? it.split('') : Object(it);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_to-iobject", ["npm:core-js@2.1.0/library/modules/_iobject", "npm:core-js@2.1.0/library/modules/_defined"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var IObject = require("npm:core-js@2.1.0/library/modules/_iobject"),
-      defined = require("npm:core-js@2.1.0/library/modules/_defined");
-  module.exports = function(it) {
-    return IObject(defined(it));
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_has", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var hasOwnProperty = {}.hasOwnProperty;
-  module.exports = function(it, key) {
-    return hasOwnProperty.call(it, key);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_object-gopd", ["npm:core-js@2.1.0/library/modules/_object-pie", "npm:core-js@2.1.0/library/modules/_property-desc", "npm:core-js@2.1.0/library/modules/_to-iobject", "npm:core-js@2.1.0/library/modules/_to-primitive", "npm:core-js@2.1.0/library/modules/_has", "npm:core-js@2.1.0/library/modules/_ie8-dom-define", "npm:core-js@2.1.0/library/modules/_descriptors"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var pIE = require("npm:core-js@2.1.0/library/modules/_object-pie"),
-      createDesc = require("npm:core-js@2.1.0/library/modules/_property-desc"),
-      toIObject = require("npm:core-js@2.1.0/library/modules/_to-iobject"),
-      toPrimitive = require("npm:core-js@2.1.0/library/modules/_to-primitive"),
-      has = require("npm:core-js@2.1.0/library/modules/_has"),
-      IE8_DOM_DEFINE = require("npm:core-js@2.1.0/library/modules/_ie8-dom-define"),
-      gOPD = Object.getOwnPropertyDescriptor;
-  exports.f = require("npm:core-js@2.1.0/library/modules/_descriptors") ? gOPD : function getOwnPropertyDescriptor(O, P) {
-    O = toIObject(O);
-    P = toPrimitive(P, true);
-    if (IE8_DOM_DEFINE)
-      try {
-        return gOPD(O, P);
-      } catch (e) {}
-    if (has(O, P))
-      return createDesc(!pIE.f.call(O, P), O[P]);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_set-proto", ["npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_ctx", "npm:core-js@2.1.0/library/modules/_object-gopd"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object");
-  var check = function(O, proto) {
-    anObject(O);
-    if (!isObject(proto) && proto !== null)
-      throw TypeError(proto + ": can't set as prototype!");
-  };
-  module.exports = {
-    set: Object.setPrototypeOf || ('__proto__' in {} ? function(test, buggy, set) {
-      try {
-        set = require("npm:core-js@2.1.0/library/modules/_ctx")(Function.call, require("npm:core-js@2.1.0/library/modules/_object-gopd").f(Object.prototype, '__proto__').set, 2);
-        set(test, []);
-        buggy = !(test instanceof Array);
-      } catch (e) {
-        buggy = true;
-      }
-      return function setPrototypeOf(O, proto) {
-        check(O, proto);
-        if (buggy)
-          O.__proto__ = proto;
-        else
-          set(O, proto);
-        return O;
-      };
-    }({}, false) : undefined),
-    check: check
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_inherit-if-required", ["npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_set-proto"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      setPrototypeOf = require("npm:core-js@2.1.0/library/modules/_set-proto").set;
-  module.exports = function(that, target, C) {
-    var P,
-        S = target.constructor;
-    if (S !== C && typeof S == 'function' && (P = S.prototype) !== C.prototype && isObject(P) && setPrototypeOf) {
-      setPrototypeOf(that, P);
-    }
-    return that;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_export", ["npm:core-js@2.1.0/library/modules/_global", "npm:core-js@2.1.0/library/modules/_core", "npm:core-js@2.1.0/library/modules/_ctx", "npm:core-js@2.1.0/library/modules/_hide"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var global = require("npm:core-js@2.1.0/library/modules/_global"),
-      core = require("npm:core-js@2.1.0/library/modules/_core"),
-      ctx = require("npm:core-js@2.1.0/library/modules/_ctx"),
-      hide = require("npm:core-js@2.1.0/library/modules/_hide"),
-      PROTOTYPE = 'prototype';
-  var $export = function(type, name, source) {
-    var IS_FORCED = type & $export.F,
-        IS_GLOBAL = type & $export.G,
-        IS_STATIC = type & $export.S,
-        IS_PROTO = type & $export.P,
-        IS_BIND = type & $export.B,
-        IS_WRAP = type & $export.W,
-        exports = IS_GLOBAL ? core : core[name] || (core[name] = {}),
-        expProto = exports[PROTOTYPE],
-        target = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE],
-        key,
-        own,
-        out;
-    if (IS_GLOBAL)
-      source = name;
-    for (key in source) {
-      own = !IS_FORCED && target && target[key] !== undefined;
-      if (own && key in exports)
-        continue;
-      out = own ? target[key] : source[key];
-      exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key] : IS_BIND && own ? ctx(out, global) : IS_WRAP && target[key] == out ? (function(C) {
-        var F = function(a, b, c) {
-          if (this instanceof C) {
-            switch (arguments.length) {
-              case 0:
-                return new C;
-              case 1:
-                return new C(a);
-              case 2:
-                return new C(a, b);
-            }
-            return new C(a, b, c);
-          }
-          return C.apply(this, arguments);
-        };
-        F[PROTOTYPE] = C[PROTOTYPE];
-        return F;
-      })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
-      if (IS_PROTO) {
-        (exports.virtual || (exports.virtual = {}))[key] = out;
-        if (type & $export.R && expProto && !expProto[key])
-          hide(expProto, key, out);
-      }
-    }
-  };
-  $export.F = 1;
-  $export.G = 2;
-  $export.S = 4;
-  $export.P = 8;
-  $export.B = 16;
-  $export.W = 32;
-  $export.U = 64;
-  $export.R = 128;
-  module.exports = $export;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_path", ["npm:core-js@2.1.0/library/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = require("npm:core-js@2.1.0/library/modules/_core");
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_invoke", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = function(fn, args, that) {
-    var un = that === undefined;
-    switch (args.length) {
-      case 0:
-        return un ? fn() : fn.call(that);
-      case 1:
-        return un ? fn(args[0]) : fn.call(that, args[0]);
-      case 2:
-        return un ? fn(args[0], args[1]) : fn.call(that, args[0], args[1]);
-      case 3:
-        return un ? fn(args[0], args[1], args[2]) : fn.call(that, args[0], args[1], args[2]);
-      case 4:
-        return un ? fn(args[0], args[1], args[2], args[3]) : fn.call(that, args[0], args[1], args[2], args[3]);
-    }
-    return fn.apply(that, args);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_partial", ["npm:core-js@2.1.0/library/modules/_path", "npm:core-js@2.1.0/library/modules/_invoke", "npm:core-js@2.1.0/library/modules/_a-function"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var path = require("npm:core-js@2.1.0/library/modules/_path"),
-      invoke = require("npm:core-js@2.1.0/library/modules/_invoke"),
-      aFunction = require("npm:core-js@2.1.0/library/modules/_a-function");
-  module.exports = function() {
-    var fn = aFunction(this),
-        length = arguments.length,
-        pargs = Array(length),
-        i = 0,
-        _ = path._,
-        holder = false;
-    while (length > i)
-      if ((pargs[i] = arguments[i++]) === _)
-        holder = true;
-    return function() {
-      var that = this,
-          aLen = arguments.length,
-          j = 0,
-          k = 0,
-          args;
-      if (!holder && !aLen)
-        return invoke(fn, pargs, that);
-      args = pargs.slice();
-      if (holder)
-        for (; length > j; j++)
-          if (args[j] === _)
-            args[j] = arguments[k++];
-      while (aLen > k)
-        args.push(arguments[k++]);
-      return invoke(fn, args, that);
-    };
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/core.delay", ["npm:core-js@2.1.0/library/modules/_global", "npm:core-js@2.1.0/library/modules/_core", "npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_partial"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var global = require("npm:core-js@2.1.0/library/modules/_global"),
-      core = require("npm:core-js@2.1.0/library/modules/_core"),
-      $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      partial = require("npm:core-js@2.1.0/library/modules/_partial");
-  $export($export.G + $export.F, {delay: function delay(time) {
-      return new (core.Promise || global.Promise)(function(resolve) {
-        setTimeout(partial.call(resolve, true), time);
-      });
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_to-integer", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var ceil = Math.ceil,
-      floor = Math.floor;
-  module.exports = function(it) {
-    return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_to-length", ["npm:core-js@2.1.0/library/modules/_to-integer"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var toInteger = require("npm:core-js@2.1.0/library/modules/_to-integer"),
-      min = Math.min;
-  module.exports = function(it) {
-    return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_to-index", ["npm:core-js@2.1.0/library/modules/_to-integer"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var toInteger = require("npm:core-js@2.1.0/library/modules/_to-integer"),
-      max = Math.max,
-      min = Math.min;
-  module.exports = function(index, length) {
-    index = toInteger(index);
-    return index < 0 ? max(index + length, 0) : min(index, length);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_array-includes", ["npm:core-js@2.1.0/library/modules/_to-iobject", "npm:core-js@2.1.0/library/modules/_to-length", "npm:core-js@2.1.0/library/modules/_to-index"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var toIObject = require("npm:core-js@2.1.0/library/modules/_to-iobject"),
-      toLength = require("npm:core-js@2.1.0/library/modules/_to-length"),
-      toIndex = require("npm:core-js@2.1.0/library/modules/_to-index");
-  module.exports = function(IS_INCLUDES) {
-    return function($this, el, fromIndex) {
-      var O = toIObject($this),
-          length = toLength(O.length),
-          index = toIndex(fromIndex, length),
-          value;
-      if (IS_INCLUDES && el != el)
-        while (length > index) {
-          value = O[index++];
-          if (value != value)
-            return true;
+    var isWebkit = !!window.navigator.userAgent.match(/AppleWebKit\/([^ ;]*)/);
+    var webkitLoadCheck = function(link, callback) {
+      setTimeout(function() {
+        for (var i = 0; i < document.styleSheets.length; i++) {
+          var sheet = document.styleSheets[i];
+          if (sheet.href == link.href)
+            return callback();
         }
-      else
-        for (; length > index; index++)
-          if (IS_INCLUDES || index in O) {
-            if (O[index] === el)
-              return IS_INCLUDES || index;
-          }
-      return !IS_INCLUDES && -1;
+        webkitLoadCheck(link, callback);
+      }, 10);
     };
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_shared-key", ["npm:core-js@2.1.0/library/modules/_shared", "npm:core-js@2.1.0/library/modules/_uid"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var shared = require("npm:core-js@2.1.0/library/modules/_shared")('keys'),
-      uid = require("npm:core-js@2.1.0/library/modules/_uid");
-  module.exports = function(key) {
-    return shared[key] || (shared[key] = uid(key));
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_object-keys-internal", ["npm:core-js@2.1.0/library/modules/_has", "npm:core-js@2.1.0/library/modules/_to-iobject", "npm:core-js@2.1.0/library/modules/_array-includes", "npm:core-js@2.1.0/library/modules/_shared-key"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var has = require("npm:core-js@2.1.0/library/modules/_has"),
-      toIObject = require("npm:core-js@2.1.0/library/modules/_to-iobject"),
-      arrayIndexOf = require("npm:core-js@2.1.0/library/modules/_array-includes")(false),
-      IE_PROTO = require("npm:core-js@2.1.0/library/modules/_shared-key")('IE_PROTO');
-  module.exports = function(object, names) {
-    var O = toIObject(object),
-        i = 0,
-        result = [],
-        key;
-    for (key in O)
-      if (key != IE_PROTO)
-        has(O, key) && result.push(key);
-    while (names.length > i)
-      if (has(O, key = names[i++])) {
-        ~arrayIndexOf(result, key) || result.push(key);
-      }
-    return result;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_enum-bug-keys", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = ('constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf').split(',');
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_object-keys", ["npm:core-js@2.1.0/library/modules/_object-keys-internal", "npm:core-js@2.1.0/library/modules/_enum-bug-keys"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $keys = require("npm:core-js@2.1.0/library/modules/_object-keys-internal"),
-      enumBugKeys = require("npm:core-js@2.1.0/library/modules/_enum-bug-keys");
-  module.exports = Object.keys || function keys(O) {
-    return $keys(O, enumBugKeys);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_object-gops", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  exports.f = Object.getOwnPropertySymbols;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_to-object", ["npm:core-js@2.1.0/library/modules/_defined"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var defined = require("npm:core-js@2.1.0/library/modules/_defined");
-  module.exports = function(it) {
-    return Object(defined(it));
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_object-assign", ["npm:core-js@2.1.0/library/modules/_object-keys", "npm:core-js@2.1.0/library/modules/_object-gops", "npm:core-js@2.1.0/library/modules/_object-pie", "npm:core-js@2.1.0/library/modules/_to-object", "npm:core-js@2.1.0/library/modules/_iobject", "npm:core-js@2.1.0/library/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var getKeys = require("npm:core-js@2.1.0/library/modules/_object-keys"),
-      gOPS = require("npm:core-js@2.1.0/library/modules/_object-gops"),
-      pIE = require("npm:core-js@2.1.0/library/modules/_object-pie"),
-      toObject = require("npm:core-js@2.1.0/library/modules/_to-object"),
-      IObject = require("npm:core-js@2.1.0/library/modules/_iobject");
-  module.exports = require("npm:core-js@2.1.0/library/modules/_fails")(function() {
-    var a = Object.assign,
-        A = {},
-        B = {},
-        S = Symbol(),
-        K = 'abcdefghijklmnopqrst';
-    A[S] = 7;
-    K.split('').forEach(function(k) {
-      B[k] = k;
-    });
-    return a({}, A)[S] != 7 || Object.keys(a({}, B)).join('') != K;
-  }) ? function assign(target, source) {
-    var T = toObject(target),
-        aLen = arguments.length,
-        index = 1,
-        getSymbols = gOPS.f,
-        isEnum = pIE.f;
-    while (aLen > index) {
-      var S = IObject(arguments[index++]),
-          keys = getSymbols ? getKeys(S).concat(getSymbols(S)) : getKeys(S),
-          length = keys.length,
-          j = 0,
-          key;
-      while (length > j)
-        if (isEnum.call(S, key = keys[j++]))
-          T[key] = S[key];
-    }
-    return T;
-  } : Object.assign;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_object-dps", ["npm:core-js@2.1.0/library/modules/_object-dp", "npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_object-keys", "npm:core-js@2.1.0/library/modules/_descriptors"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var dP = require("npm:core-js@2.1.0/library/modules/_object-dp"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      getKeys = require("npm:core-js@2.1.0/library/modules/_object-keys");
-  module.exports = require("npm:core-js@2.1.0/library/modules/_descriptors") ? Object.defineProperties : function defineProperties(O, Properties) {
-    anObject(O);
-    var keys = getKeys(Properties),
-        length = keys.length,
-        i = 0,
-        P;
-    while (length > i)
-      dP.f(O, P = keys[i++], Properties[P]);
-    return O;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_html", ["npm:core-js@2.1.0/library/modules/_global"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = require("npm:core-js@2.1.0/library/modules/_global").document && document.documentElement;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_object-create", ["npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_object-dps", "npm:core-js@2.1.0/library/modules/_enum-bug-keys", "npm:core-js@2.1.0/library/modules/_shared-key", "npm:core-js@2.1.0/library/modules/_dom-create", "npm:core-js@2.1.0/library/modules/_html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      dPs = require("npm:core-js@2.1.0/library/modules/_object-dps"),
-      enumBugKeys = require("npm:core-js@2.1.0/library/modules/_enum-bug-keys"),
-      IE_PROTO = require("npm:core-js@2.1.0/library/modules/_shared-key")('IE_PROTO'),
-      Empty = function() {},
-      PROTOTYPE = 'prototype';
-  var createDict = function() {
-    var iframe = require("npm:core-js@2.1.0/library/modules/_dom-create")('iframe'),
-        i = enumBugKeys.length,
-        gt = '>',
-        iframeDocument;
-    iframe.style.display = 'none';
-    require("npm:core-js@2.1.0/library/modules/_html").appendChild(iframe);
-    iframe.src = 'javascript:';
-    iframeDocument = iframe.contentWindow.document;
-    iframeDocument.open();
-    iframeDocument.write('<script>document.F=Object</script' + gt);
-    iframeDocument.close();
-    createDict = iframeDocument.F;
-    while (i--)
-      delete createDict[PROTOTYPE][enumBugKeys[i]];
-    return createDict();
-  };
-  module.exports = Object.create || function create(O, Properties) {
-    var result;
-    if (O !== null) {
-      Empty[PROTOTYPE] = anObject(O);
-      result = new Empty;
-      Empty[PROTOTYPE] = null;
-      result[IE_PROTO] = O;
-    } else
-      result = createDict();
-    return Properties === undefined ? result : dPs(result, Properties);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_object-gpo", ["npm:core-js@2.1.0/library/modules/_has", "npm:core-js@2.1.0/library/modules/_to-object", "npm:core-js@2.1.0/library/modules/_shared-key"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var has = require("npm:core-js@2.1.0/library/modules/_has"),
-      toObject = require("npm:core-js@2.1.0/library/modules/_to-object"),
-      IE_PROTO = require("npm:core-js@2.1.0/library/modules/_shared-key")('IE_PROTO'),
-      ObjectProto = Object.prototype;
-  module.exports = Object.getPrototypeOf || function(O) {
-    O = toObject(O);
-    if (has(O, IE_PROTO))
-      return O[IE_PROTO];
-    if (typeof O.constructor == 'function' && O instanceof O.constructor) {
-      return O.constructor.prototype;
-    }
-    return O instanceof Object ? ObjectProto : null;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_keyof", ["npm:core-js@2.1.0/library/modules/_object-keys", "npm:core-js@2.1.0/library/modules/_to-iobject"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var getKeys = require("npm:core-js@2.1.0/library/modules/_object-keys"),
-      toIObject = require("npm:core-js@2.1.0/library/modules/_to-iobject");
-  module.exports = function(object, el) {
-    var O = toIObject(object),
-        keys = getKeys(O),
-        length = keys.length,
-        index = 0,
-        key;
-    while (length > index)
-      if (O[key = keys[index++]] === el)
-        return key;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_iter-call", ["npm:core-js@2.1.0/library/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var anObject = require("npm:core-js@2.1.0/library/modules/_an-object");
-  module.exports = function(iterator, fn, value, entries) {
-    try {
-      return entries ? fn(anObject(value)[0], value[1]) : fn(value);
-    } catch (e) {
-      var ret = iterator['return'];
-      if (ret !== undefined)
-        anObject(ret.call(iterator));
-      throw e;
-    }
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_iterators", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = {};
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_is-array-iter", ["npm:core-js@2.1.0/library/modules/_iterators", "npm:core-js@2.1.0/library/modules/_wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var Iterators = require("npm:core-js@2.1.0/library/modules/_iterators"),
-      ITERATOR = require("npm:core-js@2.1.0/library/modules/_wks")('iterator'),
-      ArrayProto = Array.prototype;
-  module.exports = function(it) {
-    return it !== undefined && (Iterators.Array === it || ArrayProto[ITERATOR] === it);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_classof", ["npm:core-js@2.1.0/library/modules/_cof", "npm:core-js@2.1.0/library/modules/_wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var cof = require("npm:core-js@2.1.0/library/modules/_cof"),
-      TAG = require("npm:core-js@2.1.0/library/modules/_wks")('toStringTag'),
-      ARG = cof(function() {
-        return arguments;
-      }()) == 'Arguments';
-  module.exports = function(it) {
-    var O,
-        T,
-        B;
-    return it === undefined ? 'Undefined' : it === null ? 'Null' : typeof(T = (O = Object(it))[TAG]) == 'string' ? T : ARG ? cof(O) : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/core.get-iterator-method", ["npm:core-js@2.1.0/library/modules/_classof", "npm:core-js@2.1.0/library/modules/_wks", "npm:core-js@2.1.0/library/modules/_iterators", "npm:core-js@2.1.0/library/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var classof = require("npm:core-js@2.1.0/library/modules/_classof"),
-      ITERATOR = require("npm:core-js@2.1.0/library/modules/_wks")('iterator'),
-      Iterators = require("npm:core-js@2.1.0/library/modules/_iterators");
-  module.exports = require("npm:core-js@2.1.0/library/modules/_core").getIteratorMethod = function(it) {
-    if (it != undefined)
-      return it[ITERATOR] || it['@@iterator'] || Iterators[classof(it)];
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_for-of", ["npm:core-js@2.1.0/library/modules/_ctx", "npm:core-js@2.1.0/library/modules/_iter-call", "npm:core-js@2.1.0/library/modules/_is-array-iter", "npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_to-length", "npm:core-js@2.1.0/library/modules/core.get-iterator-method"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var ctx = require("npm:core-js@2.1.0/library/modules/_ctx"),
-      call = require("npm:core-js@2.1.0/library/modules/_iter-call"),
-      isArrayIter = require("npm:core-js@2.1.0/library/modules/_is-array-iter"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      toLength = require("npm:core-js@2.1.0/library/modules/_to-length"),
-      getIterFn = require("npm:core-js@2.1.0/library/modules/core.get-iterator-method");
-  module.exports = function(iterable, entries, fn, that, ITERATOR) {
-    var iterFn = ITERATOR ? function() {
-      return iterable;
-    } : getIterFn(iterable),
-        f = ctx(fn, that, entries ? 2 : 1),
-        index = 0,
-        length,
-        step,
-        iterator;
-    if (typeof iterFn != 'function')
-      throw TypeError(iterable + ' is not iterable!');
-    if (isArrayIter(iterFn))
-      for (length = toLength(iterable.length); length > index; index++) {
-        entries ? f(anObject(step = iterable[index])[0], step[1]) : f(iterable[index]);
-      }
-    else
-      for (iterator = iterFn.call(iterable); !(step = iterator.next()).done; ) {
-        call(iterator, f, step.value, entries);
-      }
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/core.is-iterable", ["npm:core-js@2.1.0/library/modules/_classof", "npm:core-js@2.1.0/library/modules/_wks", "npm:core-js@2.1.0/library/modules/_iterators", "npm:core-js@2.1.0/library/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var classof = require("npm:core-js@2.1.0/library/modules/_classof"),
-      ITERATOR = require("npm:core-js@2.1.0/library/modules/_wks")('iterator'),
-      Iterators = require("npm:core-js@2.1.0/library/modules/_iterators");
-  module.exports = require("npm:core-js@2.1.0/library/modules/_core").isIterable = function(it) {
-    var O = Object(it);
-    return O[ITERATOR] !== undefined || '@@iterator' in O || Iterators.hasOwnProperty(classof(O));
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_set-to-string-tag", ["npm:core-js@2.1.0/library/modules/_object-dp", "npm:core-js@2.1.0/library/modules/_has", "npm:core-js@2.1.0/library/modules/_wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var def = require("npm:core-js@2.1.0/library/modules/_object-dp").f,
-      has = require("npm:core-js@2.1.0/library/modules/_has"),
-      TAG = require("npm:core-js@2.1.0/library/modules/_wks")('toStringTag');
-  module.exports = function(it, tag, stat) {
-    if (it && !has(it = stat ? it : it.prototype, TAG))
-      def(it, TAG, {
-        configurable: true,
-        value: tag
-      });
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_iter-create", ["npm:core-js@2.1.0/library/modules/_object-create", "npm:core-js@2.1.0/library/modules/_property-desc", "npm:core-js@2.1.0/library/modules/_set-to-string-tag", "npm:core-js@2.1.0/library/modules/_hide", "npm:core-js@2.1.0/library/modules/_wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var create = require("npm:core-js@2.1.0/library/modules/_object-create"),
-      descriptor = require("npm:core-js@2.1.0/library/modules/_property-desc"),
-      setToStringTag = require("npm:core-js@2.1.0/library/modules/_set-to-string-tag"),
-      IteratorPrototype = {};
-  require("npm:core-js@2.1.0/library/modules/_hide")(IteratorPrototype, require("npm:core-js@2.1.0/library/modules/_wks")('iterator'), function() {
-    return this;
-  });
-  module.exports = function(Constructor, NAME, next) {
-    Constructor.prototype = create(IteratorPrototype, {next: descriptor(1, next)});
-    setToStringTag(Constructor, NAME + ' Iterator');
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_iter-step", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = function(done, value) {
-    return {
-      value: value,
-      done: !!done
-    };
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/core.dict", ["npm:core-js@2.1.0/library/modules/_ctx", "npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_property-desc", "npm:core-js@2.1.0/library/modules/_object-assign", "npm:core-js@2.1.0/library/modules/_object-create", "npm:core-js@2.1.0/library/modules/_object-gpo", "npm:core-js@2.1.0/library/modules/_object-keys", "npm:core-js@2.1.0/library/modules/_object-dp", "npm:core-js@2.1.0/library/modules/_keyof", "npm:core-js@2.1.0/library/modules/_a-function", "npm:core-js@2.1.0/library/modules/_for-of", "npm:core-js@2.1.0/library/modules/core.is-iterable", "npm:core-js@2.1.0/library/modules/_iter-create", "npm:core-js@2.1.0/library/modules/_iter-step", "npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_to-iobject", "npm:core-js@2.1.0/library/modules/_descriptors", "npm:core-js@2.1.0/library/modules/_has"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var ctx = require("npm:core-js@2.1.0/library/modules/_ctx"),
-      $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      createDesc = require("npm:core-js@2.1.0/library/modules/_property-desc"),
-      assign = require("npm:core-js@2.1.0/library/modules/_object-assign"),
-      create = require("npm:core-js@2.1.0/library/modules/_object-create"),
-      getPrototypeOf = require("npm:core-js@2.1.0/library/modules/_object-gpo"),
-      getKeys = require("npm:core-js@2.1.0/library/modules/_object-keys"),
-      dP = require("npm:core-js@2.1.0/library/modules/_object-dp"),
-      keyOf = require("npm:core-js@2.1.0/library/modules/_keyof"),
-      aFunction = require("npm:core-js@2.1.0/library/modules/_a-function"),
-      forOf = require("npm:core-js@2.1.0/library/modules/_for-of"),
-      isIterable = require("npm:core-js@2.1.0/library/modules/core.is-iterable"),
-      $iterCreate = require("npm:core-js@2.1.0/library/modules/_iter-create"),
-      step = require("npm:core-js@2.1.0/library/modules/_iter-step"),
-      isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      toIObject = require("npm:core-js@2.1.0/library/modules/_to-iobject"),
-      DESCRIPTORS = require("npm:core-js@2.1.0/library/modules/_descriptors"),
-      has = require("npm:core-js@2.1.0/library/modules/_has");
-  var createDictMethod = function(TYPE) {
-    var IS_MAP = TYPE == 1,
-        IS_EVERY = TYPE == 4;
-    return function(object, callbackfn, that) {
-      var f = ctx(callbackfn, that, 3),
-          O = toIObject(object),
-          result = IS_MAP || TYPE == 7 || TYPE == 2 ? new (typeof this == 'function' ? this : Dict) : undefined,
-          key,
-          val,
-          res;
-      for (key in O)
-        if (has(O, key)) {
-          val = O[key];
-          res = f(val, key, object);
-          if (TYPE) {
-            if (IS_MAP)
-              result[key] = res;
-            else if (res)
-              switch (TYPE) {
-                case 2:
-                  result[key] = val;
-                  break;
-                case 3:
-                  return true;
-                case 5:
-                  return val;
-                case 6:
-                  return key;
-                case 7:
-                  result[res[0]] = res[1];
-              }
-            else if (IS_EVERY)
-              return false;
-          }
-        }
-      return TYPE == 3 || IS_EVERY ? IS_EVERY : result;
-    };
-  };
-  var findKey = createDictMethod(6);
-  var createDictIter = function(kind) {
-    return function(it) {
-      return new DictIterator(it, kind);
-    };
-  };
-  var DictIterator = function(iterated, kind) {
-    this._t = toIObject(iterated);
-    this._a = getKeys(iterated);
-    this._i = 0;
-    this._k = kind;
-  };
-  $iterCreate(DictIterator, 'Dict', function() {
-    var that = this,
-        O = that._t,
-        keys = that._a,
-        kind = that._k,
-        key;
-    do {
-      if (that._i >= keys.length) {
-        that._t = undefined;
-        return step(1);
-      }
-    } while (!has(O, key = keys[that._i++]));
-    if (kind == 'keys')
-      return step(0, key);
-    if (kind == 'values')
-      return step(0, O[key]);
-    return step(0, [key, O[key]]);
-  });
-  function Dict(iterable) {
-    var dict = create(null);
-    if (iterable != undefined) {
-      if (isIterable(iterable)) {
-        forOf(iterable, true, function(key, value) {
-          dict[key] = value;
-        });
-      } else
-        assign(dict, iterable);
-    }
-    return dict;
-  }
-  Dict.prototype = null;
-  function reduce(object, mapfn, init) {
-    aFunction(mapfn);
-    var O = toIObject(object),
-        keys = getKeys(O),
-        length = keys.length,
-        i = 0,
-        memo,
-        key;
-    if (arguments.length < 3) {
-      if (!length)
-        throw TypeError('Reduce of empty object with no initial value');
-      memo = O[keys[i++]];
-    } else
-      memo = Object(init);
-    while (length > i)
-      if (has(O, key = keys[i++])) {
-        memo = mapfn(memo, O[key], key, object);
-      }
-    return memo;
-  }
-  function includes(object, el) {
-    return (el == el ? keyOf(object, el) : findKey(object, function(it) {
-      return it != it;
-    })) !== undefined;
-  }
-  function get(object, key) {
-    if (has(object, key))
-      return object[key];
-  }
-  function set(object, key, value) {
-    if (DESCRIPTORS && key in Object)
-      dP.f(object, key, createDesc(0, value));
-    else
-      object[key] = value;
-    return object;
-  }
-  function isDict(it) {
-    return isObject(it) && getPrototypeOf(it) === Dict.prototype;
-  }
-  $export($export.G + $export.F, {Dict: Dict});
-  $export($export.S, 'Dict', {
-    keys: createDictIter('keys'),
-    values: createDictIter('values'),
-    entries: createDictIter('entries'),
-    forEach: createDictMethod(0),
-    map: createDictMethod(1),
-    filter: createDictMethod(2),
-    some: createDictMethod(3),
-    every: createDictMethod(4),
-    find: createDictMethod(5),
-    findKey: findKey,
-    mapPairs: createDictMethod(7),
-    reduce: reduce,
-    keyOf: keyOf,
-    includes: includes,
-    has: has,
-    get: get,
-    set: set,
-    isDict: isDict
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/core.function.part", ["npm:core-js@2.1.0/library/modules/_path", "npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_core", "npm:core-js@2.1.0/library/modules/_partial"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var path = require("npm:core-js@2.1.0/library/modules/_path"),
-      $export = require("npm:core-js@2.1.0/library/modules/_export");
-  require("npm:core-js@2.1.0/library/modules/_core")._ = path._ = path._ || {};
-  $export($export.P + $export.F, 'Function', {part: require("npm:core-js@2.1.0/library/modules/_partial")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/core.get-iterator", ["npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/core.get-iterator-method", "npm:core-js@2.1.0/library/modules/_core"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      get = require("npm:core-js@2.1.0/library/modules/core.get-iterator-method");
-  module.exports = require("npm:core-js@2.1.0/library/modules/_core").getIterator = function(it) {
-    var iterFn = get(it);
-    if (typeof iterFn != 'function')
-      throw TypeError(it + ' is not iterable!');
-    return anObject(iterFn.call(it));
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_library", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = true;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_iter-define", ["npm:core-js@2.1.0/library/modules/_library", "npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_redefine", "npm:core-js@2.1.0/library/modules/_hide", "npm:core-js@2.1.0/library/modules/_has", "npm:core-js@2.1.0/library/modules/_iterators", "npm:core-js@2.1.0/library/modules/_iter-create", "npm:core-js@2.1.0/library/modules/_set-to-string-tag", "npm:core-js@2.1.0/library/modules/_object-gpo", "npm:core-js@2.1.0/library/modules/_wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var LIBRARY = require("npm:core-js@2.1.0/library/modules/_library"),
-      $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      redefine = require("npm:core-js@2.1.0/library/modules/_redefine"),
-      hide = require("npm:core-js@2.1.0/library/modules/_hide"),
-      has = require("npm:core-js@2.1.0/library/modules/_has"),
-      Iterators = require("npm:core-js@2.1.0/library/modules/_iterators"),
-      $iterCreate = require("npm:core-js@2.1.0/library/modules/_iter-create"),
-      setToStringTag = require("npm:core-js@2.1.0/library/modules/_set-to-string-tag"),
-      getPrototypeOf = require("npm:core-js@2.1.0/library/modules/_object-gpo"),
-      ITERATOR = require("npm:core-js@2.1.0/library/modules/_wks")('iterator'),
-      BUGGY = !([].keys && 'next' in [].keys()),
-      FF_ITERATOR = '@@iterator',
-      KEYS = 'keys',
-      VALUES = 'values';
-  var returnThis = function() {
-    return this;
-  };
-  module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED) {
-    $iterCreate(Constructor, NAME, next);
-    var getMethod = function(kind) {
-      if (!BUGGY && kind in proto)
-        return proto[kind];
-      switch (kind) {
-        case KEYS:
-          return function keys() {
-            return new Constructor(this, kind);
+    var noop = function() {};
+    var loadCSS = function(url) {
+      return new Promise(function(resolve, reject) {
+        var timeout = setTimeout(function() {
+          reject('Unable to load CSS');
+        }, waitSeconds * 1000);
+        var _callback = function(error) {
+          clearTimeout(timeout);
+          link.onload = link.onerror = noop;
+          setTimeout(function() {
+            if (error)
+              reject(error);
+            else
+              resolve('');
+          }, 7);
+        };
+        var link = document.createElement('link');
+        link.type = 'text/css';
+        link.rel = 'stylesheet';
+        link.href = url;
+        if (!isWebkit) {
+          link.onload = function() {
+            _callback();
           };
-        case VALUES:
-          return function values() {
-            return new Constructor(this, kind);
-          };
-      }
-      return function entries() {
-        return new Constructor(this, kind);
-      };
-    };
-    var TAG = NAME + ' Iterator',
-        DEF_VALUES = DEFAULT == VALUES,
-        VALUES_BUG = false,
-        proto = Base.prototype,
-        $native = proto[ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT],
-        $default = $native || getMethod(DEFAULT),
-        $entries = DEFAULT ? !DEF_VALUES ? $default : getMethod('entries') : undefined,
-        $anyNative = NAME == 'Array' ? proto.entries || $native : $native,
-        methods,
-        key,
-        IteratorPrototype;
-    if ($anyNative) {
-      IteratorPrototype = getPrototypeOf($anyNative.call(new Base));
-      if (IteratorPrototype !== Object.prototype) {
-        setToStringTag(IteratorPrototype, TAG, true);
-        if (!LIBRARY && !has(IteratorPrototype, ITERATOR))
-          hide(IteratorPrototype, ITERATOR, returnThis);
-      }
-    }
-    if (DEF_VALUES && $native && $native.name !== VALUES) {
-      VALUES_BUG = true;
-      $default = function values() {
-        return $native.call(this);
-      };
-    }
-    if ((!LIBRARY || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
-      hide(proto, ITERATOR, $default);
-    }
-    Iterators[NAME] = $default;
-    Iterators[TAG] = returnThis;
-    if (DEFAULT) {
-      methods = {
-        values: DEF_VALUES ? $default : getMethod(VALUES),
-        keys: IS_SET ? $default : getMethod(KEYS),
-        entries: $entries
-      };
-      if (FORCED)
-        for (key in methods) {
-          if (!(key in proto))
-            redefine(proto, key, methods[key]);
-        }
-      else
-        $export($export.P + $export.F * (BUGGY || VALUES_BUG), NAME, methods);
-    }
-    return methods;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/core.number.iterator", ["npm:core-js@2.1.0/library/modules/_iter-define"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/library/modules/_iter-define")(Number, 'Number', function(iterated) {
-    this._l = +iterated;
-    this._i = 0;
-  }, function() {
-    var i = this._i++,
-        done = !(i < this._l);
-    return {
-      done: done,
-      value: done ? undefined : i
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/core.object.classof", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_classof"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S + $export.F, 'Object', {classof: require("npm:core-js@2.1.0/library/modules/_classof")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_object-gopn", ["npm:core-js@2.1.0/library/modules/_object-keys-internal", "npm:core-js@2.1.0/library/modules/_enum-bug-keys"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $keys = require("npm:core-js@2.1.0/library/modules/_object-keys-internal"),
-      hiddenKeys = require("npm:core-js@2.1.0/library/modules/_enum-bug-keys").concat('length', 'prototype');
-  exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
-    return $keys(O, hiddenKeys);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_own-keys", ["npm:core-js@2.1.0/library/modules/_object-gopn", "npm:core-js@2.1.0/library/modules/_object-gops", "npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_global"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var gOPN = require("npm:core-js@2.1.0/library/modules/_object-gopn"),
-      gOPS = require("npm:core-js@2.1.0/library/modules/_object-gops"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      Reflect = require("npm:core-js@2.1.0/library/modules/_global").Reflect;
-  module.exports = Reflect && Reflect.ownKeys || function ownKeys(it) {
-    var keys = gOPN.f(anObject(it)),
-        getSymbols = gOPS.f;
-    return getSymbols ? keys.concat(getSymbols(it)) : keys;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_object-define", ["npm:core-js@2.1.0/library/modules/_object-dp", "npm:core-js@2.1.0/library/modules/_object-gopd", "npm:core-js@2.1.0/library/modules/_own-keys", "npm:core-js@2.1.0/library/modules/_to-iobject"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var dP = require("npm:core-js@2.1.0/library/modules/_object-dp"),
-      gOPD = require("npm:core-js@2.1.0/library/modules/_object-gopd"),
-      ownKeys = require("npm:core-js@2.1.0/library/modules/_own-keys"),
-      toIObject = require("npm:core-js@2.1.0/library/modules/_to-iobject");
-  module.exports = function define(target, mixin) {
-    var keys = ownKeys(toIObject(mixin)),
-        length = keys.length,
-        i = 0,
-        key;
-    while (length > i)
-      dP.f(target, key = keys[i++], gOPD.f(mixin, key));
-    return target;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/core.object.define", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_object-define"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      define = require("npm:core-js@2.1.0/library/modules/_object-define");
-  $export($export.S + $export.F, 'Object', {define: define});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/core.object.is-object", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_is-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S + $export.F, 'Object', {isObject: require("npm:core-js@2.1.0/library/modules/_is-object")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/core.object.make", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_object-define", "npm:core-js@2.1.0/library/modules/_object-create"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      define = require("npm:core-js@2.1.0/library/modules/_object-define"),
-      create = require("npm:core-js@2.1.0/library/modules/_object-create");
-  $export($export.S + $export.F, 'Object', {make: function(proto, mixin) {
-      return define(create(proto), mixin);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_replacer", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = function(regExp, replace) {
-    var replacer = replace === Object(replace) ? function(part) {
-      return replace[part];
-    } : replace;
-    return function(it) {
-      return String(it).replace(regExp, replacer);
-    };
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/core.regexp.escape", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_replacer"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $re = require("npm:core-js@2.1.0/library/modules/_replacer")(/[\\^$*+?.()|[\]{}]/g, '\\$&');
-  $export($export.S, 'RegExp', {escape: function escape(it) {
-      return $re(it);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/core.string.escape-html", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_replacer"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  var $re = require("npm:core-js@2.1.0/library/modules/_replacer")(/[&<>"']/g, {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&apos;'
-  });
-  $export($export.P + $export.F, 'String', {escapeHTML: function escapeHTML() {
-      return $re(this);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/core.string.unescape-html", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_replacer"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  var $re = require("npm:core-js@2.1.0/library/modules/_replacer")(/&(?:amp|lt|gt|quot|apos);/g, {
-    '&amp;': '&',
-    '&lt;': '<',
-    '&gt;': '>',
-    '&quot;': '"',
-    '&apos;': "'"
-  });
-  $export($export.P + $export.F, 'String', {unescapeHTML: function unescapeHTML() {
-      return $re(this);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.object.create", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_object-create"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Object', {create: require("npm:core-js@2.1.0/library/modules/_object-create")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.object.define-property", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_descriptors", "npm:core-js@2.1.0/library/modules/_object-dp"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S + $export.F * !require("npm:core-js@2.1.0/library/modules/_descriptors"), 'Object', {defineProperty: require("npm:core-js@2.1.0/library/modules/_object-dp").f});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.object.define-properties", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_descriptors", "npm:core-js@2.1.0/library/modules/_object-dps"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S + $export.F * !require("npm:core-js@2.1.0/library/modules/_descriptors"), 'Object', {defineProperties: require("npm:core-js@2.1.0/library/modules/_object-dps")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_object-sap", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_core", "npm:core-js@2.1.0/library/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      core = require("npm:core-js@2.1.0/library/modules/_core"),
-      fails = require("npm:core-js@2.1.0/library/modules/_fails");
-  module.exports = function(KEY, exec) {
-    var fn = (core.Object || {})[KEY] || Object[KEY],
-        exp = {};
-    exp[KEY] = exec(fn);
-    $export($export.S + $export.F * fails(function() {
-      fn(1);
-    }), 'Object', exp);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.object.get-own-property-descriptor", ["npm:core-js@2.1.0/library/modules/_to-iobject", "npm:core-js@2.1.0/library/modules/_object-gopd", "npm:core-js@2.1.0/library/modules/_object-sap"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var toIObject = require("npm:core-js@2.1.0/library/modules/_to-iobject"),
-      $getOwnPropertyDescriptor = require("npm:core-js@2.1.0/library/modules/_object-gopd").f;
-  require("npm:core-js@2.1.0/library/modules/_object-sap")('getOwnPropertyDescriptor', function() {
-    return function getOwnPropertyDescriptor(it, key) {
-      return $getOwnPropertyDescriptor(toIObject(it), key);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.object.get-prototype-of", ["npm:core-js@2.1.0/library/modules/_to-object", "npm:core-js@2.1.0/library/modules/_object-gpo", "npm:core-js@2.1.0/library/modules/_object-sap"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var toObject = require("npm:core-js@2.1.0/library/modules/_to-object"),
-      $getPrototypeOf = require("npm:core-js@2.1.0/library/modules/_object-gpo");
-  require("npm:core-js@2.1.0/library/modules/_object-sap")('getPrototypeOf', function() {
-    return function getPrototypeOf(it) {
-      return $getPrototypeOf(toObject(it));
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.object.keys", ["npm:core-js@2.1.0/library/modules/_to-object", "npm:core-js@2.1.0/library/modules/_object-keys", "npm:core-js@2.1.0/library/modules/_object-sap"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var toObject = require("npm:core-js@2.1.0/library/modules/_to-object"),
-      $keys = require("npm:core-js@2.1.0/library/modules/_object-keys");
-  require("npm:core-js@2.1.0/library/modules/_object-sap")('keys', function() {
-    return function keys(it) {
-      return $keys(toObject(it));
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_object-gopn-ext", ["npm:core-js@2.1.0/library/modules/_to-iobject", "npm:core-js@2.1.0/library/modules/_object-gopn"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var toIObject = require("npm:core-js@2.1.0/library/modules/_to-iobject"),
-      gOPN = require("npm:core-js@2.1.0/library/modules/_object-gopn").f,
-      toString = {}.toString;
-  var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames ? Object.getOwnPropertyNames(window) : [];
-  var getWindowNames = function(it) {
-    try {
-      return gOPN.f(it);
-    } catch (e) {
-      return windowNames.slice();
-    }
-  };
-  module.exports.f = function getOwnPropertyNames(it) {
-    return windowNames && toString.call(it) == '[object Window]' ? getWindowNames(it) : gOPN(toIObject(it));
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.object.get-own-property-names", ["npm:core-js@2.1.0/library/modules/_object-sap", "npm:core-js@2.1.0/library/modules/_object-gopn-ext"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/library/modules/_object-sap")('getOwnPropertyNames', function() {
-    return require("npm:core-js@2.1.0/library/modules/_object-gopn-ext").f;
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_meta", ["npm:core-js@2.1.0/library/modules/_uid", "npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_has", "npm:core-js@2.1.0/library/modules/_object-dp", "npm:core-js@2.1.0/library/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var META = require("npm:core-js@2.1.0/library/modules/_uid")('meta'),
-      isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      has = require("npm:core-js@2.1.0/library/modules/_has"),
-      setDesc = require("npm:core-js@2.1.0/library/modules/_object-dp").f,
-      id = 0;
-  var isExtensible = Object.isExtensible || function() {
-    return true;
-  };
-  var FREEZE = !require("npm:core-js@2.1.0/library/modules/_fails")(function() {
-    return isExtensible(Object.preventExtensions({}));
-  });
-  var setMeta = function(it) {
-    setDesc(it, META, {value: {
-        i: 'O' + ++id,
-        w: {}
-      }});
-  };
-  var fastKey = function(it, create) {
-    if (!isObject(it))
-      return typeof it == 'symbol' ? it : (typeof it == 'string' ? 'S' : 'P') + it;
-    if (!has(it, META)) {
-      if (!isExtensible(it))
-        return 'F';
-      if (!create)
-        return 'E';
-      setMeta(it);
-    }
-    return it[META].i;
-  };
-  var getWeak = function(it, create) {
-    if (!has(it, META)) {
-      if (!isExtensible(it))
-        return true;
-      if (!create)
-        return false;
-      setMeta(it);
-    }
-    return it[META].w;
-  };
-  var onFreeze = function(it) {
-    if (FREEZE && meta.NEED && isExtensible(it) && !has(it, META))
-      setMeta(it);
-    return it;
-  };
-  var meta = module.exports = {
-    KEY: META,
-    NEED: false,
-    fastKey: fastKey,
-    getWeak: getWeak,
-    onFreeze: onFreeze
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.object.freeze", ["npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_meta", "npm:core-js@2.1.0/library/modules/_object-sap"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      meta = require("npm:core-js@2.1.0/library/modules/_meta").onFreeze;
-  require("npm:core-js@2.1.0/library/modules/_object-sap")('freeze', function($freeze) {
-    return function freeze(it) {
-      return $freeze && isObject(it) ? $freeze(meta(it)) : it;
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.object.seal", ["npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_meta", "npm:core-js@2.1.0/library/modules/_object-sap"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      meta = require("npm:core-js@2.1.0/library/modules/_meta").onFreeze;
-  require("npm:core-js@2.1.0/library/modules/_object-sap")('seal', function($seal) {
-    return function seal(it) {
-      return $seal && isObject(it) ? $seal(meta(it)) : it;
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.object.prevent-extensions", ["npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_meta", "npm:core-js@2.1.0/library/modules/_object-sap"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      meta = require("npm:core-js@2.1.0/library/modules/_meta").onFreeze;
-  require("npm:core-js@2.1.0/library/modules/_object-sap")('preventExtensions', function($preventExtensions) {
-    return function preventExtensions(it) {
-      return $preventExtensions && isObject(it) ? $preventExtensions(meta(it)) : it;
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.object.is-frozen", ["npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_object-sap"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isObject = require("npm:core-js@2.1.0/library/modules/_is-object");
-  require("npm:core-js@2.1.0/library/modules/_object-sap")('isFrozen', function($isFrozen) {
-    return function isFrozen(it) {
-      return isObject(it) ? $isFrozen ? $isFrozen(it) : false : true;
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.object.is-sealed", ["npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_object-sap"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isObject = require("npm:core-js@2.1.0/library/modules/_is-object");
-  require("npm:core-js@2.1.0/library/modules/_object-sap")('isSealed', function($isSealed) {
-    return function isSealed(it) {
-      return isObject(it) ? $isSealed ? $isSealed(it) : false : true;
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.object.is-extensible", ["npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_object-sap"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isObject = require("npm:core-js@2.1.0/library/modules/_is-object");
-  require("npm:core-js@2.1.0/library/modules/_object-sap")('isExtensible', function($isExtensible) {
-    return function isExtensible(it) {
-      return isObject(it) ? $isExtensible ? $isExtensible(it) : true : false;
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_bind", ["npm:core-js@2.1.0/library/modules/_a-function", "npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_invoke"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var aFunction = require("npm:core-js@2.1.0/library/modules/_a-function"),
-      isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      invoke = require("npm:core-js@2.1.0/library/modules/_invoke"),
-      arraySlice = [].slice,
-      factories = {};
-  var construct = function(F, len, args) {
-    if (!(len in factories)) {
-      for (var n = [],
-          i = 0; i < len; i++)
-        n[i] = 'a[' + i + ']';
-      factories[len] = Function('F,a', 'return new F(' + n.join(',') + ')');
-    }
-    return factories[len](F, args);
-  };
-  module.exports = Function.bind || function bind(that) {
-    var fn = aFunction(this),
-        partArgs = arraySlice.call(arguments, 1);
-    var bound = function() {
-      var args = partArgs.concat(arraySlice.call(arguments));
-      return this instanceof bound ? construct(fn, args.length, args) : invoke(fn, args, that);
-    };
-    if (isObject(fn.prototype))
-      bound.prototype = fn.prototype;
-    return bound;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.function.bind", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_bind"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.P, 'Function', {bind: require("npm:core-js@2.1.0/library/modules/_bind")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_is-array", ["npm:core-js@2.1.0/library/modules/_cof"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var cof = require("npm:core-js@2.1.0/library/modules/_cof");
-  module.exports = Array.isArray || function isArray(arg) {
-    return cof(arg) == 'Array';
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.is-array", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_is-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Array', {isArray: require("npm:core-js@2.1.0/library/modules/_is-array")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_strict-method", ["npm:core-js@2.1.0/library/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var fails = require("npm:core-js@2.1.0/library/modules/_fails");
-  module.exports = function(method, arg) {
-    return !!method && fails(function() {
-      arg ? method.call(null, function() {}, 1) : method.call(null);
-    });
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.join", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_to-iobject", "npm:core-js@2.1.0/library/modules/_iobject", "npm:core-js@2.1.0/library/modules/_strict-method"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      toIObject = require("npm:core-js@2.1.0/library/modules/_to-iobject"),
-      arrayJoin = [].join;
-  $export($export.P + $export.F * (require("npm:core-js@2.1.0/library/modules/_iobject") != Object || !require("npm:core-js@2.1.0/library/modules/_strict-method")(arrayJoin)), 'Array', {join: function join(separator) {
-      return arrayJoin.call(toIObject(this), separator === undefined ? ',' : separator);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.slice", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_html", "npm:core-js@2.1.0/library/modules/_cof", "npm:core-js@2.1.0/library/modules/_to-index", "npm:core-js@2.1.0/library/modules/_to-length", "npm:core-js@2.1.0/library/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      html = require("npm:core-js@2.1.0/library/modules/_html"),
-      cof = require("npm:core-js@2.1.0/library/modules/_cof"),
-      toIndex = require("npm:core-js@2.1.0/library/modules/_to-index"),
-      toLength = require("npm:core-js@2.1.0/library/modules/_to-length"),
-      arraySlice = [].slice;
-  $export($export.P + $export.F * require("npm:core-js@2.1.0/library/modules/_fails")(function() {
-    if (html)
-      arraySlice.call(html);
-  }), 'Array', {slice: function slice(begin, end) {
-      var len = toLength(this.length),
-          klass = cof(this);
-      end = end === undefined ? len : end;
-      if (klass == 'Array')
-        return arraySlice.call(this, begin, end);
-      var start = toIndex(begin, len),
-          upTo = toIndex(end, len),
-          size = toLength(upTo - start),
-          cloned = Array(size),
-          i = 0;
-      for (; i < size; i++)
-        cloned[i] = klass == 'String' ? this.charAt(start + i) : this[start + i];
-      return cloned;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.sort", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_a-function", "npm:core-js@2.1.0/library/modules/_to-object", "npm:core-js@2.1.0/library/modules/_fails", "npm:core-js@2.1.0/library/modules/_strict-method"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      aFunction = require("npm:core-js@2.1.0/library/modules/_a-function"),
-      toObject = require("npm:core-js@2.1.0/library/modules/_to-object"),
-      fails = require("npm:core-js@2.1.0/library/modules/_fails"),
-      $sort = [].sort,
-      test = [1, 2, 3];
-  $export($export.P + $export.F * (fails(function() {
-    test.sort(undefined);
-  }) || !fails(function() {
-    test.sort(null);
-  }) || !require("npm:core-js@2.1.0/library/modules/_strict-method")($sort)), 'Array', {sort: function sort(comparefn) {
-      return comparefn === undefined ? $sort.call(toObject(this)) : $sort.call(toObject(this), aFunction(comparefn));
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_array-species-create", ["npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_is-array", "npm:core-js@2.1.0/library/modules/_wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      isArray = require("npm:core-js@2.1.0/library/modules/_is-array"),
-      SPECIES = require("npm:core-js@2.1.0/library/modules/_wks")('species');
-  module.exports = function(original, length) {
-    var C;
-    if (isArray(original)) {
-      C = original.constructor;
-      if (typeof C == 'function' && (C === Array || isArray(C.prototype)))
-        C = undefined;
-      if (isObject(C)) {
-        C = C[SPECIES];
-        if (C === null)
-          C = undefined;
-      }
-    }
-    return new (C === undefined ? Array : C)(length);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_array-methods", ["npm:core-js@2.1.0/library/modules/_ctx", "npm:core-js@2.1.0/library/modules/_iobject", "npm:core-js@2.1.0/library/modules/_to-object", "npm:core-js@2.1.0/library/modules/_to-length", "npm:core-js@2.1.0/library/modules/_array-species-create"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var ctx = require("npm:core-js@2.1.0/library/modules/_ctx"),
-      IObject = require("npm:core-js@2.1.0/library/modules/_iobject"),
-      toObject = require("npm:core-js@2.1.0/library/modules/_to-object"),
-      toLength = require("npm:core-js@2.1.0/library/modules/_to-length"),
-      asc = require("npm:core-js@2.1.0/library/modules/_array-species-create");
-  module.exports = function(TYPE, $create) {
-    var IS_MAP = TYPE == 1,
-        IS_FILTER = TYPE == 2,
-        IS_SOME = TYPE == 3,
-        IS_EVERY = TYPE == 4,
-        IS_FIND_INDEX = TYPE == 6,
-        NO_HOLES = TYPE == 5 || IS_FIND_INDEX,
-        create = $create || asc;
-    return function($this, callbackfn, that) {
-      var O = toObject($this),
-          self = IObject(O),
-          f = ctx(callbackfn, that, 3),
-          length = toLength(self.length),
-          index = 0,
-          result = IS_MAP ? create($this, length) : IS_FILTER ? create($this, 0) : undefined,
-          val,
-          res;
-      for (; length > index; index++)
-        if (NO_HOLES || index in self) {
-          val = self[index];
-          res = f(val, index, O);
-          if (TYPE) {
-            if (IS_MAP)
-              result[index] = res;
-            else if (res)
-              switch (TYPE) {
-                case 3:
-                  return true;
-                case 5:
-                  return val;
-                case 6:
-                  return index;
-                case 2:
-                  result.push(val);
-              }
-            else if (IS_EVERY)
-              return false;
-          }
-        }
-      return IS_FIND_INDEX ? -1 : IS_SOME || IS_EVERY ? IS_EVERY : result;
-    };
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.for-each", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_array-methods", "npm:core-js@2.1.0/library/modules/_strict-method"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $forEach = require("npm:core-js@2.1.0/library/modules/_array-methods")(0),
-      STRICT = require("npm:core-js@2.1.0/library/modules/_strict-method")([].forEach, true);
-  $export($export.P + $export.F * !STRICT, 'Array', {forEach: function forEach(callbackfn) {
-      return $forEach(this, callbackfn, arguments[1]);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.map", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_array-methods", "npm:core-js@2.1.0/library/modules/_strict-method"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $map = require("npm:core-js@2.1.0/library/modules/_array-methods")(1);
-  $export($export.P + $export.F * !require("npm:core-js@2.1.0/library/modules/_strict-method")([].map, true), 'Array', {map: function map(callbackfn) {
-      return $map(this, callbackfn, arguments[1]);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.filter", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_array-methods", "npm:core-js@2.1.0/library/modules/_strict-method"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $filter = require("npm:core-js@2.1.0/library/modules/_array-methods")(2);
-  $export($export.P + $export.F * !require("npm:core-js@2.1.0/library/modules/_strict-method")([].filter, true), 'Array', {filter: function filter(callbackfn) {
-      return $filter(this, callbackfn, arguments[1]);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.some", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_array-methods", "npm:core-js@2.1.0/library/modules/_strict-method"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $some = require("npm:core-js@2.1.0/library/modules/_array-methods")(3);
-  $export($export.P + $export.F * !require("npm:core-js@2.1.0/library/modules/_strict-method")([].some, true), 'Array', {some: function some(callbackfn) {
-      return $some(this, callbackfn, arguments[1]);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.every", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_array-methods", "npm:core-js@2.1.0/library/modules/_strict-method"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $every = require("npm:core-js@2.1.0/library/modules/_array-methods")(4);
-  $export($export.P + $export.F * !require("npm:core-js@2.1.0/library/modules/_strict-method")([].every, true), 'Array', {every: function every(callbackfn) {
-      return $every(this, callbackfn, arguments[1]);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_array-reduce", ["npm:core-js@2.1.0/library/modules/_a-function", "npm:core-js@2.1.0/library/modules/_to-object", "npm:core-js@2.1.0/library/modules/_iobject", "npm:core-js@2.1.0/library/modules/_to-length"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var aFunction = require("npm:core-js@2.1.0/library/modules/_a-function"),
-      toObject = require("npm:core-js@2.1.0/library/modules/_to-object"),
-      IObject = require("npm:core-js@2.1.0/library/modules/_iobject"),
-      toLength = require("npm:core-js@2.1.0/library/modules/_to-length");
-  module.exports = function(that, callbackfn, aLen, memo, isRight) {
-    aFunction(callbackfn);
-    var O = toObject(that),
-        self = IObject(O),
-        length = toLength(O.length),
-        index = isRight ? length - 1 : 0,
-        i = isRight ? -1 : 1;
-    if (aLen < 2)
-      for (; ; ) {
-        if (index in self) {
-          memo = self[index];
-          index += i;
-          break;
-        }
-        index += i;
-        if (isRight ? index < 0 : length <= index) {
-          throw TypeError('Reduce of empty array with no initial value');
-        }
-      }
-    for (; isRight ? index >= 0 : length > index; index += i)
-      if (index in self) {
-        memo = callbackfn(memo, self[index], index, O);
-      }
-    return memo;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.reduce", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_array-reduce", "npm:core-js@2.1.0/library/modules/_strict-method"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $reduce = require("npm:core-js@2.1.0/library/modules/_array-reduce");
-  $export($export.P + $export.F * !require("npm:core-js@2.1.0/library/modules/_strict-method")([].reduce, true), 'Array', {reduce: function reduce(callbackfn) {
-      return $reduce(this, callbackfn, arguments.length, arguments[1], false);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.reduce-right", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_array-reduce", "npm:core-js@2.1.0/library/modules/_strict-method"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $reduce = require("npm:core-js@2.1.0/library/modules/_array-reduce");
-  $export($export.P + $export.F * !require("npm:core-js@2.1.0/library/modules/_strict-method")([].reduceRight, true), 'Array', {reduceRight: function reduceRight(callbackfn) {
-      return $reduce(this, callbackfn, arguments.length, arguments[1], true);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.index-of", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_array-includes", "npm:core-js@2.1.0/library/modules/_strict-method"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $indexOf = require("npm:core-js@2.1.0/library/modules/_array-includes")(false);
-  $export($export.P + $export.F * !require("npm:core-js@2.1.0/library/modules/_strict-method")([].indexOf), 'Array', {indexOf: function indexOf(searchElement) {
-      return $indexOf(this, searchElement, arguments[1]);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.last-index-of", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_to-iobject", "npm:core-js@2.1.0/library/modules/_to-integer", "npm:core-js@2.1.0/library/modules/_to-length", "npm:core-js@2.1.0/library/modules/_strict-method"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      toIObject = require("npm:core-js@2.1.0/library/modules/_to-iobject"),
-      toInteger = require("npm:core-js@2.1.0/library/modules/_to-integer"),
-      toLength = require("npm:core-js@2.1.0/library/modules/_to-length");
-  $export($export.P + $export.F * !require("npm:core-js@2.1.0/library/modules/_strict-method")([].lastIndexOf), 'Array', {lastIndexOf: function lastIndexOf(searchElement) {
-      var O = toIObject(this),
-          length = toLength(O.length),
-          index = length - 1;
-      if (arguments.length > 1)
-        index = Math.min(index, toInteger(arguments[1]));
-      if (index < 0)
-        index = length + index;
-      for (; index >= 0; index--)
-        if (index in O)
-          if (O[index] === searchElement)
-            return index;
-      return -1;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.date.now", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Date', {now: function() {
-      return +new Date;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.date.to-iso-string", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      fails = require("npm:core-js@2.1.0/library/modules/_fails");
-  var lz = function(num) {
-    return num > 9 ? num : '0' + num;
-  };
-  $export($export.P + $export.F * (fails(function() {
-    return new Date(-5e13 - 1).toISOString() != '0385-07-25T07:06:39.999Z';
-  }) || !fails(function() {
-    new Date(NaN).toISOString();
-  })), 'Date', {toISOString: function toISOString() {
-      if (!isFinite(this))
-        throw RangeError('Invalid time value');
-      var d = this,
-          y = d.getUTCFullYear(),
-          m = d.getUTCMilliseconds(),
-          s = y < 0 ? '-' : y > 9999 ? '+' : '';
-      return s + ('00000' + Math.abs(y)).slice(s ? -6 : -4) + '-' + lz(d.getUTCMonth() + 1) + '-' + lz(d.getUTCDate()) + 'T' + lz(d.getUTCHours()) + ':' + lz(d.getUTCMinutes()) + ':' + lz(d.getUTCSeconds()) + '.' + (m > 99 ? m : '0' + lz(m)) + 'Z';
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.date.to-json", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_to-object", "npm:core-js@2.1.0/library/modules/_to-primitive", "npm:core-js@2.1.0/library/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      toObject = require("npm:core-js@2.1.0/library/modules/_to-object"),
-      toPrimitive = require("npm:core-js@2.1.0/library/modules/_to-primitive");
-  $export($export.P + $export.F * require("npm:core-js@2.1.0/library/modules/_fails")(function() {
-    return new Date(NaN).toJSON() !== null || Date.prototype.toJSON.call({toISOString: function() {
-        return 1;
-      }}) !== 1;
-  }), 'Date', {toJSON: function toJSON(key) {
-      var O = toObject(this),
-          pv = toPrimitive(O);
-      return typeof pv == 'number' && !isFinite(pv) ? null : O.toISOString();
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_string-ws", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = '\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003' + '\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF';
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_string-trim", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_defined", "npm:core-js@2.1.0/library/modules/_fails", "npm:core-js@2.1.0/library/modules/_string-ws"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      defined = require("npm:core-js@2.1.0/library/modules/_defined"),
-      fails = require("npm:core-js@2.1.0/library/modules/_fails"),
-      spaces = require("npm:core-js@2.1.0/library/modules/_string-ws"),
-      space = '[' + spaces + ']',
-      non = '\u200b\u0085',
-      ltrim = RegExp('^' + space + space + '*'),
-      rtrim = RegExp(space + space + '*$');
-  var exporter = function(KEY, exec, ALIAS) {
-    var exp = {};
-    var FORCE = fails(function() {
-      return !!spaces[KEY]() || non[KEY]() != non;
-    });
-    var fn = exp[KEY] = FORCE ? exec(trim) : spaces[KEY];
-    if (ALIAS)
-      exp[ALIAS] = fn;
-    $export($export.P + $export.F * FORCE, 'String', exp);
-  };
-  var trim = exporter.trim = function(string, TYPE) {
-    string = String(defined(string));
-    if (TYPE & 1)
-      string = string.replace(ltrim, '');
-    if (TYPE & 2)
-      string = string.replace(rtrim, '');
-    return string;
-  };
-  module.exports = exporter;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_parse-int", ["npm:core-js@2.1.0/library/modules/_global", "npm:core-js@2.1.0/library/modules/_string-trim", "npm:core-js@2.1.0/library/modules/_string-ws"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $parseInt = require("npm:core-js@2.1.0/library/modules/_global").parseInt,
-      $trim = require("npm:core-js@2.1.0/library/modules/_string-trim").trim,
-      ws = require("npm:core-js@2.1.0/library/modules/_string-ws"),
-      hex = /^[\-+]?0[xX]/;
-  module.exports = $parseInt(ws + '08') !== 8 || $parseInt(ws + '0x16') !== 22 ? function parseInt(str, radix) {
-    var string = $trim(String(str), 3);
-    return $parseInt(string, (radix >>> 0) || (hex.test(string) ? 16 : 10));
-  } : $parseInt;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.parse-int", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_parse-int"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $parseInt = require("npm:core-js@2.1.0/library/modules/_parse-int");
-  $export($export.G + $export.F * (parseInt != $parseInt), {parseInt: $parseInt});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_parse-float", ["npm:core-js@2.1.0/library/modules/_global", "npm:core-js@2.1.0/library/modules/_string-trim", "npm:core-js@2.1.0/library/modules/_string-ws"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $parseFloat = require("npm:core-js@2.1.0/library/modules/_global").parseFloat,
-      $trim = require("npm:core-js@2.1.0/library/modules/_string-trim").trim;
-  module.exports = 1 / $parseFloat(require("npm:core-js@2.1.0/library/modules/_string-ws") + '-0') !== -Infinity ? function parseFloat(str) {
-    var string = $trim(String(str), 3),
-        result = $parseFloat(string);
-    return result === 0 && string.charAt(0) == '-' ? -0 : result;
-  } : $parseFloat;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.parse-float", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_parse-float"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $parseFloat = require("npm:core-js@2.1.0/library/modules/_parse-float");
-  $export($export.G + $export.F * (parseFloat != $parseFloat), {parseFloat: $parseFloat});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.trim", ["npm:core-js@2.1.0/library/modules/_string-trim"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/library/modules/_string-trim")('trim', function($trim) {
-    return function trim() {
-      return $trim(this, 3);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.regexp.to-string", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  "format cjs";
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es5", ["npm:core-js@2.1.0/library/modules/es6.object.create", "npm:core-js@2.1.0/library/modules/es6.object.define-property", "npm:core-js@2.1.0/library/modules/es6.object.define-properties", "npm:core-js@2.1.0/library/modules/es6.object.get-own-property-descriptor", "npm:core-js@2.1.0/library/modules/es6.object.get-prototype-of", "npm:core-js@2.1.0/library/modules/es6.object.keys", "npm:core-js@2.1.0/library/modules/es6.object.get-own-property-names", "npm:core-js@2.1.0/library/modules/es6.object.freeze", "npm:core-js@2.1.0/library/modules/es6.object.seal", "npm:core-js@2.1.0/library/modules/es6.object.prevent-extensions", "npm:core-js@2.1.0/library/modules/es6.object.is-frozen", "npm:core-js@2.1.0/library/modules/es6.object.is-sealed", "npm:core-js@2.1.0/library/modules/es6.object.is-extensible", "npm:core-js@2.1.0/library/modules/es6.function.bind", "npm:core-js@2.1.0/library/modules/es6.array.is-array", "npm:core-js@2.1.0/library/modules/es6.array.join", "npm:core-js@2.1.0/library/modules/es6.array.slice", "npm:core-js@2.1.0/library/modules/es6.array.sort", "npm:core-js@2.1.0/library/modules/es6.array.for-each", "npm:core-js@2.1.0/library/modules/es6.array.map", "npm:core-js@2.1.0/library/modules/es6.array.filter", "npm:core-js@2.1.0/library/modules/es6.array.some", "npm:core-js@2.1.0/library/modules/es6.array.every", "npm:core-js@2.1.0/library/modules/es6.array.reduce", "npm:core-js@2.1.0/library/modules/es6.array.reduce-right", "npm:core-js@2.1.0/library/modules/es6.array.index-of", "npm:core-js@2.1.0/library/modules/es6.array.last-index-of", "npm:core-js@2.1.0/library/modules/es6.date.now", "npm:core-js@2.1.0/library/modules/es6.date.to-iso-string", "npm:core-js@2.1.0/library/modules/es6.date.to-json", "npm:core-js@2.1.0/library/modules/es6.parse-int", "npm:core-js@2.1.0/library/modules/es6.parse-float", "npm:core-js@2.1.0/library/modules/es6.string.trim", "npm:core-js@2.1.0/library/modules/es6.regexp.to-string"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/library/modules/es6.object.create");
-  require("npm:core-js@2.1.0/library/modules/es6.object.define-property");
-  require("npm:core-js@2.1.0/library/modules/es6.object.define-properties");
-  require("npm:core-js@2.1.0/library/modules/es6.object.get-own-property-descriptor");
-  require("npm:core-js@2.1.0/library/modules/es6.object.get-prototype-of");
-  require("npm:core-js@2.1.0/library/modules/es6.object.keys");
-  require("npm:core-js@2.1.0/library/modules/es6.object.get-own-property-names");
-  require("npm:core-js@2.1.0/library/modules/es6.object.freeze");
-  require("npm:core-js@2.1.0/library/modules/es6.object.seal");
-  require("npm:core-js@2.1.0/library/modules/es6.object.prevent-extensions");
-  require("npm:core-js@2.1.0/library/modules/es6.object.is-frozen");
-  require("npm:core-js@2.1.0/library/modules/es6.object.is-sealed");
-  require("npm:core-js@2.1.0/library/modules/es6.object.is-extensible");
-  require("npm:core-js@2.1.0/library/modules/es6.function.bind");
-  require("npm:core-js@2.1.0/library/modules/es6.array.is-array");
-  require("npm:core-js@2.1.0/library/modules/es6.array.join");
-  require("npm:core-js@2.1.0/library/modules/es6.array.slice");
-  require("npm:core-js@2.1.0/library/modules/es6.array.sort");
-  require("npm:core-js@2.1.0/library/modules/es6.array.for-each");
-  require("npm:core-js@2.1.0/library/modules/es6.array.map");
-  require("npm:core-js@2.1.0/library/modules/es6.array.filter");
-  require("npm:core-js@2.1.0/library/modules/es6.array.some");
-  require("npm:core-js@2.1.0/library/modules/es6.array.every");
-  require("npm:core-js@2.1.0/library/modules/es6.array.reduce");
-  require("npm:core-js@2.1.0/library/modules/es6.array.reduce-right");
-  require("npm:core-js@2.1.0/library/modules/es6.array.index-of");
-  require("npm:core-js@2.1.0/library/modules/es6.array.last-index-of");
-  require("npm:core-js@2.1.0/library/modules/es6.date.now");
-  require("npm:core-js@2.1.0/library/modules/es6.date.to-iso-string");
-  require("npm:core-js@2.1.0/library/modules/es6.date.to-json");
-  require("npm:core-js@2.1.0/library/modules/es6.parse-int");
-  require("npm:core-js@2.1.0/library/modules/es6.parse-float");
-  require("npm:core-js@2.1.0/library/modules/es6.string.trim");
-  require("npm:core-js@2.1.0/library/modules/es6.regexp.to-string");
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_array-copy-within", ["npm:core-js@2.1.0/library/modules/_to-object", "npm:core-js@2.1.0/library/modules/_to-index", "npm:core-js@2.1.0/library/modules/_to-length"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var toObject = require("npm:core-js@2.1.0/library/modules/_to-object"),
-      toIndex = require("npm:core-js@2.1.0/library/modules/_to-index"),
-      toLength = require("npm:core-js@2.1.0/library/modules/_to-length");
-  module.exports = [].copyWithin || function copyWithin(target, start) {
-    var O = toObject(this),
-        len = toLength(O.length),
-        to = toIndex(target, len),
-        from = toIndex(start, len),
-        end = arguments.length > 2 ? arguments[2] : undefined,
-        count = Math.min((end === undefined ? len : toIndex(end, len)) - from, len - to),
-        inc = 1;
-    if (from < to && to < from + count) {
-      inc = -1;
-      from += count - 1;
-      to += count - 1;
-    }
-    while (count-- > 0) {
-      if (from in O)
-        O[to] = O[from];
-      else
-        delete O[to];
-      to += inc;
-      from += inc;
-    }
-    return O;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_add-to-unscopables", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = function() {};
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.copy-within", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_array-copy-within", "npm:core-js@2.1.0/library/modules/_add-to-unscopables"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.P, 'Array', {copyWithin: require("npm:core-js@2.1.0/library/modules/_array-copy-within")});
-  require("npm:core-js@2.1.0/library/modules/_add-to-unscopables")('copyWithin');
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_array-fill", ["npm:core-js@2.1.0/library/modules/_to-object", "npm:core-js@2.1.0/library/modules/_to-index", "npm:core-js@2.1.0/library/modules/_to-length"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var toObject = require("npm:core-js@2.1.0/library/modules/_to-object"),
-      toIndex = require("npm:core-js@2.1.0/library/modules/_to-index"),
-      toLength = require("npm:core-js@2.1.0/library/modules/_to-length");
-  module.exports = function fill(value) {
-    var O = toObject(this),
-        length = toLength(O.length),
-        aLen = arguments.length,
-        index = toIndex(aLen > 1 ? arguments[1] : undefined, length),
-        end = aLen > 2 ? arguments[2] : undefined,
-        endPos = end === undefined ? length : toIndex(end, length);
-    while (endPos > index)
-      O[index++] = value;
-    return O;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.fill", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_array-fill", "npm:core-js@2.1.0/library/modules/_add-to-unscopables"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.P, 'Array', {fill: require("npm:core-js@2.1.0/library/modules/_array-fill")});
-  require("npm:core-js@2.1.0/library/modules/_add-to-unscopables")('fill');
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.find", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_array-methods", "npm:core-js@2.1.0/library/modules/_add-to-unscopables"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $find = require("npm:core-js@2.1.0/library/modules/_array-methods")(5),
-      KEY = 'find',
-      forced = true;
-  if (KEY in [])
-    Array(1)[KEY](function() {
-      forced = false;
-    });
-  $export($export.P + $export.F * forced, 'Array', {find: function find(callbackfn) {
-      return $find(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-    }});
-  require("npm:core-js@2.1.0/library/modules/_add-to-unscopables")(KEY);
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.find-index", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_array-methods", "npm:core-js@2.1.0/library/modules/_add-to-unscopables"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $find = require("npm:core-js@2.1.0/library/modules/_array-methods")(6),
-      KEY = 'findIndex',
-      forced = true;
-  if (KEY in [])
-    Array(1)[KEY](function() {
-      forced = false;
-    });
-  $export($export.P + $export.F * forced, 'Array', {findIndex: function findIndex(callbackfn) {
-      return $find(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-    }});
-  require("npm:core-js@2.1.0/library/modules/_add-to-unscopables")(KEY);
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_iter-detect", ["npm:core-js@2.1.0/library/modules/_wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var ITERATOR = require("npm:core-js@2.1.0/library/modules/_wks")('iterator'),
-      SAFE_CLOSING = false;
-  try {
-    var riter = [7][ITERATOR]();
-    riter['return'] = function() {
-      SAFE_CLOSING = true;
-    };
-    Array.from(riter, function() {
-      throw 2;
-    });
-  } catch (e) {}
-  module.exports = function(exec, skipClosing) {
-    if (!skipClosing && !SAFE_CLOSING)
-      return false;
-    var safe = false;
-    try {
-      var arr = [7],
-          iter = arr[ITERATOR]();
-      iter.next = function() {
-        safe = true;
-      };
-      arr[ITERATOR] = function() {
-        return iter;
-      };
-      exec(arr);
-    } catch (e) {}
-    return safe;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.from", ["npm:core-js@2.1.0/library/modules/_ctx", "npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_to-object", "npm:core-js@2.1.0/library/modules/_iter-call", "npm:core-js@2.1.0/library/modules/_is-array-iter", "npm:core-js@2.1.0/library/modules/_to-length", "npm:core-js@2.1.0/library/modules/core.get-iterator-method", "npm:core-js@2.1.0/library/modules/_iter-detect"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var ctx = require("npm:core-js@2.1.0/library/modules/_ctx"),
-      $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      toObject = require("npm:core-js@2.1.0/library/modules/_to-object"),
-      call = require("npm:core-js@2.1.0/library/modules/_iter-call"),
-      isArrayIter = require("npm:core-js@2.1.0/library/modules/_is-array-iter"),
-      toLength = require("npm:core-js@2.1.0/library/modules/_to-length"),
-      getIterFn = require("npm:core-js@2.1.0/library/modules/core.get-iterator-method");
-  $export($export.S + $export.F * !require("npm:core-js@2.1.0/library/modules/_iter-detect")(function(iter) {
-    Array.from(iter);
-  }), 'Array', {from: function from(arrayLike) {
-      var O = toObject(arrayLike),
-          C = typeof this == 'function' ? this : Array,
-          aLen = arguments.length,
-          mapfn = aLen > 1 ? arguments[1] : undefined,
-          mapping = mapfn !== undefined,
-          index = 0,
-          iterFn = getIterFn(O),
-          length,
-          result,
-          step,
-          iterator;
-      if (mapping)
-        mapfn = ctx(mapfn, aLen > 2 ? arguments[2] : undefined, 2);
-      if (iterFn != undefined && !(C == Array && isArrayIter(iterFn))) {
-        for (iterator = iterFn.call(O), result = new C; !(step = iterator.next()).done; index++) {
-          result[index] = mapping ? call(iterator, mapfn, [step.value, index], true) : step.value;
-        }
-      } else {
-        length = toLength(O.length);
-        for (result = new C(length); length > index; index++) {
-          result[index] = mapping ? mapfn(O[index], index) : O[index];
-        }
-      }
-      result.length = index;
-      return result;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.of", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S + $export.F * require("npm:core-js@2.1.0/library/modules/_fails")(function() {
-    function F() {}
-    return !(Array.of.call(F) instanceof F);
-  }), 'Array', {of: function of() {
-      var index = 0,
-          aLen = arguments.length,
-          result = new (typeof this == 'function' ? this : Array)(aLen);
-      while (aLen > index)
-        result[index] = arguments[index++];
-      result.length = aLen;
-      return result;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_set-species", ["npm:core-js@2.1.0/library/modules/_global", "npm:core-js@2.1.0/library/modules/_core", "npm:core-js@2.1.0/library/modules/_object-dp", "npm:core-js@2.1.0/library/modules/_descriptors", "npm:core-js@2.1.0/library/modules/_wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var global = require("npm:core-js@2.1.0/library/modules/_global"),
-      core = require("npm:core-js@2.1.0/library/modules/_core"),
-      dP = require("npm:core-js@2.1.0/library/modules/_object-dp"),
-      DESCRIPTORS = require("npm:core-js@2.1.0/library/modules/_descriptors"),
-      SPECIES = require("npm:core-js@2.1.0/library/modules/_wks")('species');
-  module.exports = function(KEY) {
-    var C = typeof core[KEY] == 'function' ? core[KEY] : global[KEY];
-    if (DESCRIPTORS && C && !C[SPECIES])
-      dP.f(C, SPECIES, {
-        configurable: true,
-        get: function() {
-          return this;
-        }
-      });
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.species", ["npm:core-js@2.1.0/library/modules/_set-species"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/library/modules/_set-species")('Array');
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.date.to-string", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  "format cjs";
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.function.has-instance", ["npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_object-gpo", "npm:core-js@2.1.0/library/modules/_wks", "npm:core-js@2.1.0/library/modules/_object-dp"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      getPrototypeOf = require("npm:core-js@2.1.0/library/modules/_object-gpo"),
-      HAS_INSTANCE = require("npm:core-js@2.1.0/library/modules/_wks")('hasInstance'),
-      FunctionProto = Function.prototype;
-  if (!(HAS_INSTANCE in FunctionProto))
-    require("npm:core-js@2.1.0/library/modules/_object-dp").f(FunctionProto, HAS_INSTANCE, {value: function(O) {
-        if (typeof this != 'function' || !isObject(O))
-          return false;
-        if (!isObject(this.prototype))
-          return O instanceof this;
-        while (O = getPrototypeOf(O))
-          if (this.prototype === O)
-            return true;
-        return false;
-      }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.function.name", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  "format cjs";
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_math-log1p", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = Math.log1p || function log1p(x) {
-    return (x = +x) > -1e-8 && x < 1e-8 ? x - x * x / 2 : Math.log(1 + x);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.math.acosh", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_math-log1p"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      log1p = require("npm:core-js@2.1.0/library/modules/_math-log1p"),
-      sqrt = Math.sqrt,
-      $acosh = Math.acosh;
-  $export($export.S + $export.F * !($acosh && Math.floor($acosh(Number.MAX_VALUE)) == 710), 'Math', {acosh: function acosh(x) {
-      return (x = +x) < 1 ? NaN : x > 94906265.62425156 ? Math.log(x) + Math.LN2 : log1p(x - 1 + sqrt(x - 1) * sqrt(x + 1));
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.math.asinh", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  function asinh(x) {
-    return !isFinite(x = +x) || x == 0 ? x : x < 0 ? -asinh(-x) : Math.log(x + Math.sqrt(x * x + 1));
-  }
-  $export($export.S, 'Math', {asinh: asinh});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.math.atanh", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Math', {atanh: function atanh(x) {
-      return (x = +x) == 0 ? x : Math.log((1 + x) / (1 - x)) / 2;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_math-sign", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = Math.sign || function sign(x) {
-    return (x = +x) == 0 || x != x ? x : x < 0 ? -1 : 1;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.math.cbrt", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_math-sign"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      sign = require("npm:core-js@2.1.0/library/modules/_math-sign");
-  $export($export.S, 'Math', {cbrt: function cbrt(x) {
-      return sign(x = +x) * Math.pow(Math.abs(x), 1 / 3);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.math.clz32", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Math', {clz32: function clz32(x) {
-      return (x >>>= 0) ? 31 - Math.floor(Math.log(x + 0.5) * Math.LOG2E) : 32;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.math.cosh", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      exp = Math.exp;
-  $export($export.S, 'Math', {cosh: function cosh(x) {
-      return (exp(x = +x) + exp(-x)) / 2;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_math-expm1", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = Math.expm1 || function expm1(x) {
-    return (x = +x) == 0 ? x : x > -1e-6 && x < 1e-6 ? x + x * x / 2 : Math.exp(x) - 1;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.math.expm1", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_math-expm1"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Math', {expm1: require("npm:core-js@2.1.0/library/modules/_math-expm1")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.math.fround", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_math-sign"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      sign = require("npm:core-js@2.1.0/library/modules/_math-sign"),
-      pow = Math.pow,
-      EPSILON = pow(2, -52),
-      EPSILON32 = pow(2, -23),
-      MAX32 = pow(2, 127) * (2 - EPSILON32),
-      MIN32 = pow(2, -126);
-  var roundTiesToEven = function(n) {
-    return n + 1 / EPSILON - 1 / EPSILON;
-  };
-  $export($export.S, 'Math', {fround: function fround(x) {
-      var $abs = Math.abs(x),
-          $sign = sign(x),
-          a,
-          result;
-      if ($abs < MIN32)
-        return $sign * roundTiesToEven($abs / MIN32 / EPSILON32) * MIN32 * EPSILON32;
-      a = (1 + EPSILON32 / EPSILON) * $abs;
-      result = a - (a - $abs);
-      if (result > MAX32 || result != result)
-        return $sign * Infinity;
-      return $sign * result;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.math.hypot", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      abs = Math.abs;
-  $export($export.S, 'Math', {hypot: function hypot(value1, value2) {
-      var sum = 0,
-          i = 0,
-          aLen = arguments.length,
-          larg = 0,
-          arg,
-          div;
-      while (i < aLen) {
-        arg = abs(arguments[i++]);
-        if (larg < arg) {
-          div = larg / arg;
-          sum = sum * div * div + 1;
-          larg = arg;
-        } else if (arg > 0) {
-          div = arg / larg;
-          sum += div * div;
-        } else
-          sum += arg;
-      }
-      return larg === Infinity ? Infinity : larg * Math.sqrt(sum);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.math.imul", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $imul = Math.imul;
-  $export($export.S + $export.F * require("npm:core-js@2.1.0/library/modules/_fails")(function() {
-    return $imul(0xffffffff, 5) != -5 || $imul.length != 2;
-  }), 'Math', {imul: function imul(x, y) {
-      var UINT16 = 0xffff,
-          xn = +x,
-          yn = +y,
-          xl = UINT16 & xn,
-          yl = UINT16 & yn;
-      return 0 | xl * yl + ((UINT16 & xn >>> 16) * yl + xl * (UINT16 & yn >>> 16) << 16 >>> 0);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.math.log10", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Math', {log10: function log10(x) {
-      return Math.log(x) / Math.LN10;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.math.log1p", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_math-log1p"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Math', {log1p: require("npm:core-js@2.1.0/library/modules/_math-log1p")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.math.log2", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Math', {log2: function log2(x) {
-      return Math.log(x) / Math.LN2;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.math.sign", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_math-sign"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Math', {sign: require("npm:core-js@2.1.0/library/modules/_math-sign")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.math.sinh", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_math-expm1", "npm:core-js@2.1.0/library/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      expm1 = require("npm:core-js@2.1.0/library/modules/_math-expm1"),
-      exp = Math.exp;
-  $export($export.S + $export.F * require("npm:core-js@2.1.0/library/modules/_fails")(function() {
-    return !Math.sinh(-2e-17) != -2e-17;
-  }), 'Math', {sinh: function sinh(x) {
-      return Math.abs(x = +x) < 1 ? (expm1(x) - expm1(-x)) / 2 : (exp(x - 1) - exp(-x - 1)) * (Math.E / 2);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.math.tanh", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_math-expm1"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      expm1 = require("npm:core-js@2.1.0/library/modules/_math-expm1"),
-      exp = Math.exp;
-  $export($export.S, 'Math', {tanh: function tanh(x) {
-      var a = expm1(x = +x),
-          b = expm1(-x);
-      return a == Infinity ? 1 : b == Infinity ? -1 : (a - b) / (exp(x) + exp(-x));
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.math.trunc", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Math', {trunc: function trunc(it) {
-      return (it > 0 ? Math.floor : Math.ceil)(it);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.number.constructor", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  "format cjs";
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.number.epsilon", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Number', {EPSILON: Math.pow(2, -52)});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.number.is-finite", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_global"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      _isFinite = require("npm:core-js@2.1.0/library/modules/_global").isFinite;
-  $export($export.S, 'Number', {isFinite: function isFinite(it) {
-      return typeof it == 'number' && _isFinite(it);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_is-integer", ["npm:core-js@2.1.0/library/modules/_is-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      floor = Math.floor;
-  module.exports = function isInteger(it) {
-    return !isObject(it) && isFinite(it) && floor(it) === it;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.number.is-integer", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_is-integer"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Number', {isInteger: require("npm:core-js@2.1.0/library/modules/_is-integer")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.number.is-nan", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Number', {isNaN: function isNaN(number) {
-      return number != number;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.number.is-safe-integer", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_is-integer"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      isInteger = require("npm:core-js@2.1.0/library/modules/_is-integer"),
-      abs = Math.abs;
-  $export($export.S, 'Number', {isSafeInteger: function isSafeInteger(number) {
-      return isInteger(number) && abs(number) <= 0x1fffffffffffff;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.number.max-safe-integer", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Number', {MAX_SAFE_INTEGER: 0x1fffffffffffff});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.number.min-safe-integer", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Number', {MIN_SAFE_INTEGER: -0x1fffffffffffff});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.number.parse-float", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_parse-float"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $parseFloat = require("npm:core-js@2.1.0/library/modules/_parse-float");
-  $export($export.S + $export.F * (Number.parseFloat != $parseFloat), 'Number', {parseFloat: $parseFloat});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.number.parse-int", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_parse-int"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $parseInt = require("npm:core-js@2.1.0/library/modules/_parse-int");
-  $export($export.S + $export.F * (Number.parseInt != $parseInt), 'Number', {parseInt: $parseInt});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_an-instance", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = function(it, Constructor, name, forbiddenField) {
-    if (!(it instanceof Constructor) || (forbiddenField !== undefined && forbiddenField in it)) {
-      throw TypeError(name + ': incorrect invocation!');
-    }
-    return it;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_a-number-value", ["npm:core-js@2.1.0/library/modules/_cof"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var cof = require("npm:core-js@2.1.0/library/modules/_cof");
-  module.exports = function(it, msg) {
-    if (typeof it != 'number' && cof(it) != 'Number')
-      throw TypeError(msg);
-    return +it;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_string-repeat", ["npm:core-js@2.1.0/library/modules/_to-integer", "npm:core-js@2.1.0/library/modules/_defined"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var toInteger = require("npm:core-js@2.1.0/library/modules/_to-integer"),
-      defined = require("npm:core-js@2.1.0/library/modules/_defined");
-  module.exports = function repeat(count) {
-    var str = String(defined(this)),
-        res = '',
-        n = toInteger(count);
-    if (n < 0 || n == Infinity)
-      throw RangeError("Count can't be negative");
-    for (; n > 0; (n >>>= 1) && (str += str))
-      if (n & 1)
-        res += str;
-    return res;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.number.to-fixed", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_an-instance", "npm:core-js@2.1.0/library/modules/_to-integer", "npm:core-js@2.1.0/library/modules/_a-number-value", "npm:core-js@2.1.0/library/modules/_string-repeat", "npm:core-js@2.1.0/library/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      anInstance = require("npm:core-js@2.1.0/library/modules/_an-instance"),
-      toInteger = require("npm:core-js@2.1.0/library/modules/_to-integer"),
-      aNumberValue = require("npm:core-js@2.1.0/library/modules/_a-number-value"),
-      repeat = require("npm:core-js@2.1.0/library/modules/_string-repeat"),
-      $toFixed = 1..toFixed,
-      floor = Math.floor,
-      data = [0, 0, 0, 0, 0, 0],
-      ERROR = 'Number.toFixed: incorrect invocation!',
-      ZERO = '0';
-  var multiply = function(n, c) {
-    var i = -1,
-        c2 = c;
-    while (++i < 6) {
-      c2 += n * data[i];
-      data[i] = c2 % 1e7;
-      c2 = floor(c2 / 1e7);
-    }
-  };
-  var divide = function(n) {
-    var i = 6,
-        c = 0;
-    while (--i >= 0) {
-      c += data[i];
-      data[i] = floor(c / n);
-      c = (c % n) * 1e7;
-    }
-  };
-  var numToString = function() {
-    var i = 6,
-        s = '';
-    while (--i >= 0) {
-      if (s !== '' || i === 0 || data[i] !== 0) {
-        var t = String(data[i]);
-        s = s === '' ? t : s + repeat.call(ZERO, 7 - t.length) + t;
-      }
-    }
-    return s;
-  };
-  var pow = function(x, n, acc) {
-    return n === 0 ? acc : n % 2 === 1 ? pow(x, n - 1, acc * x) : pow(x * x, n / 2, acc);
-  };
-  var log = function(x) {
-    var n = 0,
-        x2 = x;
-    while (x2 >= 4096) {
-      n += 12;
-      x2 /= 4096;
-    }
-    while (x2 >= 2) {
-      n += 1;
-      x2 /= 2;
-    }
-    return n;
-  };
-  $export($export.P + $export.F * (!!$toFixed && (0.00008.toFixed(3) !== '0.000' || 0.9.toFixed(0) !== '1' || 1.255.toFixed(2) !== '1.25' || 1000000000000000128..toFixed(0) !== '1000000000000000128') || !require("npm:core-js@2.1.0/library/modules/_fails")(function() {
-    $toFixed.call({});
-  })), 'Number', {toFixed: function toFixed(fractionDigits) {
-      var x = aNumberValue(this, ERROR),
-          f = toInteger(fractionDigits),
-          s = '',
-          m = ZERO,
-          e,
-          z,
-          j,
-          k;
-      if (f < 0 || f > 20)
-        throw RangeError(ERROR);
-      if (x != x)
-        return 'NaN';
-      if (x <= -1e21 || x >= 1e21)
-        return String(x);
-      if (x < 0) {
-        s = '-';
-        x = -x;
-      }
-      if (x > 1e-21) {
-        e = log(x * pow(2, 69, 1)) - 69;
-        z = e < 0 ? x * pow(2, -e, 1) : x / pow(2, e, 1);
-        z *= 0x10000000000000;
-        e = 52 - e;
-        if (e > 0) {
-          multiply(0, z);
-          j = f;
-          while (j >= 7) {
-            multiply(1e7, 0);
-            j -= 7;
-          }
-          multiply(pow(10, j, 1), 0);
-          j = e - 1;
-          while (j >= 23) {
-            divide(1 << 23);
-            j -= 23;
-          }
-          divide(1 << j);
-          multiply(1, 1);
-          divide(2);
-          m = numToString();
         } else {
-          multiply(0, z);
-          multiply(1 << -e, 0);
-          m = numToString() + repeat.call(ZERO, f);
+          webkitLoadCheck(link, _callback);
+        }
+        link.onerror = function(event) {
+          _callback(event.error || new Error('Error loading CSS file.'));
+        };
+        head.appendChild(link);
+      });
+    };
+    exports.fetch = function(load) {
+      for (var i = 0; i < linkHrefs.length; i++)
+        if (load.address == linkHrefs[i])
+          return '';
+      return loadCSS(load.address);
+    };
+  } else {
+    function getBuilder(loader) {
+      return loader['import']('./css-builder' + (System.version ? '.js' : ''), {name: module.id});
+    }
+    exports.cssPlugin = true;
+    exports.fetch = function(load) {
+      if (this.buildCSS === false)
+        load.metadata.build = false;
+      load.metadata.format = 'defined';
+      return '';
+    };
+    exports.instantiate = function() {};
+    exports.bundle = function(loads, opts) {
+      var loader = this;
+      if (loader.buildCSS === false)
+        return '';
+      return getBuilder(loader).then(function(builder) {
+        return builder.bundle.call(loader, loads, opts);
+      });
+    };
+    exports.listAssets = function(loads, compileOpts, outputOpts) {
+      var loader = this;
+      return getBuilder(loader).then(function(builder) {
+        return builder.listAssets.call(loader, loads, compileOpts, outputOpts);
+      });
+    };
+  }
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("github:systemjs/plugin-css@0.1.20", ["github:systemjs/plugin-css@0.1.20/css"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  module.exports = require("github:systemjs/plugin-css@0.1.20/css");
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("github:github/fetch@0.11.0/fetch", [], false, function(__require, __exports, __module) {
+  var _retrieveGlobal = System.get("@@global-helpers").prepareGlobal(__module.id, null, null);
+  (function() {
+    (function(self) {
+      'use strict';
+      if (self.fetch) {
+        return;
+      }
+      function normalizeName(name) {
+        if (typeof name !== 'string') {
+          name = String(name);
+        }
+        if (/[^a-z0-9\-#$%&'*+.\^_`|~]/i.test(name)) {
+          throw new TypeError('Invalid character in header field name');
+        }
+        return name.toLowerCase();
+      }
+      function normalizeValue(value) {
+        if (typeof value !== 'string') {
+          value = String(value);
+        }
+        return value;
+      }
+      function Headers(headers) {
+        this.map = {};
+        if (headers instanceof Headers) {
+          headers.forEach(function(value, name) {
+            this.append(name, value);
+          }, this);
+        } else if (headers) {
+          Object.getOwnPropertyNames(headers).forEach(function(name) {
+            this.append(name, headers[name]);
+          }, this);
         }
       }
-      if (f > 0) {
-        k = m.length;
-        m = s + (k <= f ? '0.' + repeat.call(ZERO, f - k) + m : m.slice(0, k - f) + '.' + m.slice(k - f));
+      Headers.prototype.append = function(name, value) {
+        name = normalizeName(name);
+        value = normalizeValue(value);
+        var list = this.map[name];
+        if (!list) {
+          list = [];
+          this.map[name] = list;
+        }
+        list.push(value);
+      };
+      Headers.prototype['delete'] = function(name) {
+        delete this.map[normalizeName(name)];
+      };
+      Headers.prototype.get = function(name) {
+        var values = this.map[normalizeName(name)];
+        return values ? values[0] : null;
+      };
+      Headers.prototype.getAll = function(name) {
+        return this.map[normalizeName(name)] || [];
+      };
+      Headers.prototype.has = function(name) {
+        return this.map.hasOwnProperty(normalizeName(name));
+      };
+      Headers.prototype.set = function(name, value) {
+        this.map[normalizeName(name)] = [normalizeValue(value)];
+      };
+      Headers.prototype.forEach = function(callback, thisArg) {
+        Object.getOwnPropertyNames(this.map).forEach(function(name) {
+          this.map[name].forEach(function(value) {
+            callback.call(thisArg, value, name, this);
+          }, this);
+        }, this);
+      };
+      function consumed(body) {
+        if (body.bodyUsed) {
+          return Promise.reject(new TypeError('Already read'));
+        }
+        body.bodyUsed = true;
+      }
+      function fileReaderReady(reader) {
+        return new Promise(function(resolve, reject) {
+          reader.onload = function() {
+            resolve(reader.result);
+          };
+          reader.onerror = function() {
+            reject(reader.error);
+          };
+        });
+      }
+      function readBlobAsArrayBuffer(blob) {
+        var reader = new FileReader();
+        reader.readAsArrayBuffer(blob);
+        return fileReaderReady(reader);
+      }
+      function readBlobAsText(blob) {
+        var reader = new FileReader();
+        reader.readAsText(blob);
+        return fileReaderReady(reader);
+      }
+      var support = {
+        blob: 'FileReader' in self && 'Blob' in self && (function() {
+          try {
+            new Blob();
+            return true;
+          } catch (e) {
+            return false;
+          }
+        })(),
+        formData: 'FormData' in self,
+        arrayBuffer: 'ArrayBuffer' in self
+      };
+      function Body() {
+        this.bodyUsed = false;
+        this._initBody = function(body) {
+          this._bodyInit = body;
+          if (typeof body === 'string') {
+            this._bodyText = body;
+          } else if (support.blob && Blob.prototype.isPrototypeOf(body)) {
+            this._bodyBlob = body;
+          } else if (support.formData && FormData.prototype.isPrototypeOf(body)) {
+            this._bodyFormData = body;
+          } else if (!body) {
+            this._bodyText = '';
+          } else if (support.arrayBuffer && ArrayBuffer.prototype.isPrototypeOf(body)) {} else {
+            throw new Error('unsupported BodyInit type');
+          }
+          if (!this.headers.get('content-type')) {
+            if (typeof body === 'string') {
+              this.headers.set('content-type', 'text/plain;charset=UTF-8');
+            } else if (this._bodyBlob && this._bodyBlob.type) {
+              this.headers.set('content-type', this._bodyBlob.type);
+            }
+          }
+        };
+        if (support.blob) {
+          this.blob = function() {
+            var rejected = consumed(this);
+            if (rejected) {
+              return rejected;
+            }
+            if (this._bodyBlob) {
+              return Promise.resolve(this._bodyBlob);
+            } else if (this._bodyFormData) {
+              throw new Error('could not read FormData body as blob');
+            } else {
+              return Promise.resolve(new Blob([this._bodyText]));
+            }
+          };
+          this.arrayBuffer = function() {
+            return this.blob().then(readBlobAsArrayBuffer);
+          };
+          this.text = function() {
+            var rejected = consumed(this);
+            if (rejected) {
+              return rejected;
+            }
+            if (this._bodyBlob) {
+              return readBlobAsText(this._bodyBlob);
+            } else if (this._bodyFormData) {
+              throw new Error('could not read FormData body as text');
+            } else {
+              return Promise.resolve(this._bodyText);
+            }
+          };
+        } else {
+          this.text = function() {
+            var rejected = consumed(this);
+            return rejected ? rejected : Promise.resolve(this._bodyText);
+          };
+        }
+        if (support.formData) {
+          this.formData = function() {
+            return this.text().then(decode);
+          };
+        }
+        this.json = function() {
+          return this.text().then(JSON.parse);
+        };
+        return this;
+      }
+      var methods = ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT'];
+      function normalizeMethod(method) {
+        var upcased = method.toUpperCase();
+        return (methods.indexOf(upcased) > -1) ? upcased : method;
+      }
+      function Request(input, options) {
+        options = options || {};
+        var body = options.body;
+        if (Request.prototype.isPrototypeOf(input)) {
+          if (input.bodyUsed) {
+            throw new TypeError('Already read');
+          }
+          this.url = input.url;
+          this.credentials = input.credentials;
+          if (!options.headers) {
+            this.headers = new Headers(input.headers);
+          }
+          this.method = input.method;
+          this.mode = input.mode;
+          if (!body) {
+            body = input._bodyInit;
+            input.bodyUsed = true;
+          }
+        } else {
+          this.url = input;
+        }
+        this.credentials = options.credentials || this.credentials || 'omit';
+        if (options.headers || !this.headers) {
+          this.headers = new Headers(options.headers);
+        }
+        this.method = normalizeMethod(options.method || this.method || 'GET');
+        this.mode = options.mode || this.mode || null;
+        this.referrer = null;
+        if ((this.method === 'GET' || this.method === 'HEAD') && body) {
+          throw new TypeError('Body not allowed for GET or HEAD requests');
+        }
+        this._initBody(body);
+      }
+      Request.prototype.clone = function() {
+        return new Request(this);
+      };
+      function decode(body) {
+        var form = new FormData();
+        body.trim().split('&').forEach(function(bytes) {
+          if (bytes) {
+            var split = bytes.split('=');
+            var name = split.shift().replace(/\+/g, ' ');
+            var value = split.join('=').replace(/\+/g, ' ');
+            form.append(decodeURIComponent(name), decodeURIComponent(value));
+          }
+        });
+        return form;
+      }
+      function headers(xhr) {
+        var head = new Headers();
+        var pairs = xhr.getAllResponseHeaders().trim().split('\n');
+        pairs.forEach(function(header) {
+          var split = header.trim().split(':');
+          var key = split.shift().trim();
+          var value = split.join(':').trim();
+          head.append(key, value);
+        });
+        return head;
+      }
+      Body.call(Request.prototype);
+      function Response(bodyInit, options) {
+        if (!options) {
+          options = {};
+        }
+        this.type = 'default';
+        this.status = options.status;
+        this.ok = this.status >= 200 && this.status < 300;
+        this.statusText = options.statusText;
+        this.headers = options.headers instanceof Headers ? options.headers : new Headers(options.headers);
+        this.url = options.url || '';
+        this._initBody(bodyInit);
+      }
+      Body.call(Response.prototype);
+      Response.prototype.clone = function() {
+        return new Response(this._bodyInit, {
+          status: this.status,
+          statusText: this.statusText,
+          headers: new Headers(this.headers),
+          url: this.url
+        });
+      };
+      Response.error = function() {
+        var response = new Response(null, {
+          status: 0,
+          statusText: ''
+        });
+        response.type = 'error';
+        return response;
+      };
+      var redirectStatuses = [301, 302, 303, 307, 308];
+      Response.redirect = function(url, status) {
+        if (redirectStatuses.indexOf(status) === -1) {
+          throw new RangeError('Invalid status code');
+        }
+        return new Response(null, {
+          status: status,
+          headers: {location: url}
+        });
+      };
+      self.Headers = Headers;
+      self.Request = Request;
+      self.Response = Response;
+      self.fetch = function(input, init) {
+        return new Promise(function(resolve, reject) {
+          var request;
+          if (Request.prototype.isPrototypeOf(input) && !init) {
+            request = input;
+          } else {
+            request = new Request(input, init);
+          }
+          var xhr = new XMLHttpRequest();
+          function responseURL() {
+            if ('responseURL' in xhr) {
+              return xhr.responseURL;
+            }
+            if (/^X-Request-URL:/m.test(xhr.getAllResponseHeaders())) {
+              return xhr.getResponseHeader('X-Request-URL');
+            }
+            return;
+          }
+          xhr.onload = function() {
+            var status = (xhr.status === 1223) ? 204 : xhr.status;
+            if (status < 100 || status > 599) {
+              reject(new TypeError('Network request failed'));
+              return;
+            }
+            var options = {
+              status: status,
+              statusText: xhr.statusText,
+              headers: headers(xhr),
+              url: responseURL()
+            };
+            var body = 'response' in xhr ? xhr.response : xhr.responseText;
+            resolve(new Response(body, options));
+          };
+          xhr.onerror = function() {
+            reject(new TypeError('Network request failed'));
+          };
+          xhr.open(request.method, request.url, true);
+          if (request.credentials === 'include') {
+            xhr.withCredentials = true;
+          }
+          if ('responseType' in xhr && support.blob) {
+            xhr.responseType = 'blob';
+          }
+          request.headers.forEach(function(value, name) {
+            xhr.setRequestHeader(name, value);
+          });
+          xhr.send(typeof request._bodyInit === 'undefined' ? null : request._bodyInit);
+        });
+      };
+      self.fetch.polyfill = true;
+    })(typeof self !== 'undefined' ? self : this);
+  })();
+  return _retrieveGlobal();
+});
+
+System.registerDynamic("github:github/fetch@0.11.0", ["github:github/fetch@0.11.0/fetch"], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  module.exports = require("github:github/fetch@0.11.0/fetch");
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("npm:moment@2.11.2/moment", [], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  "format cjs";
+  ;
+  (function(global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define(factory) : global.moment = factory();
+  }(this, function() {
+    'use strict';
+    var hookCallback;
+    function utils_hooks__hooks() {
+      return hookCallback.apply(null, arguments);
+    }
+    function setHookCallback(callback) {
+      hookCallback = callback;
+    }
+    function isArray(input) {
+      return Object.prototype.toString.call(input) === '[object Array]';
+    }
+    function isDate(input) {
+      return input instanceof Date || Object.prototype.toString.call(input) === '[object Date]';
+    }
+    function map(arr, fn) {
+      var res = [],
+          i;
+      for (i = 0; i < arr.length; ++i) {
+        res.push(fn(arr[i], i));
+      }
+      return res;
+    }
+    function hasOwnProp(a, b) {
+      return Object.prototype.hasOwnProperty.call(a, b);
+    }
+    function extend(a, b) {
+      for (var i in b) {
+        if (hasOwnProp(b, i)) {
+          a[i] = b[i];
+        }
+      }
+      if (hasOwnProp(b, 'toString')) {
+        a.toString = b.toString;
+      }
+      if (hasOwnProp(b, 'valueOf')) {
+        a.valueOf = b.valueOf;
+      }
+      return a;
+    }
+    function create_utc__createUTC(input, format, locale, strict) {
+      return createLocalOrUTC(input, format, locale, strict, true).utc();
+    }
+    function defaultParsingFlags() {
+      return {
+        empty: false,
+        unusedTokens: [],
+        unusedInput: [],
+        overflow: -2,
+        charsLeftOver: 0,
+        nullInput: false,
+        invalidMonth: null,
+        invalidFormat: false,
+        userInvalidated: false,
+        iso: false
+      };
+    }
+    function getParsingFlags(m) {
+      if (m._pf == null) {
+        m._pf = defaultParsingFlags();
+      }
+      return m._pf;
+    }
+    function valid__isValid(m) {
+      if (m._isValid == null) {
+        var flags = getParsingFlags(m);
+        m._isValid = !isNaN(m._d.getTime()) && flags.overflow < 0 && !flags.empty && !flags.invalidMonth && !flags.invalidWeekday && !flags.nullInput && !flags.invalidFormat && !flags.userInvalidated;
+        if (m._strict) {
+          m._isValid = m._isValid && flags.charsLeftOver === 0 && flags.unusedTokens.length === 0 && flags.bigHour === undefined;
+        }
+      }
+      return m._isValid;
+    }
+    function valid__createInvalid(flags) {
+      var m = create_utc__createUTC(NaN);
+      if (flags != null) {
+        extend(getParsingFlags(m), flags);
       } else {
-        m = s + m;
+        getParsingFlags(m).userInvalidated = true;
       }
       return m;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.number.to-precision", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_fails", "npm:core-js@2.1.0/library/modules/_a-number-value"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $fails = require("npm:core-js@2.1.0/library/modules/_fails"),
-      aNumberValue = require("npm:core-js@2.1.0/library/modules/_a-number-value"),
-      $toPrecision = 1..toPrecision;
-  $export($export.P + $export.F * ($fails(function() {
-    return $toPrecision.call(1, undefined) !== '1';
-  }) || !$fails(function() {
-    $toPrecision.call({});
-  })), 'Number', {toPrecision: function toPrecision(precision) {
-      var that = aNumberValue(this, 'Number#toPrecision: incorrect invocation!');
-      return precision === undefined ? $toPrecision.call(that) : $toPrecision.call(that, precision);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.object.assign", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_object-assign"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S + $export.F, 'Object', {assign: require("npm:core-js@2.1.0/library/modules/_object-assign")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_same-value", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  module.exports = Object.is || function is(x, y) {
-    return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.object.is", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_same-value"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Object', {is: require("npm:core-js@2.1.0/library/modules/_same-value")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.object.set-prototype-of", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_set-proto"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Object', {setPrototypeOf: require("npm:core-js@2.1.0/library/modules/_set-proto").set});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.object.to-string", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  "format cjs";
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_array-from-iterable", ["npm:core-js@2.1.0/library/modules/_for-of"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var forOf = require("npm:core-js@2.1.0/library/modules/_for-of");
-  module.exports = function(iter, ITERATOR) {
-    var result = [];
-    forOf(iter, false, result.push, result, ITERATOR);
-    return result;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_species-constructor", ["npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_a-function", "npm:core-js@2.1.0/library/modules/_wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      aFunction = require("npm:core-js@2.1.0/library/modules/_a-function"),
-      SPECIES = require("npm:core-js@2.1.0/library/modules/_wks")('species');
-  module.exports = function(O, D) {
-    var C = anObject(O).constructor,
-        S;
-    return C === undefined || (S = anObject(C)[SPECIES]) == undefined ? D : aFunction(S);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_task", ["npm:core-js@2.1.0/library/modules/_ctx", "npm:core-js@2.1.0/library/modules/_invoke", "npm:core-js@2.1.0/library/modules/_html", "npm:core-js@2.1.0/library/modules/_dom-create", "npm:core-js@2.1.0/library/modules/_global", "npm:core-js@2.1.0/library/modules/_cof", "github:jspm/nodelibs-process@0.1.2"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  (function(process) {
-    var ctx = require("npm:core-js@2.1.0/library/modules/_ctx"),
-        invoke = require("npm:core-js@2.1.0/library/modules/_invoke"),
-        html = require("npm:core-js@2.1.0/library/modules/_html"),
-        cel = require("npm:core-js@2.1.0/library/modules/_dom-create"),
-        global = require("npm:core-js@2.1.0/library/modules/_global"),
-        process = global.process,
-        setTask = global.setImmediate,
-        clearTask = global.clearImmediate,
-        MessageChannel = global.MessageChannel,
-        counter = 0,
-        queue = {},
-        ONREADYSTATECHANGE = 'onreadystatechange',
-        defer,
-        channel,
-        port;
-    var run = function() {
-      var id = +this;
-      if (queue.hasOwnProperty(id)) {
-        var fn = queue[id];
-        delete queue[id];
-        fn();
+    }
+    function isUndefined(input) {
+      return input === void 0;
+    }
+    var momentProperties = utils_hooks__hooks.momentProperties = [];
+    function copyConfig(to, from) {
+      var i,
+          prop,
+          val;
+      if (!isUndefined(from._isAMomentObject)) {
+        to._isAMomentObject = from._isAMomentObject;
       }
-    };
-    var listner = function(event) {
-      run.call(event.data);
-    };
-    if (!setTask || !clearTask) {
-      setTask = function setImmediate(fn) {
-        var args = [],
-            i = 1;
-        while (arguments.length > i)
-          args.push(arguments[i++]);
-        queue[++counter] = function() {
-          invoke(typeof fn == 'function' ? fn : Function(fn), args);
-        };
-        defer(counter);
-        return counter;
-      };
-      clearTask = function clearImmediate(id) {
-        delete queue[id];
-      };
-      if (require("npm:core-js@2.1.0/library/modules/_cof")(process) == 'process') {
-        defer = function(id) {
-          process.nextTick(ctx(run, id, 1));
-        };
-      } else if (MessageChannel) {
-        channel = new MessageChannel;
-        port = channel.port2;
-        channel.port1.onmessage = listner;
-        defer = ctx(port.postMessage, port, 1);
-      } else if (global.addEventListener && typeof postMessage == 'function' && !global.importScripts) {
-        defer = function(id) {
-          global.postMessage(id + '', '*');
-        };
-        global.addEventListener('message', listner, false);
-      } else if (ONREADYSTATECHANGE in cel('script')) {
-        defer = function(id) {
-          html.appendChild(cel('script'))[ONREADYSTATECHANGE] = function() {
-            html.removeChild(this);
-            run.call(id);
-          };
-        };
+      if (!isUndefined(from._i)) {
+        to._i = from._i;
+      }
+      if (!isUndefined(from._f)) {
+        to._f = from._f;
+      }
+      if (!isUndefined(from._l)) {
+        to._l = from._l;
+      }
+      if (!isUndefined(from._strict)) {
+        to._strict = from._strict;
+      }
+      if (!isUndefined(from._tzm)) {
+        to._tzm = from._tzm;
+      }
+      if (!isUndefined(from._isUTC)) {
+        to._isUTC = from._isUTC;
+      }
+      if (!isUndefined(from._offset)) {
+        to._offset = from._offset;
+      }
+      if (!isUndefined(from._pf)) {
+        to._pf = getParsingFlags(from);
+      }
+      if (!isUndefined(from._locale)) {
+        to._locale = from._locale;
+      }
+      if (momentProperties.length > 0) {
+        for (i in momentProperties) {
+          prop = momentProperties[i];
+          val = from[prop];
+          if (!isUndefined(val)) {
+            to[prop] = val;
+          }
+        }
+      }
+      return to;
+    }
+    var updateInProgress = false;
+    function Moment(config) {
+      copyConfig(this, config);
+      this._d = new Date(config._d != null ? config._d.getTime() : NaN);
+      if (updateInProgress === false) {
+        updateInProgress = true;
+        utils_hooks__hooks.updateOffset(this);
+        updateInProgress = false;
+      }
+    }
+    function isMoment(obj) {
+      return obj instanceof Moment || (obj != null && obj._isAMomentObject != null);
+    }
+    function absFloor(number) {
+      if (number < 0) {
+        return Math.ceil(number);
       } else {
-        defer = function(id) {
-          setTimeout(ctx(run, id, 1), 0);
-        };
+        return Math.floor(number);
       }
     }
-    module.exports = {
-      set: setTask,
-      clear: clearTask
-    };
-  })(require("github:jspm/nodelibs-process@0.1.2"));
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_microtask", ["npm:core-js@2.1.0/library/modules/_global", "npm:core-js@2.1.0/library/modules/_task", "npm:core-js@2.1.0/library/modules/_cof", "github:jspm/nodelibs-process@0.1.2"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  (function(process) {
-    var global = require("npm:core-js@2.1.0/library/modules/_global"),
-        macrotask = require("npm:core-js@2.1.0/library/modules/_task").set,
-        Observer = global.MutationObserver || global.WebKitMutationObserver,
-        process = global.process,
-        Promise = global.Promise,
-        isNode = require("npm:core-js@2.1.0/library/modules/_cof")(process) == 'process',
-        head,
-        last,
-        notify;
-    var flush = function() {
-      var parent,
-          domain,
-          fn;
-      if (isNode && (parent = process.domain)) {
-        process.domain = null;
-        parent.exit();
+    function toInt(argumentForCoercion) {
+      var coercedNumber = +argumentForCoercion,
+          value = 0;
+      if (coercedNumber !== 0 && isFinite(coercedNumber)) {
+        value = absFloor(coercedNumber);
       }
-      while (head) {
-        domain = head.domain;
-        fn = head.fn;
-        if (domain)
-          domain.enter();
-        fn();
-        if (domain)
-          domain.exit();
-        head = head.next;
-      }
-      last = undefined;
-      if (parent)
-        parent.enter();
-    };
-    if (isNode) {
-      notify = function() {
-        process.nextTick(flush);
-      };
-    } else if (Observer) {
-      var toggle = 1,
-          node = document.createTextNode('');
-      new Observer(flush).observe(node, {characterData: true});
-      notify = function() {
-        node.data = toggle = -toggle;
-      };
-    } else if (Promise && Promise.resolve) {
-      notify = function() {
-        Promise.resolve().then(flush);
-      };
-    } else {
-      notify = function() {
-        macrotask.call(global, flush);
-      };
+      return value;
     }
-    module.exports = function(fn) {
-      var task = {
-        fn: fn,
-        next: undefined,
-        domain: isNode && process.domain
-      };
-      if (last)
-        last.next = task;
-      if (!head) {
-        head = task;
-        notify();
-      }
-      last = task;
-    };
-  })(require("github:jspm/nodelibs-process@0.1.2"));
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_redefine-all", ["npm:core-js@2.1.0/library/modules/_hide"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var hide = require("npm:core-js@2.1.0/library/modules/_hide");
-  module.exports = function(target, src, safe) {
-    for (var key in src) {
-      if (safe && target[key])
-        target[key] = src[key];
-      else
-        hide(target, key, src[key]);
-    }
-    return target;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.promise", ["npm:core-js@2.1.0/library/modules/_library", "npm:core-js@2.1.0/library/modules/_global", "npm:core-js@2.1.0/library/modules/_ctx", "npm:core-js@2.1.0/library/modules/_classof", "npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_a-function", "npm:core-js@2.1.0/library/modules/_an-instance", "npm:core-js@2.1.0/library/modules/_for-of", "npm:core-js@2.1.0/library/modules/_array-from-iterable", "npm:core-js@2.1.0/library/modules/_set-proto", "npm:core-js@2.1.0/library/modules/_species-constructor", "npm:core-js@2.1.0/library/modules/_task", "npm:core-js@2.1.0/library/modules/_microtask", "npm:core-js@2.1.0/library/modules/_object-create", "npm:core-js@2.1.0/library/modules/_descriptors", "npm:core-js@2.1.0/library/modules/_object-dp", "npm:core-js@2.1.0/library/modules/_redefine-all", "npm:core-js@2.1.0/library/modules/_set-to-string-tag", "npm:core-js@2.1.0/library/modules/_set-species", "npm:core-js@2.1.0/library/modules/_core", "npm:core-js@2.1.0/library/modules/_iter-detect", "github:jspm/nodelibs-process@0.1.2"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  (function(process) {
-    'use strict';
-    var LIBRARY = require("npm:core-js@2.1.0/library/modules/_library"),
-        global = require("npm:core-js@2.1.0/library/modules/_global"),
-        ctx = require("npm:core-js@2.1.0/library/modules/_ctx"),
-        classof = require("npm:core-js@2.1.0/library/modules/_classof"),
-        $export = require("npm:core-js@2.1.0/library/modules/_export"),
-        isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-        anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-        aFunction = require("npm:core-js@2.1.0/library/modules/_a-function"),
-        anInstance = require("npm:core-js@2.1.0/library/modules/_an-instance"),
-        forOf = require("npm:core-js@2.1.0/library/modules/_for-of"),
-        from = require("npm:core-js@2.1.0/library/modules/_array-from-iterable"),
-        setProto = require("npm:core-js@2.1.0/library/modules/_set-proto").set,
-        speciesConstructor = require("npm:core-js@2.1.0/library/modules/_species-constructor"),
-        task = require("npm:core-js@2.1.0/library/modules/_task").set,
-        microtask = require("npm:core-js@2.1.0/library/modules/_microtask"),
-        PROMISE = 'Promise',
-        TypeError = global.TypeError,
-        process = global.process,
-        $Promise = global[PROMISE],
-        isNode = classof(process) == 'process',
-        empty = function() {},
-        Internal,
-        GenericPromiseCapability,
-        Wrapper;
-    var testResolve = function(sub) {
-      var test = new $Promise(empty),
-          promise;
-      if (sub)
-        test.constructor = function(exec) {
-          exec(empty, empty);
-        };
-      (promise = $Promise.resolve(test))['catch'](empty);
-      return promise === test;
-    };
-    var USE_NATIVE = function() {
-      var works = false;
-      var SubPromise = function(x) {
-        var self = new $Promise(x);
-        setProto(self, SubPromise.prototype);
-        return self;
-      };
-      try {
-        works = $Promise && $Promise.resolve && testResolve();
-        setProto(SubPromise, $Promise);
-        SubPromise.prototype = require("npm:core-js@2.1.0/library/modules/_object-create")($Promise.prototype, {constructor: {value: SubPromise}});
-        if (!(SubPromise.resolve(5).then(empty) instanceof SubPromise)) {
-          works = false;
+    function compareArrays(array1, array2, dontConvert) {
+      var len = Math.min(array1.length, array2.length),
+          lengthDiff = Math.abs(array1.length - array2.length),
+          diffs = 0,
+          i;
+      for (i = 0; i < len; i++) {
+        if ((dontConvert && array1[i] !== array2[i]) || (!dontConvert && toInt(array1[i]) !== toInt(array2[i]))) {
+          diffs++;
         }
-        if (works && require("npm:core-js@2.1.0/library/modules/_descriptors")) {
-          var thenableThenGotten = false;
-          $Promise.resolve(require("npm:core-js@2.1.0/library/modules/_object-dp").f({}, 'then', {get: function() {
-              thenableThenGotten = true;
-            }}));
-          works = thenableThenGotten;
-        }
-      } catch (e) {
-        works = false;
       }
-      return !!works;
-    }();
-    var sameConstructor = function(a, b) {
-      return a === b || a === $Promise && b === Wrapper;
-    };
-    var isThenable = function(it) {
-      var then;
-      return isObject(it) && typeof(then = it.then) == 'function' ? then : false;
-    };
-    var newPromiseCapability = function(C) {
-      return sameConstructor($Promise, C) ? new PromiseCapability(C) : new GenericPromiseCapability(C);
-    };
-    var PromiseCapability = GenericPromiseCapability = function(C) {
-      var resolve,
-          reject;
-      this.promise = new C(function($$resolve, $$reject) {
-        if (resolve !== undefined || reject !== undefined)
-          throw TypeError('Bad Promise constructor');
-        resolve = $$resolve;
-        reject = $$reject;
-      });
-      this.resolve = aFunction(resolve);
-      this.reject = aFunction(reject);
-    };
-    var perform = function(exec) {
-      try {
-        exec();
-      } catch (e) {
-        return {error: e};
-      }
-    };
-    var notify = function(promise, isReject) {
-      if (promise._n)
-        return;
-      promise._n = true;
-      var chain = promise._c;
-      microtask(function() {
-        var value = promise._v,
-            ok = promise._s == 1,
-            i = 0;
-        var run = function(reaction) {
-          var handler = ok ? reaction.ok : reaction.fail,
-              resolve = reaction.resolve,
-              reject = reaction.reject,
-              result,
-              then;
-          try {
-            if (handler) {
-              if (!ok) {
-                if (promise._h == 2)
-                  onHandleUnhandled(promise);
-                promise._h = 1;
-              }
-              result = handler === true ? value : handler(value);
-              if (result === reaction.promise) {
-                reject(TypeError('Promise-chain cycle'));
-              } else if (then = isThenable(result)) {
-                then.call(result, resolve, reject);
-              } else
-                resolve(result);
-            } else
-              reject(value);
-          } catch (e) {
-            reject(e);
+      return diffs + lengthDiff;
+    }
+    function Locale() {}
+    var locales = {};
+    var globalLocale;
+    function normalizeLocale(key) {
+      return key ? key.toLowerCase().replace('_', '-') : key;
+    }
+    function chooseLocale(names) {
+      var i = 0,
+          j,
+          next,
+          locale,
+          split;
+      while (i < names.length) {
+        split = normalizeLocale(names[i]).split('-');
+        j = split.length;
+        next = normalizeLocale(names[i + 1]);
+        next = next ? next.split('-') : null;
+        while (j > 0) {
+          locale = loadLocale(split.slice(0, j).join('-'));
+          if (locale) {
+            return locale;
           }
-        };
-        while (chain.length > i)
-          run(chain[i++]);
-        promise._c = [];
-        promise._n = false;
-        if (isReject && !promise._h)
-          onUnhandled(promise);
-      });
-    };
-    var onUnhandled = function(promise) {
-      task.call(global, function() {
-        if (isUnhandled(promise)) {
-          var value = promise._v,
-              handler,
-              console;
-          if (isNode) {
-            process.emit('unhandledRejection', value, promise);
-          } else if (handler = global.onunhandledrejection) {
-            handler({
-              promise: promise,
-              reason: value
-            });
-          } else if ((console = global.console) && console.error) {
-            console.error('Unhandled promise rejection', value);
+          if (next && next.length >= j && compareArrays(split, next, true) >= j - 1) {
+            break;
           }
-          promise._h = 2;
+          j--;
         }
-        promise._a = undefined;
-      });
-    };
-    var isUnhandled = function(promise) {
-      var chain = promise._a || promise._c,
-          i = 0,
-          reaction;
-      if (promise._h == 1)
-        return false;
-      while (chain.length > i) {
-        reaction = chain[i++];
-        if (reaction.fail || !isUnhandled(reaction.promise))
-          return false;
+        i++;
       }
-      return true;
-    };
-    var onHandleUnhandled = function(promise) {
-      task.call(global, function() {
-        var handler;
-        if (isNode) {
-          process.emit('rejectionHandled', promise);
-        } else if (handler = global.onrejectionhandled) {
-          handler({
-            promise: promise,
-            reason: promise._v
-          });
-        }
-      });
-    };
-    var $reject = function(value) {
-      var promise = this;
-      if (promise._d)
-        return;
-      promise._d = true;
-      promise = promise._w || promise;
-      promise._v = value;
-      promise._s = 2;
-      if (!promise._a)
-        promise._a = promise._c.slice();
-      notify(promise, true);
-    };
-    var $resolve = function(value) {
-      var promise = this,
-          then;
-      if (promise._d)
-        return;
-      promise._d = true;
-      promise = promise._w || promise;
-      try {
-        if (promise === value)
-          throw TypeError("Promise can't be resolved itself");
-        if (then = isThenable(value)) {
-          microtask(function() {
-            var wrapper = {
-              _w: promise,
-              _d: false
-            };
-            try {
-              then.call(value, ctx($resolve, wrapper, 1), ctx($reject, wrapper, 1));
-            } catch (e) {
-              $reject.call(wrapper, e);
-            }
-          });
+      return null;
+    }
+    function loadLocale(name) {
+      var oldLocale = null;
+      if (!locales[name] && (typeof module !== 'undefined') && module && module.exports) {
+        try {
+          oldLocale = globalLocale._abbr;
+          require('./locale/' + name);
+          locale_locales__getSetGlobalLocale(oldLocale);
+        } catch (e) {}
+      }
+      return locales[name];
+    }
+    function locale_locales__getSetGlobalLocale(key, values) {
+      var data;
+      if (key) {
+        if (isUndefined(values)) {
+          data = locale_locales__getLocale(key);
         } else {
-          promise._v = value;
-          promise._s = 1;
-          notify(promise, false);
+          data = defineLocale(key, values);
         }
-      } catch (e) {
-        $reject.call({
-          _w: promise,
-          _d: false
-        }, e);
+        if (data) {
+          globalLocale = data;
+        }
       }
-    };
-    if (!USE_NATIVE) {
-      $Promise = function Promise(executor) {
-        anInstance(this, $Promise, PROMISE, '_h');
-        aFunction(executor);
-        Internal.call(this);
-        try {
-          executor(ctx($resolve, this, 1), ctx($reject, this, 1));
-        } catch (err) {
-          $reject.call(this, err);
-        }
-      };
-      Internal = function Promise(executor) {
-        this._c = [];
-        this._a = undefined;
-        this._s = 0;
-        this._d = false;
-        this._v = undefined;
-        this._h = 0;
-        this._n = false;
-      };
-      Internal.prototype = require("npm:core-js@2.1.0/library/modules/_redefine-all")($Promise.prototype, {
-        then: function then(onFulfilled, onRejected) {
-          var reaction = newPromiseCapability(speciesConstructor(this, $Promise));
-          reaction.ok = typeof onFulfilled == 'function' ? onFulfilled : true;
-          reaction.fail = typeof onRejected == 'function' && onRejected;
-          this._c.push(reaction);
-          if (this._a)
-            this._a.push(reaction);
-          if (this._s)
-            notify(this, false);
-          return reaction.promise;
-        },
-        'catch': function(onRejected) {
-          return this.then(undefined, onRejected);
-        }
-      });
-      PromiseCapability = function() {
-        var promise = new Internal;
-        this.promise = promise;
-        this.resolve = ctx($resolve, promise, 1);
-        this.reject = ctx($reject, promise, 1);
-      };
+      return globalLocale._abbr;
     }
-    $export($export.G + $export.W + $export.F * !USE_NATIVE, {Promise: $Promise});
-    require("npm:core-js@2.1.0/library/modules/_set-to-string-tag")($Promise, PROMISE);
-    require("npm:core-js@2.1.0/library/modules/_set-species")(PROMISE);
-    Wrapper = require("npm:core-js@2.1.0/library/modules/_core")[PROMISE];
-    $export($export.S + $export.F * !USE_NATIVE, PROMISE, {reject: function reject(r) {
-        var capability = newPromiseCapability(this),
-            $$reject = capability.reject;
-        $$reject(r);
-        return capability.promise;
-      }});
-    $export($export.S + $export.F * (LIBRARY || !USE_NATIVE || testResolve(true)), PROMISE, {resolve: function resolve(x) {
-        if (x instanceof $Promise && sameConstructor(x.constructor, this))
-          return x;
-        var capability = newPromiseCapability(this),
-            $$resolve = capability.resolve;
-        $$resolve(x);
-        return capability.promise;
-      }});
-    $export($export.S + $export.F * !(USE_NATIVE && require("npm:core-js@2.1.0/library/modules/_iter-detect")(function(iter) {
-      $Promise.all(iter)['catch'](empty);
-    })), PROMISE, {
-      all: function all(iterable) {
-        var C = this,
-            capability = newPromiseCapability(C),
-            resolve = capability.resolve,
-            reject = capability.reject;
-        var abrupt = perform(function() {
-          var values = from(iterable),
-              remaining = values.length,
-              results = Array(remaining);
-          var f = function(promise, index) {
-            var alreadyCalled = false;
-            C.resolve(promise).then(function(value) {
-              if (alreadyCalled)
-                return;
-              alreadyCalled = true;
-              results[index] = value;
-              --remaining || resolve(results);
-            }, reject);
-          };
-          if (remaining)
-            for (var i = 0,
-                l = values.length; l > i; i++)
-              f(values[i], i);
-          else
-            resolve(results);
-        });
-        if (abrupt)
-          reject(abrupt.error);
-        return capability.promise;
-      },
-      race: function race(iterable) {
-        var C = this,
-            capability = newPromiseCapability(C),
-            reject = capability.reject;
-        var abrupt = perform(function() {
-          forOf(iterable, false, function(promise) {
-            C.resolve(promise).then(capability.resolve, reject);
-          });
-        });
-        if (abrupt)
-          reject(abrupt.error);
-        return capability.promise;
+    function defineLocale(name, values) {
+      if (values !== null) {
+        values.abbr = name;
+        locales[name] = locales[name] || new Locale();
+        locales[name].set(values);
+        locale_locales__getSetGlobalLocale(name);
+        return locales[name];
+      } else {
+        delete locales[name];
+        return null;
       }
-    });
-  })(require("github:jspm/nodelibs-process@0.1.2"));
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.reflect.apply", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      _apply = Function.apply;
-  $export($export.S, 'Reflect', {apply: function apply(target, thisArgument, argumentsList) {
-      return _apply.call(target, thisArgument, argumentsList);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.reflect.construct", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_object-create", "npm:core-js@2.1.0/library/modules/_a-function", "npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_bind", "npm:core-js@2.1.0/library/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      create = require("npm:core-js@2.1.0/library/modules/_object-create"),
-      aFunction = require("npm:core-js@2.1.0/library/modules/_a-function"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      bind = require("npm:core-js@2.1.0/library/modules/_bind");
-  $export($export.S + $export.F * require("npm:core-js@2.1.0/library/modules/_fails")(function() {
-    function F() {}
-    return !(Reflect.construct(function() {}, [], F) instanceof F);
-  }), 'Reflect', {construct: function construct(Target, args) {
-      aFunction(Target);
-      var newTarget = arguments.length < 3 ? Target : aFunction(arguments[2]);
-      if (Target == newTarget) {
-        if (args != undefined)
-          switch (anObject(args).length) {
-            case 0:
-              return new Target;
-            case 1:
-              return new Target(args[0]);
-            case 2:
-              return new Target(args[0], args[1]);
-            case 3:
-              return new Target(args[0], args[1], args[2]);
-            case 4:
-              return new Target(args[0], args[1], args[2], args[3]);
+    }
+    function locale_locales__getLocale(key) {
+      var locale;
+      if (key && key._locale && key._locale._abbr) {
+        key = key._locale._abbr;
+      }
+      if (!key) {
+        return globalLocale;
+      }
+      if (!isArray(key)) {
+        locale = loadLocale(key);
+        if (locale) {
+          return locale;
+        }
+        key = [key];
+      }
+      return chooseLocale(key);
+    }
+    var aliases = {};
+    function addUnitAlias(unit, shorthand) {
+      var lowerCase = unit.toLowerCase();
+      aliases[lowerCase] = aliases[lowerCase + 's'] = aliases[shorthand] = unit;
+    }
+    function normalizeUnits(units) {
+      return typeof units === 'string' ? aliases[units] || aliases[units.toLowerCase()] : undefined;
+    }
+    function normalizeObjectUnits(inputObject) {
+      var normalizedInput = {},
+          normalizedProp,
+          prop;
+      for (prop in inputObject) {
+        if (hasOwnProp(inputObject, prop)) {
+          normalizedProp = normalizeUnits(prop);
+          if (normalizedProp) {
+            normalizedInput[normalizedProp] = inputObject[prop];
           }
-        var $args = [null];
-        $args.push.apply($args, args);
-        return new (bind.apply(Target, $args));
+        }
       }
-      var proto = newTarget.prototype,
-          instance = create(isObject(proto) ? proto : Object.prototype),
-          result = Function.apply.call(Target, instance, args);
-      return isObject(result) ? result : instance;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.reflect.define-property", ["npm:core-js@2.1.0/library/modules/_object-dp", "npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_to-primitive", "npm:core-js@2.1.0/library/modules/_fails"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var dP = require("npm:core-js@2.1.0/library/modules/_object-dp"),
-      $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      toPrimitive = require("npm:core-js@2.1.0/library/modules/_to-primitive");
-  $export($export.S + $export.F * require("npm:core-js@2.1.0/library/modules/_fails")(function() {
-    Reflect.defineProperty(dP.f({}, 1, {value: 1}), 1, {value: 2});
-  }), 'Reflect', {defineProperty: function defineProperty(target, propertyKey, attributes) {
-      anObject(target);
-      propertyKey = toPrimitive(propertyKey, true);
-      anObject(attributes);
-      try {
-        dP.f(target, propertyKey, attributes);
-        return true;
-      } catch (e) {
-        return false;
+      return normalizedInput;
+    }
+    function isFunction(input) {
+      return input instanceof Function || Object.prototype.toString.call(input) === '[object Function]';
+    }
+    function makeGetSet(unit, keepTime) {
+      return function(value) {
+        if (value != null) {
+          get_set__set(this, unit, value);
+          utils_hooks__hooks.updateOffset(this, keepTime);
+          return this;
+        } else {
+          return get_set__get(this, unit);
+        }
+      };
+    }
+    function get_set__get(mom, unit) {
+      return mom.isValid() ? mom._d['get' + (mom._isUTC ? 'UTC' : '') + unit]() : NaN;
+    }
+    function get_set__set(mom, unit, value) {
+      if (mom.isValid()) {
+        mom._d['set' + (mom._isUTC ? 'UTC' : '') + unit](value);
       }
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.reflect.delete-property", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_object-gopd", "npm:core-js@2.1.0/library/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      gOPD = require("npm:core-js@2.1.0/library/modules/_object-gopd").f,
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object");
-  $export($export.S, 'Reflect', {deleteProperty: function deleteProperty(target, propertyKey) {
-      var desc = gOPD(anObject(target), propertyKey);
-      return desc && !desc.configurable ? false : delete target[propertyKey];
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.reflect.enumerate", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_iter-create"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object");
-  var Enumerate = function(iterated) {
-    this._t = anObject(iterated);
-    this._i = 0;
-    var keys = this._k = [],
-        key;
-    for (key in iterated)
-      keys.push(key);
-  };
-  require("npm:core-js@2.1.0/library/modules/_iter-create")(Enumerate, 'Object', function() {
-    var that = this,
-        keys = that._k,
-        key;
-    do {
-      if (that._i >= keys.length)
-        return {
-          value: undefined,
-          done: true
+    }
+    function getSet(units, value) {
+      var unit;
+      if (typeof units === 'object') {
+        for (unit in units) {
+          this.set(unit, units[unit]);
+        }
+      } else {
+        units = normalizeUnits(units);
+        if (isFunction(this[units])) {
+          return this[units](value);
+        }
+      }
+      return this;
+    }
+    function zeroFill(number, targetLength, forceSign) {
+      var absNumber = '' + Math.abs(number),
+          zerosToFill = targetLength - absNumber.length,
+          sign = number >= 0;
+      return (sign ? (forceSign ? '+' : '') : '-') + Math.pow(10, Math.max(0, zerosToFill)).toString().substr(1) + absNumber;
+    }
+    var formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
+    var localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g;
+    var formatFunctions = {};
+    var formatTokenFunctions = {};
+    function addFormatToken(token, padded, ordinal, callback) {
+      var func = callback;
+      if (typeof callback === 'string') {
+        func = function() {
+          return this[callback]();
         };
-    } while (!((key = keys[that._i++]) in that._t));
-    return {
-      value: key,
-      done: false
-    };
-  });
-  $export($export.S, 'Reflect', {enumerate: function enumerate(target) {
-      return new Enumerate(target);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.reflect.get", ["npm:core-js@2.1.0/library/modules/_object-gopd", "npm:core-js@2.1.0/library/modules/_object-gpo", "npm:core-js@2.1.0/library/modules/_has", "npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var gOPD = require("npm:core-js@2.1.0/library/modules/_object-gopd"),
-      getPrototypeOf = require("npm:core-js@2.1.0/library/modules/_object-gpo"),
-      has = require("npm:core-js@2.1.0/library/modules/_has"),
-      $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object");
-  function get(target, propertyKey) {
-    var receiver = arguments.length < 3 ? target : arguments[2],
-        desc,
-        proto;
-    if (anObject(target) === receiver)
-      return target[propertyKey];
-    if (desc = gOPD.f(target, propertyKey))
-      return has(desc, 'value') ? desc.value : desc.get !== undefined ? desc.get.call(receiver) : undefined;
-    if (isObject(proto = getPrototypeOf(target)))
-      return get(proto, propertyKey, receiver);
-  }
-  $export($export.S, 'Reflect', {get: get});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.reflect.get-own-property-descriptor", ["npm:core-js@2.1.0/library/modules/_object-gopd", "npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var gOPD = require("npm:core-js@2.1.0/library/modules/_object-gopd"),
-      $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object");
-  $export($export.S, 'Reflect', {getOwnPropertyDescriptor: function getOwnPropertyDescriptor(target, propertyKey) {
-      return gOPD.f(anObject(target), propertyKey);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.reflect.get-prototype-of", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_object-gpo", "npm:core-js@2.1.0/library/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      getProto = require("npm:core-js@2.1.0/library/modules/_object-gpo"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object");
-  $export($export.S, 'Reflect', {getPrototypeOf: function getPrototypeOf(target) {
-      return getProto(anObject(target));
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.reflect.has", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Reflect', {has: function has(target, propertyKey) {
-      return propertyKey in target;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.reflect.is-extensible", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      $isExtensible = Object.isExtensible;
-  $export($export.S, 'Reflect', {isExtensible: function isExtensible(target) {
-      anObject(target);
-      return $isExtensible ? $isExtensible(target) : true;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.reflect.own-keys", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_own-keys"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Reflect', {ownKeys: require("npm:core-js@2.1.0/library/modules/_own-keys")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.reflect.prevent-extensions", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      $preventExtensions = Object.preventExtensions;
-  $export($export.S, 'Reflect', {preventExtensions: function preventExtensions(target) {
-      anObject(target);
-      try {
-        if ($preventExtensions)
-          $preventExtensions(target);
-        return true;
-      } catch (e) {
-        return false;
       }
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.reflect.set", ["npm:core-js@2.1.0/library/modules/_object-dp", "npm:core-js@2.1.0/library/modules/_object-gopd", "npm:core-js@2.1.0/library/modules/_object-gpo", "npm:core-js@2.1.0/library/modules/_has", "npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_property-desc", "npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_is-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var dP = require("npm:core-js@2.1.0/library/modules/_object-dp"),
-      gOPD = require("npm:core-js@2.1.0/library/modules/_object-gopd"),
-      getPrototypeOf = require("npm:core-js@2.1.0/library/modules/_object-gpo"),
-      has = require("npm:core-js@2.1.0/library/modules/_has"),
-      $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      createDesc = require("npm:core-js@2.1.0/library/modules/_property-desc"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      isObject = require("npm:core-js@2.1.0/library/modules/_is-object");
-  function set(target, propertyKey, V) {
-    var receiver = arguments.length < 4 ? target : arguments[3],
-        ownDesc = gOPD.f(anObject(target), propertyKey),
-        existingDescriptor,
-        proto;
-    if (!ownDesc) {
-      if (isObject(proto = getPrototypeOf(target))) {
-        return set(proto, propertyKey, V, receiver);
+      if (token) {
+        formatTokenFunctions[token] = func;
       }
-      ownDesc = createDesc(0);
-    }
-    if (has(ownDesc, 'value')) {
-      if (ownDesc.writable === false || !isObject(receiver))
-        return false;
-      existingDescriptor = gOPD.f(receiver, propertyKey) || createDesc(0);
-      existingDescriptor.value = V;
-      dP.f(receiver, propertyKey, existingDescriptor);
-      return true;
-    }
-    return ownDesc.set === undefined ? false : (ownDesc.set.call(receiver, V), true);
-  }
-  $export($export.S, 'Reflect', {set: set});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.reflect.set-prototype-of", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_set-proto"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      setProto = require("npm:core-js@2.1.0/library/modules/_set-proto");
-  if (setProto)
-    $export($export.S, 'Reflect', {setPrototypeOf: function setPrototypeOf(target, proto) {
-        setProto.check(target, proto);
-        try {
-          setProto.set(target, proto);
-          return true;
-        } catch (e) {
-          return false;
-        }
-      }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.regexp.constructor", ["npm:core-js@2.1.0/library/modules/_set-species"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/library/modules/_set-species")('RegExp');
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.regexp.flags", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  "format cjs";
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.regexp.match", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  "format cjs";
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.regexp.replace", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  "format cjs";
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.regexp.search", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  "format cjs";
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.regexp.split", [], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  "format cjs";
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_string-html", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_fails", "npm:core-js@2.1.0/library/modules/_defined"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      fails = require("npm:core-js@2.1.0/library/modules/_fails"),
-      defined = require("npm:core-js@2.1.0/library/modules/_defined"),
-      quot = /"/g;
-  var createHTML = function(string, tag, attribute, value) {
-    var S = String(defined(string)),
-        p1 = '<' + tag;
-    if (attribute !== '')
-      p1 += ' ' + attribute + '="' + String(value).replace(quot, '&quot;') + '"';
-    return p1 + '>' + S + '</' + tag + '>';
-  };
-  module.exports = function(NAME, exec) {
-    var O = {};
-    O[NAME] = exec(createHTML);
-    $export($export.P + $export.F * fails(function() {
-      var test = ''[NAME]('"');
-      return test !== test.toLowerCase() || test.split('"').length > 3;
-    }), 'String', O);
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.anchor", ["npm:core-js@2.1.0/library/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/library/modules/_string-html")('anchor', function(createHTML) {
-    return function anchor(name) {
-      return createHTML(this, 'a', 'name', name);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.big", ["npm:core-js@2.1.0/library/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/library/modules/_string-html")('big', function(createHTML) {
-    return function big() {
-      return createHTML(this, 'big', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.blink", ["npm:core-js@2.1.0/library/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/library/modules/_string-html")('blink', function(createHTML) {
-    return function blink() {
-      return createHTML(this, 'blink', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.bold", ["npm:core-js@2.1.0/library/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/library/modules/_string-html")('bold', function(createHTML) {
-    return function bold() {
-      return createHTML(this, 'b', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_string-at", ["npm:core-js@2.1.0/library/modules/_to-integer", "npm:core-js@2.1.0/library/modules/_defined"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var toInteger = require("npm:core-js@2.1.0/library/modules/_to-integer"),
-      defined = require("npm:core-js@2.1.0/library/modules/_defined");
-  module.exports = function(TO_STRING) {
-    return function(that, pos) {
-      var s = String(defined(that)),
-          i = toInteger(pos),
-          l = s.length,
-          a,
-          b;
-      if (i < 0 || i >= l)
-        return TO_STRING ? '' : undefined;
-      a = s.charCodeAt(i);
-      return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff ? TO_STRING ? s.charAt(i) : a : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
-    };
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.code-point-at", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_string-at"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $at = require("npm:core-js@2.1.0/library/modules/_string-at")(false);
-  $export($export.P, 'String', {codePointAt: function codePointAt(pos) {
-      return $at(this, pos);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_is-regexp", ["npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_cof", "npm:core-js@2.1.0/library/modules/_wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      cof = require("npm:core-js@2.1.0/library/modules/_cof"),
-      MATCH = require("npm:core-js@2.1.0/library/modules/_wks")('match');
-  module.exports = function(it) {
-    var isRegExp;
-    return isObject(it) && ((isRegExp = it[MATCH]) !== undefined ? !!isRegExp : cof(it) == 'RegExp');
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_string-context", ["npm:core-js@2.1.0/library/modules/_is-regexp", "npm:core-js@2.1.0/library/modules/_defined"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var isRegExp = require("npm:core-js@2.1.0/library/modules/_is-regexp"),
-      defined = require("npm:core-js@2.1.0/library/modules/_defined");
-  module.exports = function(that, searchString, NAME) {
-    if (isRegExp(searchString))
-      throw TypeError('String#' + NAME + " doesn't accept regex!");
-    return String(defined(that));
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_fails-is-regexp", ["npm:core-js@2.1.0/library/modules/_wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var MATCH = require("npm:core-js@2.1.0/library/modules/_wks")('match');
-  module.exports = function(KEY) {
-    var re = /./;
-    try {
-      '/./'[KEY](re);
-    } catch (e) {
-      try {
-        re[MATCH] = false;
-        return !'/./'[KEY](re);
-      } catch (f) {}
-    }
-    return true;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.ends-with", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_to-length", "npm:core-js@2.1.0/library/modules/_string-context", "npm:core-js@2.1.0/library/modules/_fails-is-regexp"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      toLength = require("npm:core-js@2.1.0/library/modules/_to-length"),
-      context = require("npm:core-js@2.1.0/library/modules/_string-context"),
-      ENDS_WITH = 'endsWith',
-      $endsWith = ''[ENDS_WITH];
-  $export($export.P + $export.F * require("npm:core-js@2.1.0/library/modules/_fails-is-regexp")(ENDS_WITH), 'String', {endsWith: function endsWith(searchString) {
-      var that = context(this, searchString, ENDS_WITH),
-          endPosition = arguments.length > 1 ? arguments[1] : undefined,
-          len = toLength(that.length),
-          end = endPosition === undefined ? len : Math.min(toLength(endPosition), len),
-          search = String(searchString);
-      return $endsWith ? $endsWith.call(that, search, end) : that.slice(end - search.length, end) === search;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.fixed", ["npm:core-js@2.1.0/library/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/library/modules/_string-html")('fixed', function(createHTML) {
-    return function fixed() {
-      return createHTML(this, 'tt', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.fontcolor", ["npm:core-js@2.1.0/library/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/library/modules/_string-html")('fontcolor', function(createHTML) {
-    return function fontcolor(color) {
-      return createHTML(this, 'font', 'color', color);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.fontsize", ["npm:core-js@2.1.0/library/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/library/modules/_string-html")('fontsize', function(createHTML) {
-    return function fontsize(size) {
-      return createHTML(this, 'font', 'size', size);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.from-code-point", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_to-index"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      toIndex = require("npm:core-js@2.1.0/library/modules/_to-index"),
-      fromCharCode = String.fromCharCode,
-      $fromCodePoint = String.fromCodePoint;
-  $export($export.S + $export.F * (!!$fromCodePoint && $fromCodePoint.length != 1), 'String', {fromCodePoint: function fromCodePoint(x) {
-      var res = [],
-          aLen = arguments.length,
-          i = 0,
-          code;
-      while (aLen > i) {
-        code = +arguments[i++];
-        if (toIndex(code, 0x10ffff) !== code)
-          throw RangeError(code + ' is not a valid code point');
-        res.push(code < 0x10000 ? fromCharCode(code) : fromCharCode(((code -= 0x10000) >> 10) + 0xd800, code % 0x400 + 0xdc00));
+      if (padded) {
+        formatTokenFunctions[padded[0]] = function() {
+          return zeroFill(func.apply(this, arguments), padded[1], padded[2]);
+        };
       }
-      return res.join('');
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.includes", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_string-context", "npm:core-js@2.1.0/library/modules/_fails-is-regexp"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      context = require("npm:core-js@2.1.0/library/modules/_string-context"),
-      INCLUDES = 'includes';
-  $export($export.P + $export.F * require("npm:core-js@2.1.0/library/modules/_fails-is-regexp")(INCLUDES), 'String', {includes: function includes(searchString) {
-      return !!~context(this, searchString, INCLUDES).indexOf(searchString, arguments.length > 1 ? arguments[1] : undefined);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.italics", ["npm:core-js@2.1.0/library/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/library/modules/_string-html")('italics', function(createHTML) {
-    return function italics() {
-      return createHTML(this, 'i', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.iterator", ["npm:core-js@2.1.0/library/modules/_string-at", "npm:core-js@2.1.0/library/modules/_iter-define"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $at = require("npm:core-js@2.1.0/library/modules/_string-at")(true);
-  require("npm:core-js@2.1.0/library/modules/_iter-define")(String, 'String', function(iterated) {
-    this._t = String(iterated);
-    this._i = 0;
-  }, function() {
-    var O = this._t,
-        index = this._i,
-        point;
-    if (index >= O.length)
-      return {
-        value: undefined,
-        done: true
-      };
-    point = $at(O, index);
-    this._i += point.length;
-    return {
-      value: point,
-      done: false
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.link", ["npm:core-js@2.1.0/library/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/library/modules/_string-html")('link', function(createHTML) {
-    return function link(url) {
-      return createHTML(this, 'a', 'href', url);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.raw", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_to-iobject", "npm:core-js@2.1.0/library/modules/_to-length"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      toIObject = require("npm:core-js@2.1.0/library/modules/_to-iobject"),
-      toLength = require("npm:core-js@2.1.0/library/modules/_to-length");
-  $export($export.S, 'String', {raw: function raw(callSite) {
-      var tpl = toIObject(callSite.raw),
-          len = toLength(tpl.length),
-          aLen = arguments.length,
-          res = [],
-          i = 0;
-      while (len > i) {
-        res.push(String(tpl[i++]));
-        if (i < aLen)
-          res.push(String(arguments[i]));
-      }
-      return res.join('');
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.repeat", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_string-repeat"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.P, 'String', {repeat: require("npm:core-js@2.1.0/library/modules/_string-repeat")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.small", ["npm:core-js@2.1.0/library/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/library/modules/_string-html")('small', function(createHTML) {
-    return function small() {
-      return createHTML(this, 'small', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.starts-with", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_to-length", "npm:core-js@2.1.0/library/modules/_string-context", "npm:core-js@2.1.0/library/modules/_fails-is-regexp"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      toLength = require("npm:core-js@2.1.0/library/modules/_to-length"),
-      context = require("npm:core-js@2.1.0/library/modules/_string-context"),
-      STARTS_WITH = 'startsWith',
-      $startsWith = ''[STARTS_WITH];
-  $export($export.P + $export.F * require("npm:core-js@2.1.0/library/modules/_fails-is-regexp")(STARTS_WITH), 'String', {startsWith: function startsWith(searchString) {
-      var that = context(this, searchString, STARTS_WITH),
-          index = toLength(Math.min(arguments.length > 1 ? arguments[1] : undefined, that.length)),
-          search = String(searchString);
-      return $startsWith ? $startsWith.call(that, search, index) : that.slice(index, index + search.length) === search;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.strike", ["npm:core-js@2.1.0/library/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/library/modules/_string-html")('strike', function(createHTML) {
-    return function strike() {
-      return createHTML(this, 'strike', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.sub", ["npm:core-js@2.1.0/library/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/library/modules/_string-html")('sub', function(createHTML) {
-    return function sub() {
-      return createHTML(this, 'sub', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.string.sup", ["npm:core-js@2.1.0/library/modules/_string-html"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/library/modules/_string-html")('sup', function(createHTML) {
-    return function sup() {
-      return createHTML(this, 'sup', '', '');
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_enum-keys", ["npm:core-js@2.1.0/library/modules/_object-keys", "npm:core-js@2.1.0/library/modules/_object-gops", "npm:core-js@2.1.0/library/modules/_object-pie"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var getKeys = require("npm:core-js@2.1.0/library/modules/_object-keys"),
-      gOPS = require("npm:core-js@2.1.0/library/modules/_object-gops"),
-      pIE = require("npm:core-js@2.1.0/library/modules/_object-pie");
-  module.exports = function(it) {
-    var result = getKeys(it),
-        getSymbols = gOPS.f;
-    if (getSymbols) {
-      var symbols = getSymbols(it),
-          isEnum = pIE.f,
-          i = 0,
-          key;
-      while (symbols.length > i)
-        if (isEnum.call(it, key = symbols[i++]))
-          result.push(key);
-    }
-    return result;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.symbol", ["npm:core-js@2.1.0/library/modules/_global", "npm:core-js@2.1.0/library/modules/_core", "npm:core-js@2.1.0/library/modules/_has", "npm:core-js@2.1.0/library/modules/_descriptors", "npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_redefine", "npm:core-js@2.1.0/library/modules/_meta", "npm:core-js@2.1.0/library/modules/_fails", "npm:core-js@2.1.0/library/modules/_shared", "npm:core-js@2.1.0/library/modules/_set-to-string-tag", "npm:core-js@2.1.0/library/modules/_uid", "npm:core-js@2.1.0/library/modules/_wks", "npm:core-js@2.1.0/library/modules/_keyof", "npm:core-js@2.1.0/library/modules/_enum-keys", "npm:core-js@2.1.0/library/modules/_is-array", "npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_to-iobject", "npm:core-js@2.1.0/library/modules/_to-primitive", "npm:core-js@2.1.0/library/modules/_property-desc", "npm:core-js@2.1.0/library/modules/_object-create", "npm:core-js@2.1.0/library/modules/_object-gopn-ext", "npm:core-js@2.1.0/library/modules/_object-gopd", "npm:core-js@2.1.0/library/modules/_object-dp", "npm:core-js@2.1.0/library/modules/_object-gopn", "npm:core-js@2.1.0/library/modules/_object-pie", "npm:core-js@2.1.0/library/modules/_object-gops", "npm:core-js@2.1.0/library/modules/_library"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var global = require("npm:core-js@2.1.0/library/modules/_global"),
-      core = require("npm:core-js@2.1.0/library/modules/_core"),
-      has = require("npm:core-js@2.1.0/library/modules/_has"),
-      DESCRIPTORS = require("npm:core-js@2.1.0/library/modules/_descriptors"),
-      $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      redefine = require("npm:core-js@2.1.0/library/modules/_redefine"),
-      META = require("npm:core-js@2.1.0/library/modules/_meta").KEY,
-      $fails = require("npm:core-js@2.1.0/library/modules/_fails"),
-      shared = require("npm:core-js@2.1.0/library/modules/_shared"),
-      setToStringTag = require("npm:core-js@2.1.0/library/modules/_set-to-string-tag"),
-      uid = require("npm:core-js@2.1.0/library/modules/_uid"),
-      wks = require("npm:core-js@2.1.0/library/modules/_wks"),
-      keyOf = require("npm:core-js@2.1.0/library/modules/_keyof"),
-      enumKeys = require("npm:core-js@2.1.0/library/modules/_enum-keys"),
-      isArray = require("npm:core-js@2.1.0/library/modules/_is-array"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      toIObject = require("npm:core-js@2.1.0/library/modules/_to-iobject"),
-      toPrimitive = require("npm:core-js@2.1.0/library/modules/_to-primitive"),
-      createDesc = require("npm:core-js@2.1.0/library/modules/_property-desc"),
-      _create = require("npm:core-js@2.1.0/library/modules/_object-create"),
-      gOPNExt = require("npm:core-js@2.1.0/library/modules/_object-gopn-ext"),
-      $GOPD = require("npm:core-js@2.1.0/library/modules/_object-gopd"),
-      $DP = require("npm:core-js@2.1.0/library/modules/_object-dp"),
-      gOPD = $GOPD.f,
-      dP = $DP.f,
-      gOPN = gOPNExt.f,
-      $Symbol = global.Symbol,
-      $JSON = global.JSON,
-      _stringify = $JSON && $JSON.stringify,
-      setter = false,
-      HIDDEN = wks('_hidden'),
-      isEnum = {}.propertyIsEnumerable,
-      SymbolRegistry = shared('symbol-registry'),
-      AllSymbols = shared('symbols'),
-      ObjectProto = Object.prototype,
-      USE_NATIVE = typeof $Symbol == 'function';
-  var setSymbolDesc = DESCRIPTORS && $fails(function() {
-    return _create(dP({}, 'a', {get: function() {
-        return dP(this, 'a', {value: 7}).a;
-      }})).a != 7;
-  }) ? function(it, key, D) {
-    var protoDesc = gOPD(ObjectProto, key);
-    if (protoDesc)
-      delete ObjectProto[key];
-    dP(it, key, D);
-    if (protoDesc && it !== ObjectProto)
-      dP(ObjectProto, key, protoDesc);
-  } : dP;
-  var wrap = function(tag) {
-    var sym = AllSymbols[tag] = _create($Symbol.prototype);
-    sym._k = tag;
-    DESCRIPTORS && setter && setSymbolDesc(ObjectProto, tag, {
-      configurable: true,
-      set: function(value) {
-        if (has(this, HIDDEN) && has(this[HIDDEN], tag))
-          this[HIDDEN][tag] = false;
-        setSymbolDesc(this, tag, createDesc(1, value));
-      }
-    });
-    return sym;
-  };
-  var isSymbol = function(it) {
-    return typeof it == 'symbol';
-  };
-  var $defineProperty = function defineProperty(it, key, D) {
-    anObject(it);
-    key = toPrimitive(key, true);
-    anObject(D);
-    if (has(AllSymbols, key)) {
-      if (!D.enumerable) {
-        if (!has(it, HIDDEN))
-          dP(it, HIDDEN, createDesc(1, {}));
-        it[HIDDEN][key] = true;
-      } else {
-        if (has(it, HIDDEN) && it[HIDDEN][key])
-          it[HIDDEN][key] = false;
-        D = _create(D, {enumerable: createDesc(0, false)});
-      }
-      return setSymbolDesc(it, key, D);
-    }
-    return dP(it, key, D);
-  };
-  var $defineProperties = function defineProperties(it, P) {
-    anObject(it);
-    var keys = enumKeys(P = toIObject(P)),
-        i = 0,
-        l = keys.length,
-        key;
-    while (l > i)
-      $defineProperty(it, key = keys[i++], P[key]);
-    return it;
-  };
-  var $create = function create(it, P) {
-    return P === undefined ? _create(it) : $defineProperties(_create(it), P);
-  };
-  var $propertyIsEnumerable = function propertyIsEnumerable(key) {
-    var E = isEnum.call(this, key = toPrimitive(key, true));
-    return E || !has(this, key) || !has(AllSymbols, key) || has(this, HIDDEN) && this[HIDDEN][key] ? E : true;
-  };
-  var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(it, key) {
-    var D = gOPD(it = toIObject(it), key = toPrimitive(key, true));
-    if (D && has(AllSymbols, key) && !(has(it, HIDDEN) && it[HIDDEN][key]))
-      D.enumerable = true;
-    return D;
-  };
-  var $getOwnPropertyNames = function getOwnPropertyNames(it) {
-    var names = gOPN(toIObject(it)),
-        result = [],
-        i = 0,
-        key;
-    while (names.length > i)
-      if (!has(AllSymbols, key = names[i++]) && key != HIDDEN && key != META)
-        result.push(key);
-    return result;
-  };
-  var $getOwnPropertySymbols = function getOwnPropertySymbols(it) {
-    var names = gOPN(toIObject(it)),
-        result = [],
-        i = 0,
-        key;
-    while (names.length > i)
-      if (has(AllSymbols, key = names[i++]))
-        result.push(AllSymbols[key]);
-    return result;
-  };
-  var $stringify = function stringify(it) {
-    if (it === undefined || isSymbol(it))
-      return;
-    var args = [it],
-        i = 1,
-        replacer,
-        $replacer;
-    while (arguments.length > i)
-      args.push(arguments[i++]);
-    replacer = args[1];
-    if (typeof replacer == 'function')
-      $replacer = replacer;
-    if ($replacer || !isArray(replacer))
-      replacer = function(key, value) {
-        if ($replacer)
-          value = $replacer.call(this, key, value);
-        if (!isSymbol(value))
-          return value;
-      };
-    args[1] = replacer;
-    return _stringify.apply($JSON, args);
-  };
-  var BUGGY_JSON = $fails(function() {
-    var S = $Symbol();
-    return _stringify([S]) != '[null]' || _stringify({a: S}) != '{}' || _stringify(Object(S)) != '{}';
-  });
-  if (!USE_NATIVE) {
-    $Symbol = function Symbol() {
-      if (isSymbol(this))
-        throw TypeError('Symbol is not a constructor');
-      return wrap(uid(arguments.length > 0 ? arguments[0] : undefined));
-    };
-    redefine($Symbol.prototype, 'toString', function toString() {
-      return this._k;
-    });
-    isSymbol = function(it) {
-      return it instanceof $Symbol;
-    };
-    $GOPD.f = $getOwnPropertyDescriptor;
-    $DP.f = $defineProperty;
-    require("npm:core-js@2.1.0/library/modules/_object-gopn").f = gOPNExt.f = $getOwnPropertyNames;
-    require("npm:core-js@2.1.0/library/modules/_object-pie").f = $propertyIsEnumerable;
-    require("npm:core-js@2.1.0/library/modules/_object-gops").f = $getOwnPropertySymbols;
-    if (DESCRIPTORS && !require("npm:core-js@2.1.0/library/modules/_library")) {
-      redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
-    }
-  }
-  $export($export.G + $export.W + $export.F * !USE_NATIVE, {Symbol: $Symbol});
-  for (var symbols = ('hasInstance,isConcatSpreadable,iterator,match,replace,search,species,split,toPrimitive,toStringTag,unscopables').split(','),
-      i = 0; symbols.length > i; ) {
-    var key = symbols[i++],
-        Wrapper = core.Symbol,
-        sym = wks(key);
-    if (!(key in Wrapper))
-      dP(Wrapper, key, {value: USE_NATIVE ? sym : wrap(sym)});
-  }
-  ;
-  setter = true;
-  $export($export.S + $export.F * !USE_NATIVE, 'Symbol', {
-    'for': function(key) {
-      return has(SymbolRegistry, key += '') ? SymbolRegistry[key] : SymbolRegistry[key] = $Symbol(key);
-    },
-    keyFor: function keyFor(key) {
-      return keyOf(SymbolRegistry, key);
-    },
-    useSetter: function() {
-      setter = true;
-    },
-    useSimple: function() {
-      setter = false;
-    }
-  });
-  $export($export.S + $export.F * !USE_NATIVE, 'Object', {
-    create: $create,
-    defineProperty: $defineProperty,
-    defineProperties: $defineProperties,
-    getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
-    getOwnPropertyNames: $getOwnPropertyNames,
-    getOwnPropertySymbols: $getOwnPropertySymbols
-  });
-  $JSON && $export($export.S + $export.F * (!USE_NATIVE || BUGGY_JSON), 'JSON', {stringify: $stringify});
-  setToStringTag($Symbol, 'Symbol');
-  setToStringTag(Math, 'Math', true);
-  setToStringTag(global.JSON, 'JSON', true);
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_typed", ["npm:core-js@2.1.0/library/modules/_global", "npm:core-js@2.1.0/library/modules/_hide", "npm:core-js@2.1.0/library/modules/_uid"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var global = require("npm:core-js@2.1.0/library/modules/_global"),
-      hide = require("npm:core-js@2.1.0/library/modules/_hide"),
-      uid = require("npm:core-js@2.1.0/library/modules/_uid"),
-      TYPED = uid('typed_array'),
-      VIEW = uid('view'),
-      ABV = !!(global.ArrayBuffer && global.DataView),
-      CONSTR = ABV,
-      i = 0,
-      l = 9,
-      Typed;
-  var TypedArrayConstructors = ('Int8Array,Uint8Array,Uint8ClampedArray,Int16Array,Uint16Array,Int32Array,Uint32Array,Float32Array,Float64Array').split(',');
-  while (i < l) {
-    if (Typed = global[TypedArrayConstructors[i++]]) {
-      hide(Typed.prototype, TYPED, true);
-      hide(Typed.prototype, VIEW, true);
-    } else
-      CONSTR = false;
-  }
-  module.exports = {
-    ABV: ABV,
-    CONSTR: CONSTR,
-    TYPED: TYPED,
-    VIEW: VIEW
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_typed-buffer", ["npm:core-js@2.1.0/library/modules/_global", "npm:core-js@2.1.0/library/modules/_descriptors", "npm:core-js@2.1.0/library/modules/_library", "npm:core-js@2.1.0/library/modules/_typed", "npm:core-js@2.1.0/library/modules/_hide", "npm:core-js@2.1.0/library/modules/_redefine-all", "npm:core-js@2.1.0/library/modules/_fails", "npm:core-js@2.1.0/library/modules/_an-instance", "npm:core-js@2.1.0/library/modules/_to-integer", "npm:core-js@2.1.0/library/modules/_to-length", "npm:core-js@2.1.0/library/modules/_object-gopn", "npm:core-js@2.1.0/library/modules/_object-dp", "npm:core-js@2.1.0/library/modules/_array-fill", "npm:core-js@2.1.0/library/modules/_set-to-string-tag"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var global = require("npm:core-js@2.1.0/library/modules/_global"),
-      DESCRIPTORS = require("npm:core-js@2.1.0/library/modules/_descriptors"),
-      LIBRARY = require("npm:core-js@2.1.0/library/modules/_library"),
-      $typed = require("npm:core-js@2.1.0/library/modules/_typed"),
-      hide = require("npm:core-js@2.1.0/library/modules/_hide"),
-      redefineAll = require("npm:core-js@2.1.0/library/modules/_redefine-all"),
-      fails = require("npm:core-js@2.1.0/library/modules/_fails"),
-      anInstance = require("npm:core-js@2.1.0/library/modules/_an-instance"),
-      toInteger = require("npm:core-js@2.1.0/library/modules/_to-integer"),
-      toLength = require("npm:core-js@2.1.0/library/modules/_to-length"),
-      gOPN = require("npm:core-js@2.1.0/library/modules/_object-gopn").f,
-      dP = require("npm:core-js@2.1.0/library/modules/_object-dp").f,
-      arrayFill = require("npm:core-js@2.1.0/library/modules/_array-fill"),
-      setToStringTag = require("npm:core-js@2.1.0/library/modules/_set-to-string-tag"),
-      ARRAY_BUFFER = 'ArrayBuffer',
-      DATA_VIEW = 'DataView',
-      PROTOTYPE = 'prototype',
-      WRONG_LENGTH = 'Wrong length!',
-      WRONG_INDEX = 'Wrong index!',
-      $ArrayBuffer = global[ARRAY_BUFFER],
-      $DataView = global[DATA_VIEW],
-      Math = global.Math,
-      parseInt = global.parseInt,
-      RangeError = global.RangeError,
-      Infinity = global.Infinity,
-      BaseBuffer = $ArrayBuffer,
-      abs = Math.abs,
-      pow = Math.pow,
-      min = Math.min,
-      floor = Math.floor,
-      log = Math.log,
-      LN2 = Math.LN2,
-      BUFFER = 'buffer',
-      BYTE_LENGTH = 'byteLength',
-      BYTE_OFFSET = 'byteOffset',
-      $BUFFER = DESCRIPTORS ? '_b' : BUFFER,
-      $LENGTH = DESCRIPTORS ? '_l' : BYTE_LENGTH,
-      $OFFSET = DESCRIPTORS ? '_o' : BYTE_OFFSET;
-  var packIEEE754 = function(value, mLen, nBytes) {
-    var buffer = Array(nBytes),
-        eLen = nBytes * 8 - mLen - 1,
-        eMax = (1 << eLen) - 1,
-        eBias = eMax >> 1,
-        rt = mLen === 23 ? pow(2, -24) - pow(2, -77) : 0,
-        i = 0,
-        s = value < 0 || value === 0 && 1 / value < 0 ? 1 : 0,
-        e,
-        m,
-        c;
-    value = abs(value);
-    if (value != value || value === Infinity) {
-      m = value != value ? 1 : 0;
-      e = eMax;
-    } else {
-      e = floor(log(value) / LN2);
-      if (value * (c = pow(2, -e)) < 1) {
-        e--;
-        c *= 2;
-      }
-      if (e + eBias >= 1) {
-        value += rt / c;
-      } else {
-        value += rt * pow(2, 1 - eBias);
-      }
-      if (value * c >= 2) {
-        e++;
-        c /= 2;
-      }
-      if (e + eBias >= eMax) {
-        m = 0;
-        e = eMax;
-      } else if (e + eBias >= 1) {
-        m = (value * c - 1) * pow(2, mLen);
-        e = e + eBias;
-      } else {
-        m = value * pow(2, eBias - 1) * pow(2, mLen);
-        e = 0;
+      if (ordinal) {
+        formatTokenFunctions[ordinal] = function() {
+          return this.localeData().ordinal(func.apply(this, arguments), token);
+        };
       }
     }
-    for (; mLen >= 8; buffer[i++] = m & 255, m /= 256, mLen -= 8)
-      ;
-    e = e << mLen | m;
-    eLen += mLen;
-    for (; eLen > 0; buffer[i++] = e & 255, e /= 256, eLen -= 8)
-      ;
-    buffer[--i] |= s * 128;
-    return buffer;
-  };
-  var unpackIEEE754 = function(buffer, mLen, nBytes) {
-    var eLen = nBytes * 8 - mLen - 1,
-        eMax = (1 << eLen) - 1,
-        eBias = eMax >> 1,
-        nBits = eLen - 7,
-        i = nBytes - 1,
-        s = buffer[i--],
-        e = s & 127,
-        m;
-    s >>= 7;
-    for (; nBits > 0; e = e * 256 + buffer[i], i--, nBits -= 8)
-      ;
-    m = e & (1 << -nBits) - 1;
-    e >>= -nBits;
-    nBits += mLen;
-    for (; nBits > 0; m = m * 256 + buffer[i], i--, nBits -= 8)
-      ;
-    if (e === 0) {
-      e = 1 - eBias;
-    } else if (e === eMax) {
-      return m ? NaN : s ? -Infinity : Infinity;
-    } else {
-      m = m + pow(2, mLen);
-      e = e - eBias;
-    }
-    return (s ? -1 : 1) * m * pow(2, e - mLen);
-  };
-  var unpackI32 = function(bytes) {
-    return bytes[3] << 24 | bytes[2] << 16 | bytes[1] << 8 | bytes[0];
-  };
-  var packI8 = function(it) {
-    return [it & 0xff];
-  };
-  var packI16 = function(it) {
-    return [it & 0xff, it >> 8 & 0xff];
-  };
-  var packI32 = function(it) {
-    return [it & 0xff, it >> 8 & 0xff, it >> 16 & 0xff, it >> 24 & 0xff];
-  };
-  var packF64 = function(it) {
-    return packIEEE754(it, 52, 8);
-  };
-  var packF32 = function(it) {
-    return packIEEE754(it, 23, 4);
-  };
-  var addGetter = function(C, key, internal) {
-    dP(C[PROTOTYPE], key, {get: function() {
-        return this[internal];
-      }});
-  };
-  var get = function(view, bytes, index, isLittleEndian) {
-    var numIndex = +index,
-        intIndex = toInteger(numIndex);
-    if (numIndex != intIndex || intIndex < 0 || intIndex + bytes > view[$LENGTH])
-      throw RangeError(WRONG_INDEX);
-    var store = view[$BUFFER]._b,
-        start = intIndex + view[$OFFSET],
-        pack = store.slice(start, start + bytes);
-    return isLittleEndian ? pack : pack.reverse();
-  };
-  var set = function(view, bytes, index, conversion, value, isLittleEndian) {
-    var numIndex = +index,
-        intIndex = toInteger(numIndex);
-    if (numIndex != intIndex || intIndex < 0 || intIndex + bytes > view[$LENGTH])
-      throw RangeError(WRONG_INDEX);
-    var store = view[$BUFFER]._b,
-        start = intIndex + view[$OFFSET],
-        pack = conversion(+value);
-    for (var i = 0; i < bytes; i++)
-      store[start + i] = pack[isLittleEndian ? i : bytes - i - 1];
-  };
-  var validateArrayBufferArguments = function(that, length) {
-    anInstance(that, $ArrayBuffer, ARRAY_BUFFER);
-    var numberLength = +length,
-        byteLength = toLength(numberLength);
-    if (numberLength != byteLength)
-      throw RangeError(WRONG_LENGTH);
-    return byteLength;
-  };
-  if (!$typed.ABV) {
-    $ArrayBuffer = function ArrayBuffer(length) {
-      var byteLength = validateArrayBufferArguments(this, length);
-      this._b = arrayFill.call(Array(byteLength), 0);
-      this[$LENGTH] = byteLength;
-    };
-    $DataView = function DataView(buffer, byteOffset, byteLength) {
-      anInstance(this, $DataView, DATA_VIEW);
-      anInstance(buffer, $ArrayBuffer, DATA_VIEW);
-      var bufferLength = buffer[$LENGTH],
-          offset = toInteger(byteOffset);
-      if (offset < 0 || offset > bufferLength)
-        throw RangeError('Wrong offset!');
-      byteLength = byteLength === undefined ? bufferLength - offset : toLength(byteLength);
-      if (offset + byteLength > bufferLength)
-        throw RangeError(WRONG_LENGTH);
-      this[$BUFFER] = buffer;
-      this[$OFFSET] = offset;
-      this[$LENGTH] = byteLength;
-    };
-    if (DESCRIPTORS) {
-      addGetter($ArrayBuffer, BYTE_LENGTH, '_l');
-      addGetter($DataView, BUFFER, '_b');
-      addGetter($DataView, BYTE_LENGTH, '_l');
-      addGetter($DataView, BYTE_OFFSET, '_o');
-    }
-    redefineAll($DataView[PROTOTYPE], {
-      getInt8: function getInt8(byteOffset) {
-        return get(this, 1, byteOffset)[0] << 24 >> 24;
-      },
-      getUint8: function getUint8(byteOffset) {
-        return get(this, 1, byteOffset)[0];
-      },
-      getInt16: function getInt16(byteOffset) {
-        var bytes = get(this, 2, byteOffset, arguments[1]);
-        return (bytes[1] << 8 | bytes[0]) << 16 >> 16;
-      },
-      getUint16: function getUint16(byteOffset) {
-        var bytes = get(this, 2, byteOffset, arguments[1]);
-        return bytes[1] << 8 | bytes[0];
-      },
-      getInt32: function getInt32(byteOffset) {
-        return unpackI32(get(this, 4, byteOffset, arguments[1]));
-      },
-      getUint32: function getUint32(byteOffset) {
-        return unpackI32(get(this, 4, byteOffset, arguments[1])) >>> 0;
-      },
-      getFloat32: function getFloat32(byteOffset) {
-        return unpackIEEE754(get(this, 4, byteOffset, arguments[1]), 23, 4);
-      },
-      getFloat64: function getFloat64(byteOffset) {
-        return unpackIEEE754(get(this, 8, byteOffset, arguments[1]), 52, 8);
-      },
-      setInt8: function setInt8(byteOffset, value) {
-        set(this, 1, byteOffset, packI8, value);
-      },
-      setUint8: function setUint8(byteOffset, value) {
-        set(this, 1, byteOffset, packI8, value);
-      },
-      setInt16: function setInt16(byteOffset, value) {
-        set(this, 2, byteOffset, packI16, value, arguments[2]);
-      },
-      setUint16: function setUint16(byteOffset, value) {
-        set(this, 2, byteOffset, packI16, value, arguments[2]);
-      },
-      setInt32: function setInt32(byteOffset, value) {
-        set(this, 4, byteOffset, packI32, value, arguments[2]);
-      },
-      setUint32: function setUint32(byteOffset, value) {
-        set(this, 4, byteOffset, packI32, value, arguments[2]);
-      },
-      setFloat32: function setFloat32(byteOffset, value) {
-        set(this, 4, byteOffset, packF32, value, arguments[2]);
-      },
-      setFloat64: function setFloat64(byteOffset, value) {
-        set(this, 8, byteOffset, packF64, value, arguments[2]);
+    function removeFormattingTokens(input) {
+      if (input.match(/\[[\s\S]/)) {
+        return input.replace(/^\[|\]$/g, '');
       }
-    });
-  } else {
-    if (!fails(function() {
-      new $ArrayBuffer;
-    }) || !fails(function() {
-      new $ArrayBuffer(.5);
-    })) {
-      $ArrayBuffer = function ArrayBuffer(length) {
-        return new BaseBuffer(validateArrayBufferArguments(this, length));
-      };
-      var ArrayBufferProto = $ArrayBuffer[PROTOTYPE] = BaseBuffer[PROTOTYPE];
-      for (var keys = gOPN(BaseBuffer),
-          j = 0,
-          key; keys.length > j; ) {
-        if (!((key = keys[j++]) in $ArrayBuffer))
-          hide($ArrayBuffer, key, BaseBuffer[key]);
-      }
-      ;
-      if (!LIBRARY)
-        ArrayBufferProto.constructor = $ArrayBuffer;
+      return input.replace(/\\/g, '');
     }
-    var view = new $DataView(new $ArrayBuffer(2)),
-        $setInt8 = $DataView[PROTOTYPE].setInt8;
-    view.setInt8(0, 2147483648);
-    view.setInt8(1, 2147483649);
-    if (view.getInt8(0) || !view.getInt8(1))
-      redefineAll($DataView[PROTOTYPE], {
-        setInt8: function setInt8(byteOffset, value) {
-          $setInt8.call(this, byteOffset, value << 24 >> 24);
-        },
-        setUint8: function setUint8(byteOffset, value) {
-          $setInt8.call(this, byteOffset, value << 24 >> 24);
-        }
-      }, true);
-  }
-  setToStringTag($ArrayBuffer, ARRAY_BUFFER);
-  setToStringTag($DataView, DATA_VIEW);
-  hide($DataView[PROTOTYPE], $typed.VIEW, true);
-  exports[ARRAY_BUFFER] = $ArrayBuffer;
-  exports[DATA_VIEW] = $DataView;
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.typed.array-buffer", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_typed", "npm:core-js@2.1.0/library/modules/_typed-buffer", "npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_to-index", "npm:core-js@2.1.0/library/modules/_to-length", "npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_wks", "npm:core-js@2.1.0/library/modules/_global", "npm:core-js@2.1.0/library/modules/_species-constructor", "npm:core-js@2.1.0/library/modules/_fails", "npm:core-js@2.1.0/library/modules/_set-species"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $typed = require("npm:core-js@2.1.0/library/modules/_typed"),
-      buffer = require("npm:core-js@2.1.0/library/modules/_typed-buffer"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      toIndex = require("npm:core-js@2.1.0/library/modules/_to-index"),
-      toLength = require("npm:core-js@2.1.0/library/modules/_to-length"),
-      isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      TYPED_ARRAY = require("npm:core-js@2.1.0/library/modules/_wks")('typed_array'),
-      ArrayBuffer = require("npm:core-js@2.1.0/library/modules/_global").ArrayBuffer,
-      speciesConstructor = require("npm:core-js@2.1.0/library/modules/_species-constructor"),
-      $ArrayBuffer = buffer.ArrayBuffer,
-      $DataView = buffer.DataView,
-      $isView = $typed.ABV && ArrayBuffer.isView,
-      $slice = $ArrayBuffer.prototype.slice,
-      VIEW = $typed.VIEW,
-      ARRAY_BUFFER = 'ArrayBuffer';
-  $export($export.G + $export.W + $export.F * (ArrayBuffer !== $ArrayBuffer), {ArrayBuffer: $ArrayBuffer});
-  $export($export.S + $export.F * !$typed.CONSTR, ARRAY_BUFFER, {isView: function isView(it) {
-      return $isView && $isView(it) || isObject(it) && VIEW in it;
-    }});
-  $export($export.P + $export.U + $export.F * require("npm:core-js@2.1.0/library/modules/_fails")(function() {
-    return !new $ArrayBuffer(2).slice(1, undefined).byteLength;
-  }), ARRAY_BUFFER, {slice: function slice(start, end) {
-      if ($slice !== undefined && end === undefined)
-        return $slice.call(anObject(this), start);
-      var len = anObject(this).byteLength,
-          first = toIndex(start, len),
-          final = toIndex(end === undefined ? len : end, len),
-          result = new (speciesConstructor(this, $ArrayBuffer))(toLength(final - first)),
-          viewS = new $DataView(this),
-          viewT = new $DataView(result),
-          index = 0;
-      while (first < final) {
-        viewT.setUint8(index++, viewS.getUint8(first++));
-      }
-      return result;
-    }});
-  require("npm:core-js@2.1.0/library/modules/_set-species")(ARRAY_BUFFER);
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.typed.data-view", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_typed", "npm:core-js@2.1.0/library/modules/_typed-buffer"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.G + $export.W + $export.F * !require("npm:core-js@2.1.0/library/modules/_typed").ABV, {DataView: require("npm:core-js@2.1.0/library/modules/_typed-buffer").DataView});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.array.iterator", ["npm:core-js@2.1.0/library/modules/_add-to-unscopables", "npm:core-js@2.1.0/library/modules/_iter-step", "npm:core-js@2.1.0/library/modules/_iterators", "npm:core-js@2.1.0/library/modules/_to-iobject", "npm:core-js@2.1.0/library/modules/_iter-define"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var addToUnscopables = require("npm:core-js@2.1.0/library/modules/_add-to-unscopables"),
-      step = require("npm:core-js@2.1.0/library/modules/_iter-step"),
-      Iterators = require("npm:core-js@2.1.0/library/modules/_iterators"),
-      toIObject = require("npm:core-js@2.1.0/library/modules/_to-iobject");
-  module.exports = require("npm:core-js@2.1.0/library/modules/_iter-define")(Array, 'Array', function(iterated, kind) {
-    this._t = toIObject(iterated);
-    this._i = 0;
-    this._k = kind;
-  }, function() {
-    var O = this._t,
-        kind = this._k,
-        index = this._i++;
-    if (!O || index >= O.length) {
-      this._t = undefined;
-      return step(1);
-    }
-    if (kind == 'keys')
-      return step(0, index);
-    if (kind == 'values')
-      return step(0, O[index]);
-    return step(0, [index, O[index]]);
-  }, 'values');
-  Iterators.Arguments = Iterators.Array;
-  addToUnscopables('keys');
-  addToUnscopables('values');
-  addToUnscopables('entries');
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_typed-array", ["npm:core-js@2.1.0/library/modules/_descriptors", "npm:core-js@2.1.0/library/modules/_library", "npm:core-js@2.1.0/library/modules/_global", "npm:core-js@2.1.0/library/modules/_fails", "npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_typed", "npm:core-js@2.1.0/library/modules/_typed-buffer", "npm:core-js@2.1.0/library/modules/_ctx", "npm:core-js@2.1.0/library/modules/_an-instance", "npm:core-js@2.1.0/library/modules/_property-desc", "npm:core-js@2.1.0/library/modules/_hide", "npm:core-js@2.1.0/library/modules/_redefine-all", "npm:core-js@2.1.0/library/modules/_is-integer", "npm:core-js@2.1.0/library/modules/_to-integer", "npm:core-js@2.1.0/library/modules/_to-length", "npm:core-js@2.1.0/library/modules/_to-index", "npm:core-js@2.1.0/library/modules/_to-primitive", "npm:core-js@2.1.0/library/modules/_has", "npm:core-js@2.1.0/library/modules/_same-value", "npm:core-js@2.1.0/library/modules/_classof", "npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_to-object", "npm:core-js@2.1.0/library/modules/_is-array-iter", "npm:core-js@2.1.0/library/modules/_object-create", "npm:core-js@2.1.0/library/modules/_object-gpo", "npm:core-js@2.1.0/library/modules/_object-gopn", "npm:core-js@2.1.0/library/modules/core.is-iterable", "npm:core-js@2.1.0/library/modules/core.get-iterator-method", "npm:core-js@2.1.0/library/modules/_uid", "npm:core-js@2.1.0/library/modules/_wks", "npm:core-js@2.1.0/library/modules/_array-methods", "npm:core-js@2.1.0/library/modules/_array-includes", "npm:core-js@2.1.0/library/modules/_species-constructor", "npm:core-js@2.1.0/library/modules/es6.array.iterator", "npm:core-js@2.1.0/library/modules/_iterators", "npm:core-js@2.1.0/library/modules/_iter-detect", "npm:core-js@2.1.0/library/modules/_set-species", "npm:core-js@2.1.0/library/modules/_array-fill", "npm:core-js@2.1.0/library/modules/_array-copy-within", "npm:core-js@2.1.0/library/modules/_object-dp", "npm:core-js@2.1.0/library/modules/_object-gopd"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  if (require("npm:core-js@2.1.0/library/modules/_descriptors")) {
-    var LIBRARY = require("npm:core-js@2.1.0/library/modules/_library"),
-        global = require("npm:core-js@2.1.0/library/modules/_global"),
-        fails = require("npm:core-js@2.1.0/library/modules/_fails"),
-        $export = require("npm:core-js@2.1.0/library/modules/_export"),
-        $typed = require("npm:core-js@2.1.0/library/modules/_typed"),
-        $buffer = require("npm:core-js@2.1.0/library/modules/_typed-buffer"),
-        ctx = require("npm:core-js@2.1.0/library/modules/_ctx"),
-        anInstance = require("npm:core-js@2.1.0/library/modules/_an-instance"),
-        propertyDesc = require("npm:core-js@2.1.0/library/modules/_property-desc"),
-        hide = require("npm:core-js@2.1.0/library/modules/_hide"),
-        redefineAll = require("npm:core-js@2.1.0/library/modules/_redefine-all"),
-        isInteger = require("npm:core-js@2.1.0/library/modules/_is-integer"),
-        toInteger = require("npm:core-js@2.1.0/library/modules/_to-integer"),
-        toLength = require("npm:core-js@2.1.0/library/modules/_to-length"),
-        toIndex = require("npm:core-js@2.1.0/library/modules/_to-index"),
-        toPrimitive = require("npm:core-js@2.1.0/library/modules/_to-primitive"),
-        has = require("npm:core-js@2.1.0/library/modules/_has"),
-        same = require("npm:core-js@2.1.0/library/modules/_same-value"),
-        classof = require("npm:core-js@2.1.0/library/modules/_classof"),
-        isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-        toObject = require("npm:core-js@2.1.0/library/modules/_to-object"),
-        isArrayIter = require("npm:core-js@2.1.0/library/modules/_is-array-iter"),
-        create = require("npm:core-js@2.1.0/library/modules/_object-create"),
-        getPrototypeOf = require("npm:core-js@2.1.0/library/modules/_object-gpo"),
-        gOPN = require("npm:core-js@2.1.0/library/modules/_object-gopn").f,
-        isIterable = require("npm:core-js@2.1.0/library/modules/core.is-iterable"),
-        getIterFn = require("npm:core-js@2.1.0/library/modules/core.get-iterator-method"),
-        uid = require("npm:core-js@2.1.0/library/modules/_uid"),
-        wks = require("npm:core-js@2.1.0/library/modules/_wks"),
-        createArrayMethod = require("npm:core-js@2.1.0/library/modules/_array-methods"),
-        createArrayIncludes = require("npm:core-js@2.1.0/library/modules/_array-includes"),
-        speciesConstructor = require("npm:core-js@2.1.0/library/modules/_species-constructor"),
-        ArrayIterators = require("npm:core-js@2.1.0/library/modules/es6.array.iterator"),
-        Iterators = require("npm:core-js@2.1.0/library/modules/_iterators"),
-        $iterDetect = require("npm:core-js@2.1.0/library/modules/_iter-detect"),
-        setSpecies = require("npm:core-js@2.1.0/library/modules/_set-species"),
-        arrayFill = require("npm:core-js@2.1.0/library/modules/_array-fill"),
-        arrayCopyWithin = require("npm:core-js@2.1.0/library/modules/_array-copy-within"),
-        $DP = require("npm:core-js@2.1.0/library/modules/_object-dp"),
-        $GOPD = require("npm:core-js@2.1.0/library/modules/_object-gopd"),
-        dP = $DP.f,
-        gOPD = $GOPD.f,
-        RangeError = global.RangeError,
-        TypeError = global.TypeError,
-        Uint8Array = global.Uint8Array,
-        ARRAY_BUFFER = 'ArrayBuffer',
-        SHARED_BUFFER = 'Shared' + ARRAY_BUFFER,
-        BYTES_PER_ELEMENT = 'BYTES_PER_ELEMENT',
-        PROTOTYPE = 'prototype',
-        ArrayProto = Array[PROTOTYPE],
-        $ArrayBuffer = $buffer.ArrayBuffer,
-        $DataView = $buffer.DataView,
-        arrayForEach = createArrayMethod(0),
-        arrayFilter = createArrayMethod(2),
-        arraySome = createArrayMethod(3),
-        arrayEvery = createArrayMethod(4),
-        arrayFind = createArrayMethod(5),
-        arrayFindIndex = createArrayMethod(6),
-        arrayIncludes = createArrayIncludes(true),
-        arrayIndexOf = createArrayIncludes(false),
-        arrayValues = ArrayIterators.values,
-        arrayKeys = ArrayIterators.keys,
-        arrayEntries = ArrayIterators.entries,
-        arrayLastIndexOf = ArrayProto.lastIndexOf,
-        arrayReduce = ArrayProto.reduce,
-        arrayReduceRight = ArrayProto.reduceRight,
-        arrayJoin = ArrayProto.join,
-        arraySort = ArrayProto.sort,
-        arraySlice = ArrayProto.slice,
-        arrayToString = ArrayProto.toString,
-        arrayToLocaleString = ArrayProto.toLocaleString,
-        ITERATOR = wks('iterator'),
-        TAG = wks('toStringTag'),
-        TYPED_CONSTRUCTOR = uid('typed_constructor'),
-        DEF_CONSTRUCTOR = uid('def_constructor'),
-        ALL_CONSTRUCTORS = $typed.CONSTR,
-        TYPED_ARRAY = $typed.TYPED,
-        VIEW = $typed.VIEW,
-        WRONG_LENGTH = 'Wrong length!';
-    var $map = createArrayMethod(1, function(O, length) {
-      return allocate(speciesConstructor(O, O[DEF_CONSTRUCTOR]), length);
-    });
-    var LITTLE_ENDIAN = fails(function() {
-      return new Uint8Array(new Uint16Array([1]).buffer)[0] === 1;
-    });
-    var FORCED_SET = !!Uint8Array && !!Uint8Array[PROTOTYPE].set && fails(function() {
-      new Uint8Array(1).set({});
-    });
-    var strictToLength = function(it, SAME) {
-      if (it === undefined)
-        throw TypeError(WRONG_LENGTH);
-      var number = +it,
-          length = toLength(it);
-      if (SAME && !same(number, length))
-        throw RangeError(WRONG_LENGTH);
-      return length;
-    };
-    var toOffset = function(it, BYTES) {
-      var offset = toInteger(it);
-      if (offset < 0 || offset % BYTES)
-        throw RangeError('Wrong offset!');
-      return offset;
-    };
-    var validate = function(it) {
-      if (isObject(it) && TYPED_ARRAY in it)
-        return it;
-      throw TypeError(it + ' is not a typed array!');
-    };
-    var allocate = function(C, length) {
-      if (!(isObject(C) && TYPED_CONSTRUCTOR in C)) {
-        throw TypeError('It is not a typed array constructor!');
-      }
-      return new C(length);
-    };
-    var speciesFromList = function(O, list) {
-      return fromList(speciesConstructor(O, O[DEF_CONSTRUCTOR]), list);
-    };
-    var fromList = function(C, list) {
-      var index = 0,
-          length = list.length,
-          result = allocate(C, length);
-      while (length > index)
-        result[index] = list[index++];
-      return result;
-    };
-    var addGetter = function(it, key, internal) {
-      dP(it, key, {get: function() {
-          return this._d[internal];
-        }});
-    };
-    var $from = function from(source) {
-      var O = toObject(source),
-          aLen = arguments.length,
-          mapfn = aLen > 1 ? arguments[1] : undefined,
-          mapping = mapfn !== undefined,
-          iterFn = getIterFn(O),
+    function makeFormatFunction(format) {
+      var array = format.match(formattingTokens),
           i,
-          length,
-          values,
-          result,
-          step,
-          iterator;
-      if (iterFn != undefined && !isArrayIter(iterFn)) {
-        for (iterator = iterFn.call(O), values = [], i = 0; !(step = iterator.next()).done; i++) {
-          values.push(step.value);
+          length;
+      for (i = 0, length = array.length; i < length; i++) {
+        if (formatTokenFunctions[array[i]]) {
+          array[i] = formatTokenFunctions[array[i]];
+        } else {
+          array[i] = removeFormattingTokens(array[i]);
         }
-        O = values;
       }
-      if (mapping && aLen > 2)
-        mapfn = ctx(mapfn, arguments[2], 2);
-      for (i = 0, length = toLength(O.length), result = allocate(this, length); length > i; i++) {
-        result[i] = mapping ? mapfn(O[i], i) : O[i];
-      }
-      return result;
-    };
-    var $of = function of() {
-      var index = 0,
-          length = arguments.length,
-          result = allocate(this, length);
-      while (length > index)
-        result[index] = arguments[index++];
-      return result;
-    };
-    var TO_LOCALE_BUG = !!Uint8Array && fails(function() {
-      arrayToLocaleString.call(new Uint8Array(1));
-    });
-    var $toLocaleString = function toLocaleString() {
-      return arrayToLocaleString.apply(TO_LOCALE_BUG ? arraySlice.call(validate(this)) : validate(this), arguments);
-    };
-    var proto = {
-      copyWithin: function copyWithin(target, start) {
-        return arrayCopyWithin.call(validate(this), target, start, arguments.length > 2 ? arguments[2] : undefined);
-      },
-      every: function every(callbackfn) {
-        return arrayEvery(validate(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-      },
-      fill: function fill(value) {
-        return arrayFill.apply(validate(this), arguments);
-      },
-      filter: function filter(callbackfn) {
-        return speciesFromList(this, arrayFilter(validate(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined));
-      },
-      find: function find(predicate) {
-        return arrayFind(validate(this), predicate, arguments.length > 1 ? arguments[1] : undefined);
-      },
-      findIndex: function findIndex(predicate) {
-        return arrayFindIndex(validate(this), predicate, arguments.length > 1 ? arguments[1] : undefined);
-      },
-      forEach: function forEach(callbackfn) {
-        arrayForEach(validate(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-      },
-      indexOf: function indexOf(searchElement) {
-        return arrayIndexOf(validate(this), searchElement, arguments.length > 1 ? arguments[1] : undefined);
-      },
-      includes: function includes(searchElement) {
-        return arrayIncludes(validate(this), searchElement, arguments.length > 1 ? arguments[1] : undefined);
-      },
-      join: function join(separator) {
-        return arrayJoin.apply(validate(this), arguments);
-      },
-      lastIndexOf: function lastIndexOf(searchElement) {
-        return arrayLastIndexOf.apply(validate(this), arguments);
-      },
-      map: function map(mapfn) {
-        return $map(validate(this), mapfn, arguments.length > 1 ? arguments[1] : undefined);
-      },
-      reduce: function reduce(callbackfn) {
-        return arrayReduce.apply(validate(this), arguments);
-      },
-      reduceRight: function reduceRight(callbackfn) {
-        return arrayReduceRight.apply(validate(this), arguments);
-      },
-      reverse: function reverse() {
-        var that = this,
-            length = validate(that).length,
-            middle = Math.floor(length / 2),
-            index = 0,
-            value;
-        while (index < middle) {
-          value = that[index];
-          that[index++] = that[--length];
-          that[length] = value;
+      return function(mom) {
+        var output = '';
+        for (i = 0; i < length; i++) {
+          output += array[i] instanceof Function ? array[i].call(mom, format) : array[i];
         }
-        return that;
-      },
-      slice: function slice(start, end) {
-        return speciesFromList(this, arraySlice.call(validate(this), start, end));
-      },
-      some: function some(callbackfn) {
-        return arraySome(validate(this), callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-      },
-      sort: function sort(comparefn) {
-        return arraySort.call(validate(this), comparefn);
-      },
-      subarray: function subarray(begin, end) {
-        var O = validate(this),
-            length = O.length,
-            $begin = toIndex(begin, length);
-        return new (speciesConstructor(O, O[DEF_CONSTRUCTOR]))(O.buffer, O.byteOffset + $begin * O.BYTES_PER_ELEMENT, toLength((end === undefined ? length : toIndex(end, length)) - $begin));
-      }
-    };
-    var $set = function set(arrayLike) {
-      validate(this);
-      var offset = toOffset(arguments[1], 1),
-          length = this.length,
-          src = toObject(arrayLike),
-          len = toLength(src.length),
-          index = 0;
-      if (len + offset > length)
-        throw RangeError(WRONG_LENGTH);
-      while (index < len)
-        this[offset + index] = src[index++];
-    };
-    var $iterators = {
-      entries: function entries() {
-        return arrayEntries.call(validate(this));
-      },
-      keys: function keys() {
-        return arrayKeys.call(validate(this));
-      },
-      values: function values() {
-        return arrayValues.call(validate(this));
-      }
-    };
-    var isTAIndex = function(target, key) {
-      return isObject(target) && target[TYPED_ARRAY] && typeof key != 'symbol' && key in target && String(+key) == String(key);
-    };
-    var $getDesc = function getOwnPropertyDescriptor(target, key) {
-      return isTAIndex(target, key = toPrimitive(key, true)) ? propertyDesc(2, target[key]) : gOPD(target, key);
-    };
-    var $setDesc = function defineProperty(target, key, desc) {
-      if (isTAIndex(target, key = toPrimitive(key, true)) && isObject(desc) && has(desc, 'value') && !has(desc, 'get') && !has(desc, 'set') && !desc.configurable && (!has(desc, 'writable') || desc.writable) && (!has(desc, 'enumerable') || desc.enumerable)) {
-        target[key] = desc.value;
-        return target;
-      } else
-        return dP(target, key, desc);
-    };
-    if (!ALL_CONSTRUCTORS) {
-      $GOPD.f = $getDesc;
-      $DP.f = $setDesc;
-    }
-    $export($export.S + $export.F * !ALL_CONSTRUCTORS, 'Object', {
-      getOwnPropertyDescriptor: $getDesc,
-      defineProperty: $setDesc
-    });
-    if (fails(function() {
-      arrayToString.call({});
-    })) {
-      arrayToString = arrayToLocaleString = function toString() {
-        return arrayJoin.call(this);
+        return output;
       };
     }
-    var $TypedArrayPrototype$ = redefineAll({}, proto);
-    redefineAll($TypedArrayPrototype$, $iterators);
-    hide($TypedArrayPrototype$, ITERATOR, $iterators.values);
-    redefineAll($TypedArrayPrototype$, {
-      set: $set,
-      constructor: function() {},
-      toString: arrayToString,
-      toLocaleString: $toLocaleString
-    });
-    addGetter($TypedArrayPrototype$, 'buffer', 'b');
-    addGetter($TypedArrayPrototype$, 'byteOffset', 'o');
-    addGetter($TypedArrayPrototype$, 'byteLength', 'l');
-    addGetter($TypedArrayPrototype$, 'length', 'e');
-    dP($TypedArrayPrototype$, TAG, {get: function() {
-        return this[TYPED_ARRAY];
-      }});
-    module.exports = function(KEY, BYTES, wrapper, CLAMPED) {
-      CLAMPED = !!CLAMPED;
-      var NAME = KEY + (CLAMPED ? 'Clamped' : '') + 'Array',
-          ISNT_UINT8 = NAME != 'Uint8Array',
-          GETTER = 'get' + KEY,
-          SETTER = 'set' + KEY,
-          TypedArray = global[NAME],
-          Base = TypedArray || {},
-          TAC = TypedArray && getPrototypeOf(TypedArray),
-          FORCED = !TypedArray || !$typed.ABV,
-          O = {},
-          TypedArrayPrototype = TypedArray && TypedArray[PROTOTYPE];
-      var getter = function(that, index) {
-        var data = that._d;
-        return data.v[GETTER](index * BYTES + data.o, LITTLE_ENDIAN);
-      };
-      var setter = function(that, index, value) {
-        var data = that._d;
-        if (CLAMPED)
-          value = (value = Math.round(value)) < 0 ? 0 : value > 0xff ? 0xff : value & 0xff;
-        data.v[SETTER](index * BYTES + data.o, value, LITTLE_ENDIAN);
-      };
-      var addElement = function(that, index) {
-        dP(that, index, {
-          get: function() {
-            return getter(this, index);
-          },
-          set: function(value) {
-            return setter(this, index, value);
-          },
-          enumerable: true
-        });
-      };
-      if (FORCED) {
-        TypedArray = wrapper(function(that, data, $offset, $length) {
-          anInstance(that, TypedArray, NAME, '_d');
-          var index = 0,
-              offset = 0,
-              buffer,
-              byteLength,
-              length,
-              klass;
-          if (!isObject(data)) {
-            length = strictToLength(data, true);
-            byteLength = length * BYTES;
-            buffer = new $ArrayBuffer(byteLength);
-          } else if (data instanceof $ArrayBuffer || (klass = classof(data)) == ARRAY_BUFFER || klass == SHARED_BUFFER) {
-            buffer = data;
-            offset = toOffset($offset, BYTES);
-            var $len = data.byteLength;
-            if ($length === undefined) {
-              if ($len % BYTES)
-                throw RangeError(WRONG_LENGTH);
-              byteLength = $len - offset;
-              if (byteLength < 0)
-                throw RangeError(WRONG_LENGTH);
-            } else {
-              byteLength = toLength($length) * BYTES;
-              if (byteLength + offset > $len)
-                throw RangeError(WRONG_LENGTH);
-            }
-            length = byteLength / BYTES;
-          } else if (TYPED_ARRAY in data) {
-            return fromList(TypedArray, data);
-          } else {
-            return $from.call(TypedArray, data);
-          }
-          hide(that, '_d', {
-            b: buffer,
-            o: offset,
-            l: byteLength,
-            e: length,
-            v: new $DataView(buffer)
-          });
-          while (index < length)
-            addElement(that, index++);
-        });
-        TypedArrayPrototype = TypedArray[PROTOTYPE] = create($TypedArrayPrototype$);
-        hide(TypedArrayPrototype, 'constructor', TypedArray);
-      } else if (!$iterDetect(function(iter) {
-        new TypedArray(null);
-        new TypedArray(iter);
-      }, true)) {
-        TypedArray = wrapper(function(that, data, $offset, $length) {
-          anInstance(that, TypedArray, NAME);
-          var klass;
-          if (!isObject(data))
-            return new Base(strictToLength(data, ISNT_UINT8));
-          if (data instanceof $ArrayBuffer || (klass = classof(data)) == ARRAY_BUFFER || klass == SHARED_BUFFER) {
-            return $length !== undefined ? new Base(data, toOffset($offset, BYTES), $length) : $offset !== undefined ? new Base(data, toOffset($offset, BYTES)) : new Base(data);
-          }
-          if (TYPED_ARRAY in data)
-            return fromList(TypedArray, data);
-          return $from.call(TypedArray, data);
-        });
-        arrayForEach(TAC !== Function.prototype ? gOPN(Base).concat(gOPN(TAC)) : gOPN(Base), function(key) {
-          if (!(key in TypedArray))
-            hide(TypedArray, key, Base[key]);
-        });
-        TypedArray[PROTOTYPE] = TypedArrayPrototype;
-        if (!LIBRARY)
-          TypedArrayPrototype.constructor = TypedArray;
+    function formatMoment(m, format) {
+      if (!m.isValid()) {
+        return m.localeData().invalidDate();
       }
-      var $nativeIterator = TypedArrayPrototype[ITERATOR],
-          CORRECT_ITER_NAME = !!$nativeIterator && ($nativeIterator.name == 'values' || $nativeIterator.name == undefined),
-          $iterator = $iterators.values;
-      hide(TypedArray, TYPED_CONSTRUCTOR, true);
-      hide(TypedArrayPrototype, TYPED_ARRAY, NAME);
-      hide(TypedArrayPrototype, VIEW, true);
-      hide(TypedArrayPrototype, DEF_CONSTRUCTOR, TypedArray);
-      if (CLAMPED ? new TypedArray(1)[TAG] != NAME : !(TAG in TypedArrayPrototype)) {
-        dP(TypedArrayPrototype, TAG, {get: function() {
-            return NAME;
-          }});
+      format = expandFormat(format, m.localeData());
+      formatFunctions[format] = formatFunctions[format] || makeFormatFunction(format);
+      return formatFunctions[format](m);
+    }
+    function expandFormat(format, locale) {
+      var i = 5;
+      function replaceLongDateFormatTokens(input) {
+        return locale.longDateFormat(input) || input;
       }
-      O[NAME] = TypedArray;
-      $export($export.G + $export.W + $export.F * (TypedArray != Base), O);
-      $export($export.S, NAME, {
-        BYTES_PER_ELEMENT: BYTES,
-        from: $from,
-        of: $of
-      });
-      if (!(BYTES_PER_ELEMENT in TypedArrayPrototype))
-        hide(TypedArrayPrototype, BYTES_PER_ELEMENT, BYTES);
-      $export($export.P, NAME, proto);
-      $export($export.P + $export.F * FORCED_SET, NAME, {set: $set});
-      $export($export.P + $export.F * !CORRECT_ITER_NAME, NAME, $iterators);
-      $export($export.P + $export.F * (TypedArrayPrototype.toString != arrayToString), NAME, {toString: arrayToString});
-      $export($export.P + $export.F * (fails(function() {
-        return [1, 2].toLocaleString() != new TypedArray([1, 2]).toLocaleString();
-      }) || !fails(function() {
-        TypedArrayPrototype.toLocaleString.call([1, 2]);
-      })), NAME, {toLocaleString: $toLocaleString});
-      Iterators[NAME] = CORRECT_ITER_NAME ? $nativeIterator : $iterator;
-      if (!LIBRARY && !CORRECT_ITER_NAME)
-        hide(TypedArrayPrototype, ITERATOR, $iterator);
-      setSpecies(NAME);
-    };
-  } else
-    module.exports = function() {};
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.typed.float32-array", ["npm:core-js@2.1.0/library/modules/_typed-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/library/modules/_typed-array")('Float32', 4, function(init) {
-    return function Float32Array(data, byteOffset, length) {
-      return init(this, data, byteOffset, length);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.typed.float64-array", ["npm:core-js@2.1.0/library/modules/_typed-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/library/modules/_typed-array")('Float64', 8, function(init) {
-    return function Float64Array(data, byteOffset, length) {
-      return init(this, data, byteOffset, length);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.typed.int16-array", ["npm:core-js@2.1.0/library/modules/_typed-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/library/modules/_typed-array")('Int16', 2, function(init) {
-    return function Int16Array(data, byteOffset, length) {
-      return init(this, data, byteOffset, length);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.typed.int32-array", ["npm:core-js@2.1.0/library/modules/_typed-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/library/modules/_typed-array")('Int32', 4, function(init) {
-    return function Int32Array(data, byteOffset, length) {
-      return init(this, data, byteOffset, length);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.typed.int8-array", ["npm:core-js@2.1.0/library/modules/_typed-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/library/modules/_typed-array")('Int8', 1, function(init) {
-    return function Int8Array(data, byteOffset, length) {
-      return init(this, data, byteOffset, length);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.typed.uint16-array", ["npm:core-js@2.1.0/library/modules/_typed-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/library/modules/_typed-array")('Uint16', 2, function(init) {
-    return function Uint16Array(data, byteOffset, length) {
-      return init(this, data, byteOffset, length);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.typed.uint32-array", ["npm:core-js@2.1.0/library/modules/_typed-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/library/modules/_typed-array")('Uint32', 4, function(init) {
-    return function Uint32Array(data, byteOffset, length) {
-      return init(this, data, byteOffset, length);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.typed.uint8-array", ["npm:core-js@2.1.0/library/modules/_typed-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/library/modules/_typed-array")('Uint8', 1, function(init) {
-    return function Uint8Array(data, byteOffset, length) {
-      return init(this, data, byteOffset, length);
-    };
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.typed.uint8-clamped-array", ["npm:core-js@2.1.0/library/modules/_typed-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/library/modules/_typed-array")('Uint8', 1, function(init) {
-    return function Uint8ClampedArray(data, byteOffset, length) {
-      return init(this, data, byteOffset, length);
-    };
-  }, true);
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_collection-weak", ["npm:core-js@2.1.0/library/modules/_redefine-all", "npm:core-js@2.1.0/library/modules/_meta", "npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_an-instance", "npm:core-js@2.1.0/library/modules/_for-of", "npm:core-js@2.1.0/library/modules/_array-methods", "npm:core-js@2.1.0/library/modules/_has"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var redefineAll = require("npm:core-js@2.1.0/library/modules/_redefine-all"),
-      getWeak = require("npm:core-js@2.1.0/library/modules/_meta").getWeak,
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      anInstance = require("npm:core-js@2.1.0/library/modules/_an-instance"),
-      forOf = require("npm:core-js@2.1.0/library/modules/_for-of"),
-      createArrayMethod = require("npm:core-js@2.1.0/library/modules/_array-methods"),
-      $has = require("npm:core-js@2.1.0/library/modules/_has"),
-      arrayFind = createArrayMethod(5),
-      arrayFindIndex = createArrayMethod(6),
-      id = 0;
-  var uncaughtFrozenStore = function(that) {
-    return that._l || (that._l = new UncaughtFrozenStore);
-  };
-  var UncaughtFrozenStore = function() {
-    this.a = [];
-  };
-  var findUncaughtFrozen = function(store, key) {
-    return arrayFind(store.a, function(it) {
-      return it[0] === key;
-    });
-  };
-  UncaughtFrozenStore.prototype = {
-    get: function(key) {
-      var entry = findUncaughtFrozen(this, key);
-      if (entry)
-        return entry[1];
-    },
-    has: function(key) {
-      return !!findUncaughtFrozen(this, key);
-    },
-    set: function(key, value) {
-      var entry = findUncaughtFrozen(this, key);
-      if (entry)
-        entry[1] = value;
-      else
-        this.a.push([key, value]);
-    },
-    'delete': function(key) {
-      var index = arrayFindIndex(this.a, function(it) {
-        return it[0] === key;
-      });
-      if (~index)
-        this.a.splice(index, 1);
-      return !!~index;
-    }
-  };
-  module.exports = {
-    getConstructor: function(wrapper, NAME, IS_MAP, ADDER) {
-      var C = wrapper(function(that, iterable) {
-        anInstance(that, C, NAME, '_i');
-        that._i = id++;
-        that._l = undefined;
-        if (iterable != undefined)
-          forOf(iterable, IS_MAP, that[ADDER], that);
-      });
-      redefineAll(C.prototype, {
-        'delete': function(key) {
-          if (!isObject(key))
-            return false;
-          var data = getWeak(key);
-          if (data === true)
-            return uncaughtFrozenStore(this)['delete'](key);
-          return data && $has(data, this._i) && delete data[this._i];
-        },
-        has: function has(key) {
-          if (!isObject(key))
-            return false;
-          var data = getWeak(key);
-          if (data === true)
-            return uncaughtFrozenStore(this).has(key);
-          return data && $has(data, this._i);
-        }
-      });
-      return C;
-    },
-    def: function(that, key, value) {
-      var data = getWeak(anObject(key), true);
-      if (data === true)
-        uncaughtFrozenStore(that).set(key, value);
-      else
-        data[that._i] = value;
-      return that;
-    },
-    ufstore: uncaughtFrozenStore
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_collection", ["npm:core-js@2.1.0/library/modules/_global", "npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_meta", "npm:core-js@2.1.0/library/modules/_fails", "npm:core-js@2.1.0/library/modules/_hide", "npm:core-js@2.1.0/library/modules/_redefine-all", "npm:core-js@2.1.0/library/modules/_for-of", "npm:core-js@2.1.0/library/modules/_an-instance", "npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_set-to-string-tag", "npm:core-js@2.1.0/library/modules/_object-dp", "npm:core-js@2.1.0/library/modules/_array-methods", "npm:core-js@2.1.0/library/modules/_descriptors"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var global = require("npm:core-js@2.1.0/library/modules/_global"),
-      $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      meta = require("npm:core-js@2.1.0/library/modules/_meta"),
-      fails = require("npm:core-js@2.1.0/library/modules/_fails"),
-      hide = require("npm:core-js@2.1.0/library/modules/_hide"),
-      redefineAll = require("npm:core-js@2.1.0/library/modules/_redefine-all"),
-      forOf = require("npm:core-js@2.1.0/library/modules/_for-of"),
-      anInstance = require("npm:core-js@2.1.0/library/modules/_an-instance"),
-      isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      setToStringTag = require("npm:core-js@2.1.0/library/modules/_set-to-string-tag"),
-      dP = require("npm:core-js@2.1.0/library/modules/_object-dp").f,
-      each = require("npm:core-js@2.1.0/library/modules/_array-methods")(0),
-      DESCRIPTORS = require("npm:core-js@2.1.0/library/modules/_descriptors");
-  module.exports = function(NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
-    var Base = global[NAME],
-        C = Base,
-        ADDER = IS_MAP ? 'set' : 'add',
-        proto = C && C.prototype,
-        O = {};
-    if (!DESCRIPTORS || typeof C != 'function' || !(IS_WEAK || proto.forEach && !fails(function() {
-      new C().entries().next();
-    }))) {
-      C = common.getConstructor(wrapper, NAME, IS_MAP, ADDER);
-      redefineAll(C.prototype, methods);
-      meta.NEED = true;
-    } else {
-      C = wrapper(function(target, iterable) {
-        anInstance(target, C, NAME, '_c');
-        target._c = new Base;
-        if (iterable != undefined)
-          forOf(iterable, IS_MAP, target[ADDER], target);
-      });
-      each('add,clear,delete,forEach,get,has,set,keys,values,entries,toJSON'.split(','), function(KEY) {
-        var IS_ADDER = KEY == 'add' || KEY == 'set';
-        if (KEY in proto && !(IS_WEAK && KEY == 'clear'))
-          hide(C.prototype, KEY, function(a, b) {
-            anInstance(this, C, KEY);
-            if (!IS_ADDER && IS_WEAK && !isObject(a))
-              return KEY == 'get' ? undefined : false;
-            var result = this._c[KEY](a === 0 ? 0 : a, b);
-            return IS_ADDER ? this : result;
-          });
-      });
-      if ('size' in proto)
-        dP(C.prototype, 'size', {get: function() {
-            return this._c.size;
-          }});
-    }
-    setToStringTag(C, NAME);
-    O[NAME] = C;
-    $export($export.G + $export.W + $export.F, O);
-    if (!IS_WEAK)
-      common.setStrong(C, NAME, IS_MAP);
-    return C;
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.weak-set", ["npm:core-js@2.1.0/library/modules/_collection-weak", "npm:core-js@2.1.0/library/modules/_collection"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var weak = require("npm:core-js@2.1.0/library/modules/_collection-weak");
-  require("npm:core-js@2.1.0/library/modules/_collection")('WeakSet', function(get) {
-    return function WeakSet() {
-      return get(this, arguments.length > 0 ? arguments[0] : undefined);
-    };
-  }, {add: function add(value) {
-      return weak.def(this, value, true);
-    }}, weak, false, true);
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.array.includes", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_array-includes", "npm:core-js@2.1.0/library/modules/_add-to-unscopables"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $includes = require("npm:core-js@2.1.0/library/modules/_array-includes")(true);
-  $export($export.P, 'Array', {includes: function includes(el) {
-      return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
-    }});
-  require("npm:core-js@2.1.0/library/modules/_add-to-unscopables")('includes');
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.error.is-error", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_cof"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      cof = require("npm:core-js@2.1.0/library/modules/_cof");
-  $export($export.S, 'Error', {isError: function isError(it) {
-      return cof(it) === 'Error';
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_collection-to-json", ["npm:core-js@2.1.0/library/modules/_classof", "npm:core-js@2.1.0/library/modules/_array-from-iterable"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var classof = require("npm:core-js@2.1.0/library/modules/_classof"),
-      from = require("npm:core-js@2.1.0/library/modules/_array-from-iterable");
-  module.exports = function(NAME) {
-    return function toJSON() {
-      if (classof(this) != NAME)
-        throw TypeError(NAME + "#toJSON isn't generic");
-      return from(this);
-    };
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.map.to-json", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_collection-to-json"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.P + $export.R, 'Map', {toJSON: require("npm:core-js@2.1.0/library/modules/_collection-to-json")('Map')});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.math.iaddh", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Math', {iaddh: function iaddh(x0, x1, y0, y1) {
-      var $x0 = x0 >>> 0,
-          $x1 = x1 >>> 0,
-          $y0 = y0 >>> 0;
-      return $x1 + (y1 >>> 0) + (($x0 & $y0 | ($x0 | $y0) & ~($x0 + $y0 >>> 0)) >>> 31) | 0;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.math.imulh", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Math', {imulh: function imulh(u, v) {
-      var UINT16 = 0xffff,
-          $u = +u,
-          $v = +v,
-          u0 = $u & UINT16,
-          v0 = $v & UINT16,
-          u1 = $u >> 16,
-          v1 = $v >> 16,
-          t = (u1 * v0 >>> 0) + (u0 * v0 >>> 16);
-      return u1 * v1 + (t >> 16) + ((u0 * v1 >>> 0) + (t & UINT16) >> 16);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.math.isubh", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Math', {isubh: function isubh(x0, x1, y0, y1) {
-      var $x0 = x0 >>> 0,
-          $x1 = x1 >>> 0,
-          $y0 = y0 >>> 0;
-      return $x1 - (y1 >>> 0) - ((~$x0 & $y0 | ~($x0 ^ $y0) & $x0 - $y0 >>> 0) >>> 31) | 0;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.math.umulh", ["npm:core-js@2.1.0/library/modules/_export"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'Math', {umulh: function umulh(u, v) {
-      var UINT16 = 0xffff,
-          $u = +u,
-          $v = +v,
-          u0 = $u & UINT16,
-          v0 = $v & UINT16,
-          u1 = $u >>> 16,
-          v1 = $v >>> 16,
-          t = (u1 * v0 >>> 0) + (u0 * v0 >>> 16);
-      return u1 * v1 + (t >>> 16) + ((u0 * v1 >>> 0) + (t & UINT16) >>> 16);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_object-to-array", ["npm:core-js@2.1.0/library/modules/_object-keys", "npm:core-js@2.1.0/library/modules/_to-iobject", "npm:core-js@2.1.0/library/modules/_object-pie"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var getKeys = require("npm:core-js@2.1.0/library/modules/_object-keys"),
-      toIObject = require("npm:core-js@2.1.0/library/modules/_to-iobject"),
-      isEnum = require("npm:core-js@2.1.0/library/modules/_object-pie").f;
-  module.exports = function(isEntries) {
-    return function(it) {
-      var O = toIObject(it),
-          keys = getKeys(O),
-          length = keys.length,
-          i = 0,
-          result = [],
-          key;
-      while (length > i)
-        if (isEnum.call(O, key = keys[i++])) {
-          result.push(isEntries ? [key, O[key]] : O[key]);
-        }
-      return result;
-    };
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.object.entries", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_object-to-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $entries = require("npm:core-js@2.1.0/library/modules/_object-to-array")(true);
-  $export($export.S, 'Object', {entries: function entries(it) {
-      return $entries(it);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.object.get-own-property-descriptors", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_own-keys", "npm:core-js@2.1.0/library/modules/_to-iobject", "npm:core-js@2.1.0/library/modules/_property-desc", "npm:core-js@2.1.0/library/modules/_object-gopd", "npm:core-js@2.1.0/library/modules/_object-dp"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      ownKeys = require("npm:core-js@2.1.0/library/modules/_own-keys"),
-      toIObject = require("npm:core-js@2.1.0/library/modules/_to-iobject"),
-      createDesc = require("npm:core-js@2.1.0/library/modules/_property-desc"),
-      gOPD = require("npm:core-js@2.1.0/library/modules/_object-gopd"),
-      dP = require("npm:core-js@2.1.0/library/modules/_object-dp");
-  $export($export.S, 'Object', {getOwnPropertyDescriptors: function getOwnPropertyDescriptors(object) {
-      var O = toIObject(object),
-          getDesc = gOPD.f,
-          keys = ownKeys(O),
-          result = {},
-          i = 0,
-          key,
-          D;
-      while (keys.length > i) {
-        D = getDesc(O, key = keys[i++]);
-        if (key in result)
-          dP.f(result, key, createDesc(0, D));
-        else
-          result[key] = D;
+      localFormattingTokens.lastIndex = 0;
+      while (i >= 0 && localFormattingTokens.test(format)) {
+        format = format.replace(localFormattingTokens, replaceLongDateFormatTokens);
+        localFormattingTokens.lastIndex = 0;
+        i -= 1;
       }
-      return result;
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.object.values", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_object-to-array"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $values = require("npm:core-js@2.1.0/library/modules/_object-to-array")(false);
-  $export($export.S, 'Object', {values: function values(it) {
-      return $values(it);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_collection-strong", ["npm:core-js@2.1.0/library/modules/_object-dp", "npm:core-js@2.1.0/library/modules/_object-create", "npm:core-js@2.1.0/library/modules/_hide", "npm:core-js@2.1.0/library/modules/_redefine-all", "npm:core-js@2.1.0/library/modules/_ctx", "npm:core-js@2.1.0/library/modules/_an-instance", "npm:core-js@2.1.0/library/modules/_defined", "npm:core-js@2.1.0/library/modules/_for-of", "npm:core-js@2.1.0/library/modules/_iter-define", "npm:core-js@2.1.0/library/modules/_iter-step", "npm:core-js@2.1.0/library/modules/_set-species", "npm:core-js@2.1.0/library/modules/_descriptors", "npm:core-js@2.1.0/library/modules/_meta"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var dP = require("npm:core-js@2.1.0/library/modules/_object-dp").f,
-      create = require("npm:core-js@2.1.0/library/modules/_object-create"),
-      hide = require("npm:core-js@2.1.0/library/modules/_hide"),
-      redefineAll = require("npm:core-js@2.1.0/library/modules/_redefine-all"),
-      ctx = require("npm:core-js@2.1.0/library/modules/_ctx"),
-      anInstance = require("npm:core-js@2.1.0/library/modules/_an-instance"),
-      defined = require("npm:core-js@2.1.0/library/modules/_defined"),
-      forOf = require("npm:core-js@2.1.0/library/modules/_for-of"),
-      $iterDefine = require("npm:core-js@2.1.0/library/modules/_iter-define"),
-      step = require("npm:core-js@2.1.0/library/modules/_iter-step"),
-      setSpecies = require("npm:core-js@2.1.0/library/modules/_set-species"),
-      DESCRIPTORS = require("npm:core-js@2.1.0/library/modules/_descriptors"),
-      fastKey = require("npm:core-js@2.1.0/library/modules/_meta").fastKey,
-      SIZE = DESCRIPTORS ? '_s' : 'size';
-  var getEntry = function(that, key) {
-    var index = fastKey(key),
-        entry;
-    if (index !== 'F')
-      return that._i[index];
-    for (entry = that._f; entry; entry = entry.n) {
-      if (entry.k == key)
-        return entry;
+      return format;
     }
-  };
-  module.exports = {
-    getConstructor: function(wrapper, NAME, IS_MAP, ADDER) {
-      var C = wrapper(function(that, iterable) {
-        anInstance(that, C, NAME, '_i');
-        that._i = create(null);
-        that._f = undefined;
-        that._l = undefined;
-        that[SIZE] = 0;
-        if (iterable != undefined)
-          forOf(iterable, IS_MAP, that[ADDER], that);
-      });
-      redefineAll(C.prototype, {
-        clear: function clear() {
-          for (var that = this,
-              data = that._i,
-              entry = that._f; entry; entry = entry.n) {
-            entry.r = true;
-            if (entry.p)
-              entry.p = entry.p.n = undefined;
-            delete data[entry.i];
-          }
-          that._f = that._l = undefined;
-          that[SIZE] = 0;
-        },
-        'delete': function(key) {
-          var that = this,
-              entry = getEntry(that, key);
-          if (entry) {
-            var next = entry.n,
-                prev = entry.p;
-            delete that._i[entry.i];
-            entry.r = true;
-            if (prev)
-              prev.n = next;
-            if (next)
-              next.p = prev;
-            if (that._f == entry)
-              that._f = next;
-            if (that._l == entry)
-              that._l = prev;
-            that[SIZE]--;
-          }
-          return !!entry;
-        },
-        forEach: function forEach(callbackfn) {
-          anInstance(this, C, 'forEach');
-          var f = ctx(callbackfn, arguments.length > 1 ? arguments[1] : undefined, 3),
-              entry;
-          while (entry = entry ? entry.n : this._f) {
-            f(entry.v, entry.k, this);
-            while (entry && entry.r)
-              entry = entry.p;
-          }
-        },
-        has: function has(key) {
-          return !!getEntry(this, key);
-        }
-      });
-      if (DESCRIPTORS)
-        dP(C.prototype, 'size', {get: function() {
-            return defined(this[SIZE]);
-          }});
-      return C;
-    },
-    def: function(that, key, value) {
-      var entry = getEntry(that, key),
-          prev,
-          index;
-      if (entry) {
-        entry.v = value;
-      } else {
-        that._l = entry = {
-          i: index = fastKey(key, true),
-          k: key,
-          v: value,
-          p: prev = that._l,
-          n: undefined,
-          r: false
+    var match1 = /\d/;
+    var match2 = /\d\d/;
+    var match3 = /\d{3}/;
+    var match4 = /\d{4}/;
+    var match6 = /[+-]?\d{6}/;
+    var match1to2 = /\d\d?/;
+    var match3to4 = /\d\d\d\d?/;
+    var match5to6 = /\d\d\d\d\d\d?/;
+    var match1to3 = /\d{1,3}/;
+    var match1to4 = /\d{1,4}/;
+    var match1to6 = /[+-]?\d{1,6}/;
+    var matchUnsigned = /\d+/;
+    var matchSigned = /[+-]?\d+/;
+    var matchOffset = /Z|[+-]\d\d:?\d\d/gi;
+    var matchShortOffset = /Z|[+-]\d\d(?::?\d\d)?/gi;
+    var matchTimestamp = /[+-]?\d+(\.\d{1,3})?/;
+    var matchWord = /[0-9]*['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+|[\u0600-\u06FF\/]+(\s*?[\u0600-\u06FF]+){1,2}/i;
+    var regexes = {};
+    function addRegexToken(token, regex, strictRegex) {
+      regexes[token] = isFunction(regex) ? regex : function(isStrict, localeData) {
+        return (isStrict && strictRegex) ? strictRegex : regex;
+      };
+    }
+    function getParseRegexForToken(token, config) {
+      if (!hasOwnProp(regexes, token)) {
+        return new RegExp(unescapeFormat(token));
+      }
+      return regexes[token](config._strict, config._locale);
+    }
+    function unescapeFormat(s) {
+      return regexEscape(s.replace('\\', '').replace(/\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g, function(matched, p1, p2, p3, p4) {
+        return p1 || p2 || p3 || p4;
+      }));
+    }
+    function regexEscape(s) {
+      return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    }
+    var tokens = {};
+    function addParseToken(token, callback) {
+      var i,
+          func = callback;
+      if (typeof token === 'string') {
+        token = [token];
+      }
+      if (typeof callback === 'number') {
+        func = function(input, array) {
+          array[callback] = toInt(input);
         };
-        if (!that._f)
-          that._f = entry;
-        if (prev)
-          prev.n = entry;
-        that[SIZE]++;
-        if (index !== 'F')
-          that._i[index] = entry;
       }
-      return that;
-    },
-    getEntry: getEntry,
-    setStrong: function(C, NAME, IS_MAP) {
-      $iterDefine(C, NAME, function(iterated, kind) {
-        this._t = iterated;
-        this._k = kind;
-        this._l = undefined;
-      }, function() {
-        var that = this,
-            kind = that._k,
-            entry = that._l;
-        while (entry && entry.r)
-          entry = entry.p;
-        if (!that._t || !(that._l = entry = entry ? entry.n : that._t._f)) {
-          that._t = undefined;
-          return step(1);
-        }
-        if (kind == 'keys')
-          return step(0, entry.k);
-        if (kind == 'values')
-          return step(0, entry.v);
-        return step(0, [entry.k, entry.v]);
-      }, IS_MAP ? 'entries' : 'values', !IS_MAP, true);
-      setSpecies(NAME);
-    }
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.map", ["npm:core-js@2.1.0/library/modules/_collection-strong", "npm:core-js@2.1.0/library/modules/_collection"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var strong = require("npm:core-js@2.1.0/library/modules/_collection-strong");
-  module.exports = require("npm:core-js@2.1.0/library/modules/_collection")('Map', function(get) {
-    return function Map() {
-      return get(this, arguments.length > 0 ? arguments[0] : undefined);
-    };
-  }, {
-    get: function get(key) {
-      var entry = strong.getEntry(this, key);
-      return entry && entry.v;
-    },
-    set: function set(key, value) {
-      return strong.def(this, key === 0 ? 0 : key, value);
-    }
-  }, strong, true);
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.weak-map", ["npm:core-js@2.1.0/library/modules/_array-methods", "npm:core-js@2.1.0/library/modules/_redefine", "npm:core-js@2.1.0/library/modules/_meta", "npm:core-js@2.1.0/library/modules/_object-assign", "npm:core-js@2.1.0/library/modules/_collection-weak", "npm:core-js@2.1.0/library/modules/_is-object", "npm:core-js@2.1.0/library/modules/_has", "npm:core-js@2.1.0/library/modules/_collection"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var each = require("npm:core-js@2.1.0/library/modules/_array-methods")(0),
-      redefine = require("npm:core-js@2.1.0/library/modules/_redefine"),
-      meta = require("npm:core-js@2.1.0/library/modules/_meta"),
-      assign = require("npm:core-js@2.1.0/library/modules/_object-assign"),
-      weak = require("npm:core-js@2.1.0/library/modules/_collection-weak"),
-      isObject = require("npm:core-js@2.1.0/library/modules/_is-object"),
-      has = require("npm:core-js@2.1.0/library/modules/_has"),
-      getWeak = meta.getWeak,
-      isExtensible = Object.isExtensible,
-      uncaughtFrozenStore = weak.ufstore,
-      tmp = {},
-      InternalMap;
-  var wrapper = function(get) {
-    return function WeakMap() {
-      return get(this, arguments.length > 0 ? arguments[0] : undefined);
-    };
-  };
-  var methods = {
-    get: function get(key) {
-      if (isObject(key)) {
-        var data = getWeak(key);
-        if (data === true)
-          return uncaughtFrozenStore(this).get(key);
-        return data ? data[this._i] : undefined;
+      for (i = 0; i < token.length; i++) {
+        tokens[token[i]] = func;
       }
-    },
-    set: function set(key, value) {
-      return weak.def(this, key, value);
     }
-  };
-  var $WeakMap = module.exports = require("npm:core-js@2.1.0/library/modules/_collection")('WeakMap', wrapper, methods, weak, true, true);
-  if (new $WeakMap().set((Object.freeze || Object)(tmp), 7).get(tmp) != 7) {
-    InternalMap = weak.getConstructor(wrapper);
-    assign(InternalMap.prototype, methods);
-    meta.NEED = true;
-    each(['delete', 'has', 'get', 'set'], function(key) {
-      var proto = $WeakMap.prototype,
-          method = proto[key];
-      redefine(proto, key, function(a, b) {
-        if (isObject(a) && !isExtensible(a)) {
-          if (!this._f)
-            this._f = new InternalMap;
-          var result = this._f[key](a, b);
-          return key == 'set' ? this : result;
-        }
-        return method.call(this, a, b);
+    function addWeekParseToken(token, callback) {
+      addParseToken(token, function(input, array, config, token) {
+        config._w = config._w || {};
+        callback(input, config._w, config, token);
       });
+    }
+    function addTimeToArrayFromToken(token, input, config) {
+      if (input != null && hasOwnProp(tokens, token)) {
+        tokens[token](input, config._a, config, token);
+      }
+    }
+    var YEAR = 0;
+    var MONTH = 1;
+    var DATE = 2;
+    var HOUR = 3;
+    var MINUTE = 4;
+    var SECOND = 5;
+    var MILLISECOND = 6;
+    var WEEK = 7;
+    var WEEKDAY = 8;
+    function daysInMonth(year, month) {
+      return new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+    }
+    addFormatToken('M', ['MM', 2], 'Mo', function() {
+      return this.month() + 1;
     });
-  }
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_metadata", ["npm:core-js@2.1.0/library/modules/es6.map", "npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_shared", "npm:core-js@2.1.0/library/modules/es6.weak-map"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var Map = require("npm:core-js@2.1.0/library/modules/es6.map"),
-      $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      shared = require("npm:core-js@2.1.0/library/modules/_shared")('metadata'),
-      store = shared.store || (shared.store = new (require("npm:core-js@2.1.0/library/modules/es6.weak-map")));
-  var getOrCreateMetadataMap = function(target, targetKey, create) {
-    var targetMetadata = store.get(target);
-    if (!targetMetadata) {
-      if (!create)
-        return undefined;
-      store.set(target, targetMetadata = new Map);
+    addFormatToken('MMM', 0, 0, function(format) {
+      return this.localeData().monthsShort(this, format);
+    });
+    addFormatToken('MMMM', 0, 0, function(format) {
+      return this.localeData().months(this, format);
+    });
+    addUnitAlias('month', 'M');
+    addRegexToken('M', match1to2);
+    addRegexToken('MM', match1to2, match2);
+    addRegexToken('MMM', function(isStrict, locale) {
+      return locale.monthsShortRegex(isStrict);
+    });
+    addRegexToken('MMMM', function(isStrict, locale) {
+      return locale.monthsRegex(isStrict);
+    });
+    addParseToken(['M', 'MM'], function(input, array) {
+      array[MONTH] = toInt(input) - 1;
+    });
+    addParseToken(['MMM', 'MMMM'], function(input, array, config, token) {
+      var month = config._locale.monthsParse(input, token, config._strict);
+      if (month != null) {
+        array[MONTH] = month;
+      } else {
+        getParsingFlags(config).invalidMonth = input;
+      }
+    });
+    var MONTHS_IN_FORMAT = /D[oD]?(\[[^\[\]]*\]|\s+)+MMMM?/;
+    var defaultLocaleMonths = 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_');
+    function localeMonths(m, format) {
+      return isArray(this._months) ? this._months[m.month()] : this._months[MONTHS_IN_FORMAT.test(format) ? 'format' : 'standalone'][m.month()];
     }
-    var keyMetadata = targetMetadata.get(targetKey);
-    if (!keyMetadata) {
-      if (!create)
-        return undefined;
-      targetMetadata.set(targetKey, keyMetadata = new Map);
+    var defaultLocaleMonthsShort = 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_');
+    function localeMonthsShort(m, format) {
+      return isArray(this._monthsShort) ? this._monthsShort[m.month()] : this._monthsShort[MONTHS_IN_FORMAT.test(format) ? 'format' : 'standalone'][m.month()];
     }
-    return keyMetadata;
-  };
-  var ordinaryHasOwnMetadata = function(MetadataKey, O, P) {
-    var metadataMap = getOrCreateMetadataMap(O, P, false);
-    return metadataMap === undefined ? false : metadataMap.has(MetadataKey);
-  };
-  var ordinaryGetOwnMetadata = function(MetadataKey, O, P) {
-    var metadataMap = getOrCreateMetadataMap(O, P, false);
-    return metadataMap === undefined ? undefined : metadataMap.get(MetadataKey);
-  };
-  var ordinaryDefineOwnMetadata = function(MetadataKey, MetadataValue, O, P) {
-    getOrCreateMetadataMap(O, P, true).set(MetadataKey, MetadataValue);
-  };
-  var ordinaryOwnMetadataKeys = function(target, targetKey) {
-    var metadataMap = getOrCreateMetadataMap(target, targetKey, false),
-        keys = [];
-    if (metadataMap)
-      metadataMap.forEach(function(_, key) {
-        keys.push(key);
-      });
-    return keys;
-  };
-  var toMetaKey = function(it) {
-    return it === undefined || typeof it == 'symbol' ? it : String(it);
-  };
-  var exp = function(O) {
-    $export($export.S, 'Reflect', O);
-  };
-  module.exports = {
-    store: store,
-    map: getOrCreateMetadataMap,
-    has: ordinaryHasOwnMetadata,
-    get: ordinaryGetOwnMetadata,
-    set: ordinaryDefineOwnMetadata,
-    keys: ordinaryOwnMetadataKeys,
-    key: toMetaKey,
-    exp: exp
-  };
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.reflect.define-metadata", ["npm:core-js@2.1.0/library/modules/_metadata", "npm:core-js@2.1.0/library/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var metadata = require("npm:core-js@2.1.0/library/modules/_metadata"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      toMetaKey = metadata.key,
-      ordinaryDefineOwnMetadata = metadata.set;
-  metadata.exp({defineMetadata: function defineMetadata(metadataKey, metadataValue, target, targetKey) {
-      ordinaryDefineOwnMetadata(metadataKey, metadataValue, anObject(target), toMetaKey(targetKey));
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.reflect.delete-metadata", ["npm:core-js@2.1.0/library/modules/_metadata", "npm:core-js@2.1.0/library/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var metadata = require("npm:core-js@2.1.0/library/modules/_metadata"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      toMetaKey = metadata.key,
-      getOrCreateMetadataMap = metadata.map,
-      store = metadata.store;
-  metadata.exp({deleteMetadata: function deleteMetadata(metadataKey, target) {
-      var targetKey = arguments.length < 3 ? undefined : toMetaKey(arguments[2]),
-          metadataMap = getOrCreateMetadataMap(anObject(target), targetKey, false);
-      if (metadataMap === undefined || !metadataMap['delete'](metadataKey))
-        return false;
-      if (metadataMap.size)
-        return true;
-      var targetMetadata = store.get(target);
-      targetMetadata['delete'](targetKey);
-      return !!targetMetadata.size || store['delete'](target);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.reflect.get-metadata", ["npm:core-js@2.1.0/library/modules/_metadata", "npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_object-gpo"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var metadata = require("npm:core-js@2.1.0/library/modules/_metadata"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      getPrototypeOf = require("npm:core-js@2.1.0/library/modules/_object-gpo"),
-      ordinaryHasOwnMetadata = metadata.has,
-      ordinaryGetOwnMetadata = metadata.get,
-      toMetaKey = metadata.key;
-  var ordinaryGetMetadata = function(MetadataKey, O, P) {
-    var hasOwn = ordinaryHasOwnMetadata(MetadataKey, O, P);
-    if (hasOwn)
-      return ordinaryGetOwnMetadata(MetadataKey, O, P);
-    var parent = getPrototypeOf(O);
-    return parent !== null ? ordinaryGetMetadata(MetadataKey, parent, P) : undefined;
-  };
-  metadata.exp({getMetadata: function getMetadata(metadataKey, target) {
-      return ordinaryGetMetadata(metadataKey, anObject(target), arguments.length < 3 ? undefined : toMetaKey(arguments[2]));
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es6.set", ["npm:core-js@2.1.0/library/modules/_collection-strong", "npm:core-js@2.1.0/library/modules/_collection"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var strong = require("npm:core-js@2.1.0/library/modules/_collection-strong");
-  module.exports = require("npm:core-js@2.1.0/library/modules/_collection")('Set', function(get) {
-    return function Set() {
-      return get(this, arguments.length > 0 ? arguments[0] : undefined);
+    function localeMonthsParse(monthName, format, strict) {
+      var i,
+          mom,
+          regex;
+      if (!this._monthsParse) {
+        this._monthsParse = [];
+        this._longMonthsParse = [];
+        this._shortMonthsParse = [];
+      }
+      for (i = 0; i < 12; i++) {
+        mom = create_utc__createUTC([2000, i]);
+        if (strict && !this._longMonthsParse[i]) {
+          this._longMonthsParse[i] = new RegExp('^' + this.months(mom, '').replace('.', '') + '$', 'i');
+          this._shortMonthsParse[i] = new RegExp('^' + this.monthsShort(mom, '').replace('.', '') + '$', 'i');
+        }
+        if (!strict && !this._monthsParse[i]) {
+          regex = '^' + this.months(mom, '') + '|^' + this.monthsShort(mom, '');
+          this._monthsParse[i] = new RegExp(regex.replace('.', ''), 'i');
+        }
+        if (strict && format === 'MMMM' && this._longMonthsParse[i].test(monthName)) {
+          return i;
+        } else if (strict && format === 'MMM' && this._shortMonthsParse[i].test(monthName)) {
+          return i;
+        } else if (!strict && this._monthsParse[i].test(monthName)) {
+          return i;
+        }
+      }
+    }
+    function setMonth(mom, value) {
+      var dayOfMonth;
+      if (!mom.isValid()) {
+        return mom;
+      }
+      if (typeof value === 'string') {
+        value = mom.localeData().monthsParse(value);
+        if (typeof value !== 'number') {
+          return mom;
+        }
+      }
+      dayOfMonth = Math.min(mom.date(), daysInMonth(mom.year(), value));
+      mom._d['set' + (mom._isUTC ? 'UTC' : '') + 'Month'](value, dayOfMonth);
+      return mom;
+    }
+    function getSetMonth(value) {
+      if (value != null) {
+        setMonth(this, value);
+        utils_hooks__hooks.updateOffset(this, true);
+        return this;
+      } else {
+        return get_set__get(this, 'Month');
+      }
+    }
+    function getDaysInMonth() {
+      return daysInMonth(this.year(), this.month());
+    }
+    var defaultMonthsShortRegex = matchWord;
+    function monthsShortRegex(isStrict) {
+      if (this._monthsParseExact) {
+        if (!hasOwnProp(this, '_monthsRegex')) {
+          computeMonthsParse.call(this);
+        }
+        if (isStrict) {
+          return this._monthsShortStrictRegex;
+        } else {
+          return this._monthsShortRegex;
+        }
+      } else {
+        return this._monthsShortStrictRegex && isStrict ? this._monthsShortStrictRegex : this._monthsShortRegex;
+      }
+    }
+    var defaultMonthsRegex = matchWord;
+    function monthsRegex(isStrict) {
+      if (this._monthsParseExact) {
+        if (!hasOwnProp(this, '_monthsRegex')) {
+          computeMonthsParse.call(this);
+        }
+        if (isStrict) {
+          return this._monthsStrictRegex;
+        } else {
+          return this._monthsRegex;
+        }
+      } else {
+        return this._monthsStrictRegex && isStrict ? this._monthsStrictRegex : this._monthsRegex;
+      }
+    }
+    function computeMonthsParse() {
+      function cmpLenRev(a, b) {
+        return b.length - a.length;
+      }
+      var shortPieces = [],
+          longPieces = [],
+          mixedPieces = [],
+          i,
+          mom;
+      for (i = 0; i < 12; i++) {
+        mom = create_utc__createUTC([2000, i]);
+        shortPieces.push(this.monthsShort(mom, ''));
+        longPieces.push(this.months(mom, ''));
+        mixedPieces.push(this.months(mom, ''));
+        mixedPieces.push(this.monthsShort(mom, ''));
+      }
+      shortPieces.sort(cmpLenRev);
+      longPieces.sort(cmpLenRev);
+      mixedPieces.sort(cmpLenRev);
+      for (i = 0; i < 12; i++) {
+        shortPieces[i] = regexEscape(shortPieces[i]);
+        longPieces[i] = regexEscape(longPieces[i]);
+        mixedPieces[i] = regexEscape(mixedPieces[i]);
+      }
+      this._monthsRegex = new RegExp('^(' + mixedPieces.join('|') + ')', 'i');
+      this._monthsShortRegex = this._monthsRegex;
+      this._monthsStrictRegex = new RegExp('^(' + longPieces.join('|') + ')$', 'i');
+      this._monthsShortStrictRegex = new RegExp('^(' + shortPieces.join('|') + ')$', 'i');
+    }
+    function checkOverflow(m) {
+      var overflow;
+      var a = m._a;
+      if (a && getParsingFlags(m).overflow === -2) {
+        overflow = a[MONTH] < 0 || a[MONTH] > 11 ? MONTH : a[DATE] < 1 || a[DATE] > daysInMonth(a[YEAR], a[MONTH]) ? DATE : a[HOUR] < 0 || a[HOUR] > 24 || (a[HOUR] === 24 && (a[MINUTE] !== 0 || a[SECOND] !== 0 || a[MILLISECOND] !== 0)) ? HOUR : a[MINUTE] < 0 || a[MINUTE] > 59 ? MINUTE : a[SECOND] < 0 || a[SECOND] > 59 ? SECOND : a[MILLISECOND] < 0 || a[MILLISECOND] > 999 ? MILLISECOND : -1;
+        if (getParsingFlags(m)._overflowDayOfYear && (overflow < YEAR || overflow > DATE)) {
+          overflow = DATE;
+        }
+        if (getParsingFlags(m)._overflowWeeks && overflow === -1) {
+          overflow = WEEK;
+        }
+        if (getParsingFlags(m)._overflowWeekday && overflow === -1) {
+          overflow = WEEKDAY;
+        }
+        getParsingFlags(m).overflow = overflow;
+      }
+      return m;
+    }
+    function warn(msg) {
+      if (utils_hooks__hooks.suppressDeprecationWarnings === false && (typeof console !== 'undefined') && console.warn) {
+        console.warn('Deprecation warning: ' + msg);
+      }
+    }
+    function deprecate(msg, fn) {
+      var firstTime = true;
+      return extend(function() {
+        if (firstTime) {
+          warn(msg + '\nArguments: ' + Array.prototype.slice.call(arguments).join(', ') + '\n' + (new Error()).stack);
+          firstTime = false;
+        }
+        return fn.apply(this, arguments);
+      }, fn);
+    }
+    var deprecations = {};
+    function deprecateSimple(name, msg) {
+      if (!deprecations[name]) {
+        warn(msg);
+        deprecations[name] = true;
+      }
+    }
+    utils_hooks__hooks.suppressDeprecationWarnings = false;
+    var extendedIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?/;
+    var basicIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?/;
+    var tzRegex = /Z|[+-]\d\d(?::?\d\d)?/;
+    var isoDates = [['YYYYYY-MM-DD', /[+-]\d{6}-\d\d-\d\d/], ['YYYY-MM-DD', /\d{4}-\d\d-\d\d/], ['GGGG-[W]WW-E', /\d{4}-W\d\d-\d/], ['GGGG-[W]WW', /\d{4}-W\d\d/, false], ['YYYY-DDD', /\d{4}-\d{3}/], ['YYYY-MM', /\d{4}-\d\d/, false], ['YYYYYYMMDD', /[+-]\d{10}/], ['YYYYMMDD', /\d{8}/], ['GGGG[W]WWE', /\d{4}W\d{3}/], ['GGGG[W]WW', /\d{4}W\d{2}/, false], ['YYYYDDD', /\d{7}/]];
+    var isoTimes = [['HH:mm:ss.SSSS', /\d\d:\d\d:\d\d\.\d+/], ['HH:mm:ss,SSSS', /\d\d:\d\d:\d\d,\d+/], ['HH:mm:ss', /\d\d:\d\d:\d\d/], ['HH:mm', /\d\d:\d\d/], ['HHmmss.SSSS', /\d\d\d\d\d\d\.\d+/], ['HHmmss,SSSS', /\d\d\d\d\d\d,\d+/], ['HHmmss', /\d\d\d\d\d\d/], ['HHmm', /\d\d\d\d/], ['HH', /\d\d/]];
+    var aspNetJsonRegex = /^\/?Date\((\-?\d+)/i;
+    function configFromISO(config) {
+      var i,
+          l,
+          string = config._i,
+          match = extendedIsoRegex.exec(string) || basicIsoRegex.exec(string),
+          allowTime,
+          dateFormat,
+          timeFormat,
+          tzFormat;
+      if (match) {
+        getParsingFlags(config).iso = true;
+        for (i = 0, l = isoDates.length; i < l; i++) {
+          if (isoDates[i][1].exec(match[1])) {
+            dateFormat = isoDates[i][0];
+            allowTime = isoDates[i][2] !== false;
+            break;
+          }
+        }
+        if (dateFormat == null) {
+          config._isValid = false;
+          return;
+        }
+        if (match[3]) {
+          for (i = 0, l = isoTimes.length; i < l; i++) {
+            if (isoTimes[i][1].exec(match[3])) {
+              timeFormat = (match[2] || ' ') + isoTimes[i][0];
+              break;
+            }
+          }
+          if (timeFormat == null) {
+            config._isValid = false;
+            return;
+          }
+        }
+        if (!allowTime && timeFormat != null) {
+          config._isValid = false;
+          return;
+        }
+        if (match[4]) {
+          if (tzRegex.exec(match[4])) {
+            tzFormat = 'Z';
+          } else {
+            config._isValid = false;
+            return;
+          }
+        }
+        config._f = dateFormat + (timeFormat || '') + (tzFormat || '');
+        configFromStringAndFormat(config);
+      } else {
+        config._isValid = false;
+      }
+    }
+    function configFromString(config) {
+      var matched = aspNetJsonRegex.exec(config._i);
+      if (matched !== null) {
+        config._d = new Date(+matched[1]);
+        return;
+      }
+      configFromISO(config);
+      if (config._isValid === false) {
+        delete config._isValid;
+        utils_hooks__hooks.createFromInputFallback(config);
+      }
+    }
+    utils_hooks__hooks.createFromInputFallback = deprecate('moment construction falls back to js Date. This is ' + 'discouraged and will be removed in upcoming major ' + 'release. Please refer to ' + 'https://github.com/moment/moment/issues/1407 for more info.', function(config) {
+      config._d = new Date(config._i + (config._useUTC ? ' UTC' : ''));
+    });
+    function createDate(y, m, d, h, M, s, ms) {
+      var date = new Date(y, m, d, h, M, s, ms);
+      if (y < 100 && y >= 0 && isFinite(date.getFullYear())) {
+        date.setFullYear(y);
+      }
+      return date;
+    }
+    function createUTCDate(y) {
+      var date = new Date(Date.UTC.apply(null, arguments));
+      if (y < 100 && y >= 0 && isFinite(date.getUTCFullYear())) {
+        date.setUTCFullYear(y);
+      }
+      return date;
+    }
+    addFormatToken('Y', 0, 0, function() {
+      var y = this.year();
+      return y <= 9999 ? '' + y : '+' + y;
+    });
+    addFormatToken(0, ['YY', 2], 0, function() {
+      return this.year() % 100;
+    });
+    addFormatToken(0, ['YYYY', 4], 0, 'year');
+    addFormatToken(0, ['YYYYY', 5], 0, 'year');
+    addFormatToken(0, ['YYYYYY', 6, true], 0, 'year');
+    addUnitAlias('year', 'y');
+    addRegexToken('Y', matchSigned);
+    addRegexToken('YY', match1to2, match2);
+    addRegexToken('YYYY', match1to4, match4);
+    addRegexToken('YYYYY', match1to6, match6);
+    addRegexToken('YYYYYY', match1to6, match6);
+    addParseToken(['YYYYY', 'YYYYYY'], YEAR);
+    addParseToken('YYYY', function(input, array) {
+      array[YEAR] = input.length === 2 ? utils_hooks__hooks.parseTwoDigitYear(input) : toInt(input);
+    });
+    addParseToken('YY', function(input, array) {
+      array[YEAR] = utils_hooks__hooks.parseTwoDigitYear(input);
+    });
+    addParseToken('Y', function(input, array) {
+      array[YEAR] = parseInt(input, 10);
+    });
+    function daysInYear(year) {
+      return isLeapYear(year) ? 366 : 365;
+    }
+    function isLeapYear(year) {
+      return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+    }
+    utils_hooks__hooks.parseTwoDigitYear = function(input) {
+      return toInt(input) + (toInt(input) > 68 ? 1900 : 2000);
     };
-  }, {add: function add(value) {
-      return strong.def(this, value = value === 0 ? 0 : value, value);
-    }}, strong);
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.reflect.get-metadata-keys", ["npm:core-js@2.1.0/library/modules/es6.set", "npm:core-js@2.1.0/library/modules/_array-from-iterable", "npm:core-js@2.1.0/library/modules/_metadata", "npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_object-gpo"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var Set = require("npm:core-js@2.1.0/library/modules/es6.set"),
-      from = require("npm:core-js@2.1.0/library/modules/_array-from-iterable"),
-      metadata = require("npm:core-js@2.1.0/library/modules/_metadata"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      getPrototypeOf = require("npm:core-js@2.1.0/library/modules/_object-gpo"),
-      ordinaryOwnMetadataKeys = metadata.keys,
-      toMetaKey = metadata.key;
-  var ordinaryMetadataKeys = function(O, P) {
-    var oKeys = ordinaryOwnMetadataKeys(O, P),
-        parent = getPrototypeOf(O);
-    if (parent === null)
-      return oKeys;
-    var pKeys = ordinaryMetadataKeys(parent, P);
-    return pKeys.length ? oKeys.length ? from(new Set(oKeys.concat(pKeys))) : pKeys : oKeys;
-  };
-  metadata.exp({getMetadataKeys: function getMetadataKeys(target) {
-      return ordinaryMetadataKeys(anObject(target), arguments.length < 2 ? undefined : toMetaKey(arguments[1]));
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.reflect.get-own-metadata", ["npm:core-js@2.1.0/library/modules/_metadata", "npm:core-js@2.1.0/library/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var metadata = require("npm:core-js@2.1.0/library/modules/_metadata"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      ordinaryGetOwnMetadata = metadata.get,
-      toMetaKey = metadata.key;
-  metadata.exp({getOwnMetadata: function getOwnMetadata(metadataKey, target) {
-      return ordinaryGetOwnMetadata(metadataKey, anObject(target), arguments.length < 3 ? undefined : toMetaKey(arguments[2]));
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.reflect.get-own-metadata-keys", ["npm:core-js@2.1.0/library/modules/_metadata", "npm:core-js@2.1.0/library/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var metadata = require("npm:core-js@2.1.0/library/modules/_metadata"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      ordinaryOwnMetadataKeys = metadata.keys,
-      toMetaKey = metadata.key;
-  metadata.exp({getOwnMetadataKeys: function getOwnMetadataKeys(target) {
-      return ordinaryOwnMetadataKeys(anObject(target), arguments.length < 2 ? undefined : toMetaKey(arguments[1]));
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.reflect.has-metadata", ["npm:core-js@2.1.0/library/modules/_metadata", "npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_object-gpo"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var metadata = require("npm:core-js@2.1.0/library/modules/_metadata"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      getPrototypeOf = require("npm:core-js@2.1.0/library/modules/_object-gpo"),
-      ordinaryHasOwnMetadata = metadata.has,
-      toMetaKey = metadata.key;
-  var ordinaryHasMetadata = function(MetadataKey, O, P) {
-    var hasOwn = ordinaryHasOwnMetadata(MetadataKey, O, P);
-    if (hasOwn)
-      return true;
-    var parent = getPrototypeOf(O);
-    return parent !== null ? ordinaryHasMetadata(MetadataKey, parent, P) : false;
-  };
-  metadata.exp({hasMetadata: function hasMetadata(metadataKey, target) {
-      return ordinaryHasMetadata(metadataKey, anObject(target), arguments.length < 3 ? undefined : toMetaKey(arguments[2]));
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.reflect.has-own-metadata", ["npm:core-js@2.1.0/library/modules/_metadata", "npm:core-js@2.1.0/library/modules/_an-object"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var metadata = require("npm:core-js@2.1.0/library/modules/_metadata"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      ordinaryHasOwnMetadata = metadata.has,
-      toMetaKey = metadata.key;
-  metadata.exp({hasOwnMetadata: function hasOwnMetadata(metadataKey, target) {
-      return ordinaryHasOwnMetadata(metadataKey, anObject(target), arguments.length < 3 ? undefined : toMetaKey(arguments[2]));
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.reflect.metadata", ["npm:core-js@2.1.0/library/modules/_metadata", "npm:core-js@2.1.0/library/modules/_an-object", "npm:core-js@2.1.0/library/modules/_a-function"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var metadata = require("npm:core-js@2.1.0/library/modules/_metadata"),
-      anObject = require("npm:core-js@2.1.0/library/modules/_an-object"),
-      aFunction = require("npm:core-js@2.1.0/library/modules/_a-function"),
-      toMetaKey = metadata.key,
-      ordinaryDefineOwnMetadata = metadata.set;
-  metadata.exp({metadata: function metadata(metadataKey, metadataValue) {
-      return function decorator(target, targetKey) {
-        ordinaryDefineOwnMetadata(metadataKey, metadataValue, (targetKey !== undefined ? anObject : aFunction)(target), toMetaKey(targetKey));
+    var getSetYear = makeGetSet('FullYear', false);
+    function getIsLeapYear() {
+      return isLeapYear(this.year());
+    }
+    function firstWeekOffset(year, dow, doy) {
+      var fwd = 7 + dow - doy,
+          fwdlw = (7 + createUTCDate(year, 0, fwd).getUTCDay() - dow) % 7;
+      return -fwdlw + fwd - 1;
+    }
+    function dayOfYearFromWeeks(year, week, weekday, dow, doy) {
+      var localWeekday = (7 + weekday - dow) % 7,
+          weekOffset = firstWeekOffset(year, dow, doy),
+          dayOfYear = 1 + 7 * (week - 1) + localWeekday + weekOffset,
+          resYear,
+          resDayOfYear;
+      if (dayOfYear <= 0) {
+        resYear = year - 1;
+        resDayOfYear = daysInYear(resYear) + dayOfYear;
+      } else if (dayOfYear > daysInYear(year)) {
+        resYear = year + 1;
+        resDayOfYear = dayOfYear - daysInYear(year);
+      } else {
+        resYear = year;
+        resDayOfYear = dayOfYear;
+      }
+      return {
+        year: resYear,
+        dayOfYear: resDayOfYear
       };
-    }});
+    }
+    function weekOfYear(mom, dow, doy) {
+      var weekOffset = firstWeekOffset(mom.year(), dow, doy),
+          week = Math.floor((mom.dayOfYear() - weekOffset - 1) / 7) + 1,
+          resWeek,
+          resYear;
+      if (week < 1) {
+        resYear = mom.year() - 1;
+        resWeek = week + weeksInYear(resYear, dow, doy);
+      } else if (week > weeksInYear(mom.year(), dow, doy)) {
+        resWeek = week - weeksInYear(mom.year(), dow, doy);
+        resYear = mom.year() + 1;
+      } else {
+        resYear = mom.year();
+        resWeek = week;
+      }
+      return {
+        week: resWeek,
+        year: resYear
+      };
+    }
+    function weeksInYear(year, dow, doy) {
+      var weekOffset = firstWeekOffset(year, dow, doy),
+          weekOffsetNext = firstWeekOffset(year + 1, dow, doy);
+      return (daysInYear(year) - weekOffset + weekOffsetNext) / 7;
+    }
+    function defaults(a, b, c) {
+      if (a != null) {
+        return a;
+      }
+      if (b != null) {
+        return b;
+      }
+      return c;
+    }
+    function currentDateArray(config) {
+      var nowValue = new Date(utils_hooks__hooks.now());
+      if (config._useUTC) {
+        return [nowValue.getUTCFullYear(), nowValue.getUTCMonth(), nowValue.getUTCDate()];
+      }
+      return [nowValue.getFullYear(), nowValue.getMonth(), nowValue.getDate()];
+    }
+    function configFromArray(config) {
+      var i,
+          date,
+          input = [],
+          currentDate,
+          yearToUse;
+      if (config._d) {
+        return;
+      }
+      currentDate = currentDateArray(config);
+      if (config._w && config._a[DATE] == null && config._a[MONTH] == null) {
+        dayOfYearFromWeekInfo(config);
+      }
+      if (config._dayOfYear) {
+        yearToUse = defaults(config._a[YEAR], currentDate[YEAR]);
+        if (config._dayOfYear > daysInYear(yearToUse)) {
+          getParsingFlags(config)._overflowDayOfYear = true;
+        }
+        date = createUTCDate(yearToUse, 0, config._dayOfYear);
+        config._a[MONTH] = date.getUTCMonth();
+        config._a[DATE] = date.getUTCDate();
+      }
+      for (i = 0; i < 3 && config._a[i] == null; ++i) {
+        config._a[i] = input[i] = currentDate[i];
+      }
+      for (; i < 7; i++) {
+        config._a[i] = input[i] = (config._a[i] == null) ? (i === 2 ? 1 : 0) : config._a[i];
+      }
+      if (config._a[HOUR] === 24 && config._a[MINUTE] === 0 && config._a[SECOND] === 0 && config._a[MILLISECOND] === 0) {
+        config._nextDay = true;
+        config._a[HOUR] = 0;
+      }
+      config._d = (config._useUTC ? createUTCDate : createDate).apply(null, input);
+      if (config._tzm != null) {
+        config._d.setUTCMinutes(config._d.getUTCMinutes() - config._tzm);
+      }
+      if (config._nextDay) {
+        config._a[HOUR] = 24;
+      }
+    }
+    function dayOfYearFromWeekInfo(config) {
+      var w,
+          weekYear,
+          week,
+          weekday,
+          dow,
+          doy,
+          temp,
+          weekdayOverflow;
+      w = config._w;
+      if (w.GG != null || w.W != null || w.E != null) {
+        dow = 1;
+        doy = 4;
+        weekYear = defaults(w.GG, config._a[YEAR], weekOfYear(local__createLocal(), 1, 4).year);
+        week = defaults(w.W, 1);
+        weekday = defaults(w.E, 1);
+        if (weekday < 1 || weekday > 7) {
+          weekdayOverflow = true;
+        }
+      } else {
+        dow = config._locale._week.dow;
+        doy = config._locale._week.doy;
+        weekYear = defaults(w.gg, config._a[YEAR], weekOfYear(local__createLocal(), dow, doy).year);
+        week = defaults(w.w, 1);
+        if (w.d != null) {
+          weekday = w.d;
+          if (weekday < 0 || weekday > 6) {
+            weekdayOverflow = true;
+          }
+        } else if (w.e != null) {
+          weekday = w.e + dow;
+          if (w.e < 0 || w.e > 6) {
+            weekdayOverflow = true;
+          }
+        } else {
+          weekday = dow;
+        }
+      }
+      if (week < 1 || week > weeksInYear(weekYear, dow, doy)) {
+        getParsingFlags(config)._overflowWeeks = true;
+      } else if (weekdayOverflow != null) {
+        getParsingFlags(config)._overflowWeekday = true;
+      } else {
+        temp = dayOfYearFromWeeks(weekYear, week, weekday, dow, doy);
+        config._a[YEAR] = temp.year;
+        config._dayOfYear = temp.dayOfYear;
+      }
+    }
+    utils_hooks__hooks.ISO_8601 = function() {};
+    function configFromStringAndFormat(config) {
+      if (config._f === utils_hooks__hooks.ISO_8601) {
+        configFromISO(config);
+        return;
+      }
+      config._a = [];
+      getParsingFlags(config).empty = true;
+      var string = '' + config._i,
+          i,
+          parsedInput,
+          tokens,
+          token,
+          skipped,
+          stringLength = string.length,
+          totalParsedInputLength = 0;
+      tokens = expandFormat(config._f, config._locale).match(formattingTokens) || [];
+      for (i = 0; i < tokens.length; i++) {
+        token = tokens[i];
+        parsedInput = (string.match(getParseRegexForToken(token, config)) || [])[0];
+        if (parsedInput) {
+          skipped = string.substr(0, string.indexOf(parsedInput));
+          if (skipped.length > 0) {
+            getParsingFlags(config).unusedInput.push(skipped);
+          }
+          string = string.slice(string.indexOf(parsedInput) + parsedInput.length);
+          totalParsedInputLength += parsedInput.length;
+        }
+        if (formatTokenFunctions[token]) {
+          if (parsedInput) {
+            getParsingFlags(config).empty = false;
+          } else {
+            getParsingFlags(config).unusedTokens.push(token);
+          }
+          addTimeToArrayFromToken(token, parsedInput, config);
+        } else if (config._strict && !parsedInput) {
+          getParsingFlags(config).unusedTokens.push(token);
+        }
+      }
+      getParsingFlags(config).charsLeftOver = stringLength - totalParsedInputLength;
+      if (string.length > 0) {
+        getParsingFlags(config).unusedInput.push(string);
+      }
+      if (getParsingFlags(config).bigHour === true && config._a[HOUR] <= 12 && config._a[HOUR] > 0) {
+        getParsingFlags(config).bigHour = undefined;
+      }
+      config._a[HOUR] = meridiemFixWrap(config._locale, config._a[HOUR], config._meridiem);
+      configFromArray(config);
+      checkOverflow(config);
+    }
+    function meridiemFixWrap(locale, hour, meridiem) {
+      var isPm;
+      if (meridiem == null) {
+        return hour;
+      }
+      if (locale.meridiemHour != null) {
+        return locale.meridiemHour(hour, meridiem);
+      } else if (locale.isPM != null) {
+        isPm = locale.isPM(meridiem);
+        if (isPm && hour < 12) {
+          hour += 12;
+        }
+        if (!isPm && hour === 12) {
+          hour = 0;
+        }
+        return hour;
+      } else {
+        return hour;
+      }
+    }
+    function configFromStringAndArray(config) {
+      var tempConfig,
+          bestMoment,
+          scoreToBeat,
+          i,
+          currentScore;
+      if (config._f.length === 0) {
+        getParsingFlags(config).invalidFormat = true;
+        config._d = new Date(NaN);
+        return;
+      }
+      for (i = 0; i < config._f.length; i++) {
+        currentScore = 0;
+        tempConfig = copyConfig({}, config);
+        if (config._useUTC != null) {
+          tempConfig._useUTC = config._useUTC;
+        }
+        tempConfig._f = config._f[i];
+        configFromStringAndFormat(tempConfig);
+        if (!valid__isValid(tempConfig)) {
+          continue;
+        }
+        currentScore += getParsingFlags(tempConfig).charsLeftOver;
+        currentScore += getParsingFlags(tempConfig).unusedTokens.length * 10;
+        getParsingFlags(tempConfig).score = currentScore;
+        if (scoreToBeat == null || currentScore < scoreToBeat) {
+          scoreToBeat = currentScore;
+          bestMoment = tempConfig;
+        }
+      }
+      extend(config, bestMoment || tempConfig);
+    }
+    function configFromObject(config) {
+      if (config._d) {
+        return;
+      }
+      var i = normalizeObjectUnits(config._i);
+      config._a = map([i.year, i.month, i.day || i.date, i.hour, i.minute, i.second, i.millisecond], function(obj) {
+        return obj && parseInt(obj, 10);
+      });
+      configFromArray(config);
+    }
+    function createFromConfig(config) {
+      var res = new Moment(checkOverflow(prepareConfig(config)));
+      if (res._nextDay) {
+        res.add(1, 'd');
+        res._nextDay = undefined;
+      }
+      return res;
+    }
+    function prepareConfig(config) {
+      var input = config._i,
+          format = config._f;
+      config._locale = config._locale || locale_locales__getLocale(config._l);
+      if (input === null || (format === undefined && input === '')) {
+        return valid__createInvalid({nullInput: true});
+      }
+      if (typeof input === 'string') {
+        config._i = input = config._locale.preparse(input);
+      }
+      if (isMoment(input)) {
+        return new Moment(checkOverflow(input));
+      } else if (isArray(format)) {
+        configFromStringAndArray(config);
+      } else if (format) {
+        configFromStringAndFormat(config);
+      } else if (isDate(input)) {
+        config._d = input;
+      } else {
+        configFromInput(config);
+      }
+      if (!valid__isValid(config)) {
+        config._d = null;
+      }
+      return config;
+    }
+    function configFromInput(config) {
+      var input = config._i;
+      if (input === undefined) {
+        config._d = new Date(utils_hooks__hooks.now());
+      } else if (isDate(input)) {
+        config._d = new Date(+input);
+      } else if (typeof input === 'string') {
+        configFromString(config);
+      } else if (isArray(input)) {
+        config._a = map(input.slice(0), function(obj) {
+          return parseInt(obj, 10);
+        });
+        configFromArray(config);
+      } else if (typeof(input) === 'object') {
+        configFromObject(config);
+      } else if (typeof(input) === 'number') {
+        config._d = new Date(input);
+      } else {
+        utils_hooks__hooks.createFromInputFallback(config);
+      }
+    }
+    function createLocalOrUTC(input, format, locale, strict, isUTC) {
+      var c = {};
+      if (typeof(locale) === 'boolean') {
+        strict = locale;
+        locale = undefined;
+      }
+      c._isAMomentObject = true;
+      c._useUTC = c._isUTC = isUTC;
+      c._l = locale;
+      c._i = input;
+      c._f = format;
+      c._strict = strict;
+      return createFromConfig(c);
+    }
+    function local__createLocal(input, format, locale, strict) {
+      return createLocalOrUTC(input, format, locale, strict, false);
+    }
+    var prototypeMin = deprecate('moment().min is deprecated, use moment.min instead. https://github.com/moment/moment/issues/1548', function() {
+      var other = local__createLocal.apply(null, arguments);
+      if (this.isValid() && other.isValid()) {
+        return other < this ? this : other;
+      } else {
+        return valid__createInvalid();
+      }
+    });
+    var prototypeMax = deprecate('moment().max is deprecated, use moment.max instead. https://github.com/moment/moment/issues/1548', function() {
+      var other = local__createLocal.apply(null, arguments);
+      if (this.isValid() && other.isValid()) {
+        return other > this ? this : other;
+      } else {
+        return valid__createInvalid();
+      }
+    });
+    function pickBy(fn, moments) {
+      var res,
+          i;
+      if (moments.length === 1 && isArray(moments[0])) {
+        moments = moments[0];
+      }
+      if (!moments.length) {
+        return local__createLocal();
+      }
+      res = moments[0];
+      for (i = 1; i < moments.length; ++i) {
+        if (!moments[i].isValid() || moments[i][fn](res)) {
+          res = moments[i];
+        }
+      }
+      return res;
+    }
+    function min() {
+      var args = [].slice.call(arguments, 0);
+      return pickBy('isBefore', args);
+    }
+    function max() {
+      var args = [].slice.call(arguments, 0);
+      return pickBy('isAfter', args);
+    }
+    var now = function() {
+      return Date.now ? Date.now() : +(new Date());
+    };
+    function Duration(duration) {
+      var normalizedInput = normalizeObjectUnits(duration),
+          years = normalizedInput.year || 0,
+          quarters = normalizedInput.quarter || 0,
+          months = normalizedInput.month || 0,
+          weeks = normalizedInput.week || 0,
+          days = normalizedInput.day || 0,
+          hours = normalizedInput.hour || 0,
+          minutes = normalizedInput.minute || 0,
+          seconds = normalizedInput.second || 0,
+          milliseconds = normalizedInput.millisecond || 0;
+      this._milliseconds = +milliseconds + seconds * 1e3 + minutes * 6e4 + hours * 36e5;
+      this._days = +days + weeks * 7;
+      this._months = +months + quarters * 3 + years * 12;
+      this._data = {};
+      this._locale = locale_locales__getLocale();
+      this._bubble();
+    }
+    function isDuration(obj) {
+      return obj instanceof Duration;
+    }
+    function offset(token, separator) {
+      addFormatToken(token, 0, 0, function() {
+        var offset = this.utcOffset();
+        var sign = '+';
+        if (offset < 0) {
+          offset = -offset;
+          sign = '-';
+        }
+        return sign + zeroFill(~~(offset / 60), 2) + separator + zeroFill(~~(offset) % 60, 2);
+      });
+    }
+    offset('Z', ':');
+    offset('ZZ', '');
+    addRegexToken('Z', matchShortOffset);
+    addRegexToken('ZZ', matchShortOffset);
+    addParseToken(['Z', 'ZZ'], function(input, array, config) {
+      config._useUTC = true;
+      config._tzm = offsetFromString(matchShortOffset, input);
+    });
+    var chunkOffset = /([\+\-]|\d\d)/gi;
+    function offsetFromString(matcher, string) {
+      var matches = ((string || '').match(matcher) || []);
+      var chunk = matches[matches.length - 1] || [];
+      var parts = (chunk + '').match(chunkOffset) || ['-', 0, 0];
+      var minutes = +(parts[1] * 60) + toInt(parts[2]);
+      return parts[0] === '+' ? minutes : -minutes;
+    }
+    function cloneWithOffset(input, model) {
+      var res,
+          diff;
+      if (model._isUTC) {
+        res = model.clone();
+        diff = (isMoment(input) || isDate(input) ? +input : +local__createLocal(input)) - (+res);
+        res._d.setTime(+res._d + diff);
+        utils_hooks__hooks.updateOffset(res, false);
+        return res;
+      } else {
+        return local__createLocal(input).local();
+      }
+    }
+    function getDateOffset(m) {
+      return -Math.round(m._d.getTimezoneOffset() / 15) * 15;
+    }
+    utils_hooks__hooks.updateOffset = function() {};
+    function getSetOffset(input, keepLocalTime) {
+      var offset = this._offset || 0,
+          localAdjust;
+      if (!this.isValid()) {
+        return input != null ? this : NaN;
+      }
+      if (input != null) {
+        if (typeof input === 'string') {
+          input = offsetFromString(matchShortOffset, input);
+        } else if (Math.abs(input) < 16) {
+          input = input * 60;
+        }
+        if (!this._isUTC && keepLocalTime) {
+          localAdjust = getDateOffset(this);
+        }
+        this._offset = input;
+        this._isUTC = true;
+        if (localAdjust != null) {
+          this.add(localAdjust, 'm');
+        }
+        if (offset !== input) {
+          if (!keepLocalTime || this._changeInProgress) {
+            add_subtract__addSubtract(this, create__createDuration(input - offset, 'm'), 1, false);
+          } else if (!this._changeInProgress) {
+            this._changeInProgress = true;
+            utils_hooks__hooks.updateOffset(this, true);
+            this._changeInProgress = null;
+          }
+        }
+        return this;
+      } else {
+        return this._isUTC ? offset : getDateOffset(this);
+      }
+    }
+    function getSetZone(input, keepLocalTime) {
+      if (input != null) {
+        if (typeof input !== 'string') {
+          input = -input;
+        }
+        this.utcOffset(input, keepLocalTime);
+        return this;
+      } else {
+        return -this.utcOffset();
+      }
+    }
+    function setOffsetToUTC(keepLocalTime) {
+      return this.utcOffset(0, keepLocalTime);
+    }
+    function setOffsetToLocal(keepLocalTime) {
+      if (this._isUTC) {
+        this.utcOffset(0, keepLocalTime);
+        this._isUTC = false;
+        if (keepLocalTime) {
+          this.subtract(getDateOffset(this), 'm');
+        }
+      }
+      return this;
+    }
+    function setOffsetToParsedOffset() {
+      if (this._tzm) {
+        this.utcOffset(this._tzm);
+      } else if (typeof this._i === 'string') {
+        this.utcOffset(offsetFromString(matchOffset, this._i));
+      }
+      return this;
+    }
+    function hasAlignedHourOffset(input) {
+      if (!this.isValid()) {
+        return false;
+      }
+      input = input ? local__createLocal(input).utcOffset() : 0;
+      return (this.utcOffset() - input) % 60 === 0;
+    }
+    function isDaylightSavingTime() {
+      return (this.utcOffset() > this.clone().month(0).utcOffset() || this.utcOffset() > this.clone().month(5).utcOffset());
+    }
+    function isDaylightSavingTimeShifted() {
+      if (!isUndefined(this._isDSTShifted)) {
+        return this._isDSTShifted;
+      }
+      var c = {};
+      copyConfig(c, this);
+      c = prepareConfig(c);
+      if (c._a) {
+        var other = c._isUTC ? create_utc__createUTC(c._a) : local__createLocal(c._a);
+        this._isDSTShifted = this.isValid() && compareArrays(c._a, other.toArray()) > 0;
+      } else {
+        this._isDSTShifted = false;
+      }
+      return this._isDSTShifted;
+    }
+    function isLocal() {
+      return this.isValid() ? !this._isUTC : false;
+    }
+    function isUtcOffset() {
+      return this.isValid() ? this._isUTC : false;
+    }
+    function isUtc() {
+      return this.isValid() ? this._isUTC && this._offset === 0 : false;
+    }
+    var aspNetRegex = /^(\-)?(?:(\d*)[. ])?(\d+)\:(\d+)(?:\:(\d+)\.?(\d{3})?\d*)?$/;
+    var isoRegex = /^(-)?P(?:(?:([0-9,.]*)Y)?(?:([0-9,.]*)M)?(?:([0-9,.]*)D)?(?:T(?:([0-9,.]*)H)?(?:([0-9,.]*)M)?(?:([0-9,.]*)S)?)?|([0-9,.]*)W)$/;
+    function create__createDuration(input, key) {
+      var duration = input,
+          match = null,
+          sign,
+          ret,
+          diffRes;
+      if (isDuration(input)) {
+        duration = {
+          ms: input._milliseconds,
+          d: input._days,
+          M: input._months
+        };
+      } else if (typeof input === 'number') {
+        duration = {};
+        if (key) {
+          duration[key] = input;
+        } else {
+          duration.milliseconds = input;
+        }
+      } else if (!!(match = aspNetRegex.exec(input))) {
+        sign = (match[1] === '-') ? -1 : 1;
+        duration = {
+          y: 0,
+          d: toInt(match[DATE]) * sign,
+          h: toInt(match[HOUR]) * sign,
+          m: toInt(match[MINUTE]) * sign,
+          s: toInt(match[SECOND]) * sign,
+          ms: toInt(match[MILLISECOND]) * sign
+        };
+      } else if (!!(match = isoRegex.exec(input))) {
+        sign = (match[1] === '-') ? -1 : 1;
+        duration = {
+          y: parseIso(match[2], sign),
+          M: parseIso(match[3], sign),
+          d: parseIso(match[4], sign),
+          h: parseIso(match[5], sign),
+          m: parseIso(match[6], sign),
+          s: parseIso(match[7], sign),
+          w: parseIso(match[8], sign)
+        };
+      } else if (duration == null) {
+        duration = {};
+      } else if (typeof duration === 'object' && ('from' in duration || 'to' in duration)) {
+        diffRes = momentsDifference(local__createLocal(duration.from), local__createLocal(duration.to));
+        duration = {};
+        duration.ms = diffRes.milliseconds;
+        duration.M = diffRes.months;
+      }
+      ret = new Duration(duration);
+      if (isDuration(input) && hasOwnProp(input, '_locale')) {
+        ret._locale = input._locale;
+      }
+      return ret;
+    }
+    create__createDuration.fn = Duration.prototype;
+    function parseIso(inp, sign) {
+      var res = inp && parseFloat(inp.replace(',', '.'));
+      return (isNaN(res) ? 0 : res) * sign;
+    }
+    function positiveMomentsDifference(base, other) {
+      var res = {
+        milliseconds: 0,
+        months: 0
+      };
+      res.months = other.month() - base.month() + (other.year() - base.year()) * 12;
+      if (base.clone().add(res.months, 'M').isAfter(other)) {
+        --res.months;
+      }
+      res.milliseconds = +other - +(base.clone().add(res.months, 'M'));
+      return res;
+    }
+    function momentsDifference(base, other) {
+      var res;
+      if (!(base.isValid() && other.isValid())) {
+        return {
+          milliseconds: 0,
+          months: 0
+        };
+      }
+      other = cloneWithOffset(other, base);
+      if (base.isBefore(other)) {
+        res = positiveMomentsDifference(base, other);
+      } else {
+        res = positiveMomentsDifference(other, base);
+        res.milliseconds = -res.milliseconds;
+        res.months = -res.months;
+      }
+      return res;
+    }
+    function createAdder(direction, name) {
+      return function(val, period) {
+        var dur,
+            tmp;
+        if (period !== null && !isNaN(+period)) {
+          deprecateSimple(name, 'moment().' + name + '(period, number) is deprecated. Please use moment().' + name + '(number, period).');
+          tmp = val;
+          val = period;
+          period = tmp;
+        }
+        val = typeof val === 'string' ? +val : val;
+        dur = create__createDuration(val, period);
+        add_subtract__addSubtract(this, dur, direction);
+        return this;
+      };
+    }
+    function add_subtract__addSubtract(mom, duration, isAdding, updateOffset) {
+      var milliseconds = duration._milliseconds,
+          days = duration._days,
+          months = duration._months;
+      if (!mom.isValid()) {
+        return;
+      }
+      updateOffset = updateOffset == null ? true : updateOffset;
+      if (milliseconds) {
+        mom._d.setTime(+mom._d + milliseconds * isAdding);
+      }
+      if (days) {
+        get_set__set(mom, 'Date', get_set__get(mom, 'Date') + days * isAdding);
+      }
+      if (months) {
+        setMonth(mom, get_set__get(mom, 'Month') + months * isAdding);
+      }
+      if (updateOffset) {
+        utils_hooks__hooks.updateOffset(mom, days || months);
+      }
+    }
+    var add_subtract__add = createAdder(1, 'add');
+    var add_subtract__subtract = createAdder(-1, 'subtract');
+    function moment_calendar__calendar(time, formats) {
+      var now = time || local__createLocal(),
+          sod = cloneWithOffset(now, this).startOf('day'),
+          diff = this.diff(sod, 'days', true),
+          format = diff < -6 ? 'sameElse' : diff < -1 ? 'lastWeek' : diff < 0 ? 'lastDay' : diff < 1 ? 'sameDay' : diff < 2 ? 'nextDay' : diff < 7 ? 'nextWeek' : 'sameElse';
+      var output = formats && (isFunction(formats[format]) ? formats[format]() : formats[format]);
+      return this.format(output || this.localeData().calendar(format, this, local__createLocal(now)));
+    }
+    function clone() {
+      return new Moment(this);
+    }
+    function isAfter(input, units) {
+      var localInput = isMoment(input) ? input : local__createLocal(input);
+      if (!(this.isValid() && localInput.isValid())) {
+        return false;
+      }
+      units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+      if (units === 'millisecond') {
+        return +this > +localInput;
+      } else {
+        return +localInput < +this.clone().startOf(units);
+      }
+    }
+    function isBefore(input, units) {
+      var localInput = isMoment(input) ? input : local__createLocal(input);
+      if (!(this.isValid() && localInput.isValid())) {
+        return false;
+      }
+      units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+      if (units === 'millisecond') {
+        return +this < +localInput;
+      } else {
+        return +this.clone().endOf(units) < +localInput;
+      }
+    }
+    function isBetween(from, to, units) {
+      return this.isAfter(from, units) && this.isBefore(to, units);
+    }
+    function isSame(input, units) {
+      var localInput = isMoment(input) ? input : local__createLocal(input),
+          inputMs;
+      if (!(this.isValid() && localInput.isValid())) {
+        return false;
+      }
+      units = normalizeUnits(units || 'millisecond');
+      if (units === 'millisecond') {
+        return +this === +localInput;
+      } else {
+        inputMs = +localInput;
+        return +(this.clone().startOf(units)) <= inputMs && inputMs <= +(this.clone().endOf(units));
+      }
+    }
+    function isSameOrAfter(input, units) {
+      return this.isSame(input, units) || this.isAfter(input, units);
+    }
+    function isSameOrBefore(input, units) {
+      return this.isSame(input, units) || this.isBefore(input, units);
+    }
+    function diff(input, units, asFloat) {
+      var that,
+          zoneDelta,
+          delta,
+          output;
+      if (!this.isValid()) {
+        return NaN;
+      }
+      that = cloneWithOffset(input, this);
+      if (!that.isValid()) {
+        return NaN;
+      }
+      zoneDelta = (that.utcOffset() - this.utcOffset()) * 6e4;
+      units = normalizeUnits(units);
+      if (units === 'year' || units === 'month' || units === 'quarter') {
+        output = monthDiff(this, that);
+        if (units === 'quarter') {
+          output = output / 3;
+        } else if (units === 'year') {
+          output = output / 12;
+        }
+      } else {
+        delta = this - that;
+        output = units === 'second' ? delta / 1e3 : units === 'minute' ? delta / 6e4 : units === 'hour' ? delta / 36e5 : units === 'day' ? (delta - zoneDelta) / 864e5 : units === 'week' ? (delta - zoneDelta) / 6048e5 : delta;
+      }
+      return asFloat ? output : absFloor(output);
+    }
+    function monthDiff(a, b) {
+      var wholeMonthDiff = ((b.year() - a.year()) * 12) + (b.month() - a.month()),
+          anchor = a.clone().add(wholeMonthDiff, 'months'),
+          anchor2,
+          adjust;
+      if (b - anchor < 0) {
+        anchor2 = a.clone().add(wholeMonthDiff - 1, 'months');
+        adjust = (b - anchor) / (anchor - anchor2);
+      } else {
+        anchor2 = a.clone().add(wholeMonthDiff + 1, 'months');
+        adjust = (b - anchor) / (anchor2 - anchor);
+      }
+      return -(wholeMonthDiff + adjust);
+    }
+    utils_hooks__hooks.defaultFormat = 'YYYY-MM-DDTHH:mm:ssZ';
+    function toString() {
+      return this.clone().locale('en').format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ');
+    }
+    function moment_format__toISOString() {
+      var m = this.clone().utc();
+      if (0 < m.year() && m.year() <= 9999) {
+        if (isFunction(Date.prototype.toISOString)) {
+          return this.toDate().toISOString();
+        } else {
+          return formatMoment(m, 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
+        }
+      } else {
+        return formatMoment(m, 'YYYYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
+      }
+    }
+    function format(inputString) {
+      var output = formatMoment(this, inputString || utils_hooks__hooks.defaultFormat);
+      return this.localeData().postformat(output);
+    }
+    function from(time, withoutSuffix) {
+      if (this.isValid() && ((isMoment(time) && time.isValid()) || local__createLocal(time).isValid())) {
+        return create__createDuration({
+          to: this,
+          from: time
+        }).locale(this.locale()).humanize(!withoutSuffix);
+      } else {
+        return this.localeData().invalidDate();
+      }
+    }
+    function fromNow(withoutSuffix) {
+      return this.from(local__createLocal(), withoutSuffix);
+    }
+    function to(time, withoutSuffix) {
+      if (this.isValid() && ((isMoment(time) && time.isValid()) || local__createLocal(time).isValid())) {
+        return create__createDuration({
+          from: this,
+          to: time
+        }).locale(this.locale()).humanize(!withoutSuffix);
+      } else {
+        return this.localeData().invalidDate();
+      }
+    }
+    function toNow(withoutSuffix) {
+      return this.to(local__createLocal(), withoutSuffix);
+    }
+    function locale(key) {
+      var newLocaleData;
+      if (key === undefined) {
+        return this._locale._abbr;
+      } else {
+        newLocaleData = locale_locales__getLocale(key);
+        if (newLocaleData != null) {
+          this._locale = newLocaleData;
+        }
+        return this;
+      }
+    }
+    var lang = deprecate('moment().lang() is deprecated. Instead, use moment().localeData() to get the language configuration. Use moment().locale() to change languages.', function(key) {
+      if (key === undefined) {
+        return this.localeData();
+      } else {
+        return this.locale(key);
+      }
+    });
+    function localeData() {
+      return this._locale;
+    }
+    function startOf(units) {
+      units = normalizeUnits(units);
+      switch (units) {
+        case 'year':
+          this.month(0);
+        case 'quarter':
+        case 'month':
+          this.date(1);
+        case 'week':
+        case 'isoWeek':
+        case 'day':
+          this.hours(0);
+        case 'hour':
+          this.minutes(0);
+        case 'minute':
+          this.seconds(0);
+        case 'second':
+          this.milliseconds(0);
+      }
+      if (units === 'week') {
+        this.weekday(0);
+      }
+      if (units === 'isoWeek') {
+        this.isoWeekday(1);
+      }
+      if (units === 'quarter') {
+        this.month(Math.floor(this.month() / 3) * 3);
+      }
+      return this;
+    }
+    function endOf(units) {
+      units = normalizeUnits(units);
+      if (units === undefined || units === 'millisecond') {
+        return this;
+      }
+      return this.startOf(units).add(1, (units === 'isoWeek' ? 'week' : units)).subtract(1, 'ms');
+    }
+    function to_type__valueOf() {
+      return +this._d - ((this._offset || 0) * 60000);
+    }
+    function unix() {
+      return Math.floor(+this / 1000);
+    }
+    function toDate() {
+      return this._offset ? new Date(+this) : this._d;
+    }
+    function toArray() {
+      var m = this;
+      return [m.year(), m.month(), m.date(), m.hour(), m.minute(), m.second(), m.millisecond()];
+    }
+    function toObject() {
+      var m = this;
+      return {
+        years: m.year(),
+        months: m.month(),
+        date: m.date(),
+        hours: m.hours(),
+        minutes: m.minutes(),
+        seconds: m.seconds(),
+        milliseconds: m.milliseconds()
+      };
+    }
+    function toJSON() {
+      return this.isValid() ? this.toISOString() : 'null';
+    }
+    function moment_valid__isValid() {
+      return valid__isValid(this);
+    }
+    function parsingFlags() {
+      return extend({}, getParsingFlags(this));
+    }
+    function invalidAt() {
+      return getParsingFlags(this).overflow;
+    }
+    function creationData() {
+      return {
+        input: this._i,
+        format: this._f,
+        locale: this._locale,
+        isUTC: this._isUTC,
+        strict: this._strict
+      };
+    }
+    addFormatToken(0, ['gg', 2], 0, function() {
+      return this.weekYear() % 100;
+    });
+    addFormatToken(0, ['GG', 2], 0, function() {
+      return this.isoWeekYear() % 100;
+    });
+    function addWeekYearFormatToken(token, getter) {
+      addFormatToken(0, [token, token.length], 0, getter);
+    }
+    addWeekYearFormatToken('gggg', 'weekYear');
+    addWeekYearFormatToken('ggggg', 'weekYear');
+    addWeekYearFormatToken('GGGG', 'isoWeekYear');
+    addWeekYearFormatToken('GGGGG', 'isoWeekYear');
+    addUnitAlias('weekYear', 'gg');
+    addUnitAlias('isoWeekYear', 'GG');
+    addRegexToken('G', matchSigned);
+    addRegexToken('g', matchSigned);
+    addRegexToken('GG', match1to2, match2);
+    addRegexToken('gg', match1to2, match2);
+    addRegexToken('GGGG', match1to4, match4);
+    addRegexToken('gggg', match1to4, match4);
+    addRegexToken('GGGGG', match1to6, match6);
+    addRegexToken('ggggg', match1to6, match6);
+    addWeekParseToken(['gggg', 'ggggg', 'GGGG', 'GGGGG'], function(input, week, config, token) {
+      week[token.substr(0, 2)] = toInt(input);
+    });
+    addWeekParseToken(['gg', 'GG'], function(input, week, config, token) {
+      week[token] = utils_hooks__hooks.parseTwoDigitYear(input);
+    });
+    function getSetWeekYear(input) {
+      return getSetWeekYearHelper.call(this, input, this.week(), this.weekday(), this.localeData()._week.dow, this.localeData()._week.doy);
+    }
+    function getSetISOWeekYear(input) {
+      return getSetWeekYearHelper.call(this, input, this.isoWeek(), this.isoWeekday(), 1, 4);
+    }
+    function getISOWeeksInYear() {
+      return weeksInYear(this.year(), 1, 4);
+    }
+    function getWeeksInYear() {
+      var weekInfo = this.localeData()._week;
+      return weeksInYear(this.year(), weekInfo.dow, weekInfo.doy);
+    }
+    function getSetWeekYearHelper(input, week, weekday, dow, doy) {
+      var weeksTarget;
+      if (input == null) {
+        return weekOfYear(this, dow, doy).year;
+      } else {
+        weeksTarget = weeksInYear(input, dow, doy);
+        if (week > weeksTarget) {
+          week = weeksTarget;
+        }
+        return setWeekAll.call(this, input, week, weekday, dow, doy);
+      }
+    }
+    function setWeekAll(weekYear, week, weekday, dow, doy) {
+      var dayOfYearData = dayOfYearFromWeeks(weekYear, week, weekday, dow, doy),
+          date = createUTCDate(dayOfYearData.year, 0, dayOfYearData.dayOfYear);
+      this.year(date.getUTCFullYear());
+      this.month(date.getUTCMonth());
+      this.date(date.getUTCDate());
+      return this;
+    }
+    addFormatToken('Q', 0, 'Qo', 'quarter');
+    addUnitAlias('quarter', 'Q');
+    addRegexToken('Q', match1);
+    addParseToken('Q', function(input, array) {
+      array[MONTH] = (toInt(input) - 1) * 3;
+    });
+    function getSetQuarter(input) {
+      return input == null ? Math.ceil((this.month() + 1) / 3) : this.month((input - 1) * 3 + this.month() % 3);
+    }
+    addFormatToken('w', ['ww', 2], 'wo', 'week');
+    addFormatToken('W', ['WW', 2], 'Wo', 'isoWeek');
+    addUnitAlias('week', 'w');
+    addUnitAlias('isoWeek', 'W');
+    addRegexToken('w', match1to2);
+    addRegexToken('ww', match1to2, match2);
+    addRegexToken('W', match1to2);
+    addRegexToken('WW', match1to2, match2);
+    addWeekParseToken(['w', 'ww', 'W', 'WW'], function(input, week, config, token) {
+      week[token.substr(0, 1)] = toInt(input);
+    });
+    function localeWeek(mom) {
+      return weekOfYear(mom, this._week.dow, this._week.doy).week;
+    }
+    var defaultLocaleWeek = {
+      dow: 0,
+      doy: 6
+    };
+    function localeFirstDayOfWeek() {
+      return this._week.dow;
+    }
+    function localeFirstDayOfYear() {
+      return this._week.doy;
+    }
+    function getSetWeek(input) {
+      var week = this.localeData().week(this);
+      return input == null ? week : this.add((input - week) * 7, 'd');
+    }
+    function getSetISOWeek(input) {
+      var week = weekOfYear(this, 1, 4).week;
+      return input == null ? week : this.add((input - week) * 7, 'd');
+    }
+    addFormatToken('D', ['DD', 2], 'Do', 'date');
+    addUnitAlias('date', 'D');
+    addRegexToken('D', match1to2);
+    addRegexToken('DD', match1to2, match2);
+    addRegexToken('Do', function(isStrict, locale) {
+      return isStrict ? locale._ordinalParse : locale._ordinalParseLenient;
+    });
+    addParseToken(['D', 'DD'], DATE);
+    addParseToken('Do', function(input, array) {
+      array[DATE] = toInt(input.match(match1to2)[0], 10);
+    });
+    var getSetDayOfMonth = makeGetSet('Date', true);
+    addFormatToken('d', 0, 'do', 'day');
+    addFormatToken('dd', 0, 0, function(format) {
+      return this.localeData().weekdaysMin(this, format);
+    });
+    addFormatToken('ddd', 0, 0, function(format) {
+      return this.localeData().weekdaysShort(this, format);
+    });
+    addFormatToken('dddd', 0, 0, function(format) {
+      return this.localeData().weekdays(this, format);
+    });
+    addFormatToken('e', 0, 0, 'weekday');
+    addFormatToken('E', 0, 0, 'isoWeekday');
+    addUnitAlias('day', 'd');
+    addUnitAlias('weekday', 'e');
+    addUnitAlias('isoWeekday', 'E');
+    addRegexToken('d', match1to2);
+    addRegexToken('e', match1to2);
+    addRegexToken('E', match1to2);
+    addRegexToken('dd', matchWord);
+    addRegexToken('ddd', matchWord);
+    addRegexToken('dddd', matchWord);
+    addWeekParseToken(['dd', 'ddd', 'dddd'], function(input, week, config, token) {
+      var weekday = config._locale.weekdaysParse(input, token, config._strict);
+      if (weekday != null) {
+        week.d = weekday;
+      } else {
+        getParsingFlags(config).invalidWeekday = input;
+      }
+    });
+    addWeekParseToken(['d', 'e', 'E'], function(input, week, config, token) {
+      week[token] = toInt(input);
+    });
+    function parseWeekday(input, locale) {
+      if (typeof input !== 'string') {
+        return input;
+      }
+      if (!isNaN(input)) {
+        return parseInt(input, 10);
+      }
+      input = locale.weekdaysParse(input);
+      if (typeof input === 'number') {
+        return input;
+      }
+      return null;
+    }
+    var defaultLocaleWeekdays = 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_');
+    function localeWeekdays(m, format) {
+      return isArray(this._weekdays) ? this._weekdays[m.day()] : this._weekdays[this._weekdays.isFormat.test(format) ? 'format' : 'standalone'][m.day()];
+    }
+    var defaultLocaleWeekdaysShort = 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_');
+    function localeWeekdaysShort(m) {
+      return this._weekdaysShort[m.day()];
+    }
+    var defaultLocaleWeekdaysMin = 'Su_Mo_Tu_We_Th_Fr_Sa'.split('_');
+    function localeWeekdaysMin(m) {
+      return this._weekdaysMin[m.day()];
+    }
+    function localeWeekdaysParse(weekdayName, format, strict) {
+      var i,
+          mom,
+          regex;
+      if (!this._weekdaysParse) {
+        this._weekdaysParse = [];
+        this._minWeekdaysParse = [];
+        this._shortWeekdaysParse = [];
+        this._fullWeekdaysParse = [];
+      }
+      for (i = 0; i < 7; i++) {
+        mom = local__createLocal([2000, 1]).day(i);
+        if (strict && !this._fullWeekdaysParse[i]) {
+          this._fullWeekdaysParse[i] = new RegExp('^' + this.weekdays(mom, '').replace('.', '\.?') + '$', 'i');
+          this._shortWeekdaysParse[i] = new RegExp('^' + this.weekdaysShort(mom, '').replace('.', '\.?') + '$', 'i');
+          this._minWeekdaysParse[i] = new RegExp('^' + this.weekdaysMin(mom, '').replace('.', '\.?') + '$', 'i');
+        }
+        if (!this._weekdaysParse[i]) {
+          regex = '^' + this.weekdays(mom, '') + '|^' + this.weekdaysShort(mom, '') + '|^' + this.weekdaysMin(mom, '');
+          this._weekdaysParse[i] = new RegExp(regex.replace('.', ''), 'i');
+        }
+        if (strict && format === 'dddd' && this._fullWeekdaysParse[i].test(weekdayName)) {
+          return i;
+        } else if (strict && format === 'ddd' && this._shortWeekdaysParse[i].test(weekdayName)) {
+          return i;
+        } else if (strict && format === 'dd' && this._minWeekdaysParse[i].test(weekdayName)) {
+          return i;
+        } else if (!strict && this._weekdaysParse[i].test(weekdayName)) {
+          return i;
+        }
+      }
+    }
+    function getSetDayOfWeek(input) {
+      if (!this.isValid()) {
+        return input != null ? this : NaN;
+      }
+      var day = this._isUTC ? this._d.getUTCDay() : this._d.getDay();
+      if (input != null) {
+        input = parseWeekday(input, this.localeData());
+        return this.add(input - day, 'd');
+      } else {
+        return day;
+      }
+    }
+    function getSetLocaleDayOfWeek(input) {
+      if (!this.isValid()) {
+        return input != null ? this : NaN;
+      }
+      var weekday = (this.day() + 7 - this.localeData()._week.dow) % 7;
+      return input == null ? weekday : this.add(input - weekday, 'd');
+    }
+    function getSetISODayOfWeek(input) {
+      if (!this.isValid()) {
+        return input != null ? this : NaN;
+      }
+      return input == null ? this.day() || 7 : this.day(this.day() % 7 ? input : input - 7);
+    }
+    addFormatToken('DDD', ['DDDD', 3], 'DDDo', 'dayOfYear');
+    addUnitAlias('dayOfYear', 'DDD');
+    addRegexToken('DDD', match1to3);
+    addRegexToken('DDDD', match3);
+    addParseToken(['DDD', 'DDDD'], function(input, array, config) {
+      config._dayOfYear = toInt(input);
+    });
+    function getSetDayOfYear(input) {
+      var dayOfYear = Math.round((this.clone().startOf('day') - this.clone().startOf('year')) / 864e5) + 1;
+      return input == null ? dayOfYear : this.add((input - dayOfYear), 'd');
+    }
+    function hFormat() {
+      return this.hours() % 12 || 12;
+    }
+    addFormatToken('H', ['HH', 2], 0, 'hour');
+    addFormatToken('h', ['hh', 2], 0, hFormat);
+    addFormatToken('hmm', 0, 0, function() {
+      return '' + hFormat.apply(this) + zeroFill(this.minutes(), 2);
+    });
+    addFormatToken('hmmss', 0, 0, function() {
+      return '' + hFormat.apply(this) + zeroFill(this.minutes(), 2) + zeroFill(this.seconds(), 2);
+    });
+    addFormatToken('Hmm', 0, 0, function() {
+      return '' + this.hours() + zeroFill(this.minutes(), 2);
+    });
+    addFormatToken('Hmmss', 0, 0, function() {
+      return '' + this.hours() + zeroFill(this.minutes(), 2) + zeroFill(this.seconds(), 2);
+    });
+    function meridiem(token, lowercase) {
+      addFormatToken(token, 0, 0, function() {
+        return this.localeData().meridiem(this.hours(), this.minutes(), lowercase);
+      });
+    }
+    meridiem('a', true);
+    meridiem('A', false);
+    addUnitAlias('hour', 'h');
+    function matchMeridiem(isStrict, locale) {
+      return locale._meridiemParse;
+    }
+    addRegexToken('a', matchMeridiem);
+    addRegexToken('A', matchMeridiem);
+    addRegexToken('H', match1to2);
+    addRegexToken('h', match1to2);
+    addRegexToken('HH', match1to2, match2);
+    addRegexToken('hh', match1to2, match2);
+    addRegexToken('hmm', match3to4);
+    addRegexToken('hmmss', match5to6);
+    addRegexToken('Hmm', match3to4);
+    addRegexToken('Hmmss', match5to6);
+    addParseToken(['H', 'HH'], HOUR);
+    addParseToken(['a', 'A'], function(input, array, config) {
+      config._isPm = config._locale.isPM(input);
+      config._meridiem = input;
+    });
+    addParseToken(['h', 'hh'], function(input, array, config) {
+      array[HOUR] = toInt(input);
+      getParsingFlags(config).bigHour = true;
+    });
+    addParseToken('hmm', function(input, array, config) {
+      var pos = input.length - 2;
+      array[HOUR] = toInt(input.substr(0, pos));
+      array[MINUTE] = toInt(input.substr(pos));
+      getParsingFlags(config).bigHour = true;
+    });
+    addParseToken('hmmss', function(input, array, config) {
+      var pos1 = input.length - 4;
+      var pos2 = input.length - 2;
+      array[HOUR] = toInt(input.substr(0, pos1));
+      array[MINUTE] = toInt(input.substr(pos1, 2));
+      array[SECOND] = toInt(input.substr(pos2));
+      getParsingFlags(config).bigHour = true;
+    });
+    addParseToken('Hmm', function(input, array, config) {
+      var pos = input.length - 2;
+      array[HOUR] = toInt(input.substr(0, pos));
+      array[MINUTE] = toInt(input.substr(pos));
+    });
+    addParseToken('Hmmss', function(input, array, config) {
+      var pos1 = input.length - 4;
+      var pos2 = input.length - 2;
+      array[HOUR] = toInt(input.substr(0, pos1));
+      array[MINUTE] = toInt(input.substr(pos1, 2));
+      array[SECOND] = toInt(input.substr(pos2));
+    });
+    function localeIsPM(input) {
+      return ((input + '').toLowerCase().charAt(0) === 'p');
+    }
+    var defaultLocaleMeridiemParse = /[ap]\.?m?\.?/i;
+    function localeMeridiem(hours, minutes, isLower) {
+      if (hours > 11) {
+        return isLower ? 'pm' : 'PM';
+      } else {
+        return isLower ? 'am' : 'AM';
+      }
+    }
+    var getSetHour = makeGetSet('Hours', true);
+    addFormatToken('m', ['mm', 2], 0, 'minute');
+    addUnitAlias('minute', 'm');
+    addRegexToken('m', match1to2);
+    addRegexToken('mm', match1to2, match2);
+    addParseToken(['m', 'mm'], MINUTE);
+    var getSetMinute = makeGetSet('Minutes', false);
+    addFormatToken('s', ['ss', 2], 0, 'second');
+    addUnitAlias('second', 's');
+    addRegexToken('s', match1to2);
+    addRegexToken('ss', match1to2, match2);
+    addParseToken(['s', 'ss'], SECOND);
+    var getSetSecond = makeGetSet('Seconds', false);
+    addFormatToken('S', 0, 0, function() {
+      return ~~(this.millisecond() / 100);
+    });
+    addFormatToken(0, ['SS', 2], 0, function() {
+      return ~~(this.millisecond() / 10);
+    });
+    addFormatToken(0, ['SSS', 3], 0, 'millisecond');
+    addFormatToken(0, ['SSSS', 4], 0, function() {
+      return this.millisecond() * 10;
+    });
+    addFormatToken(0, ['SSSSS', 5], 0, function() {
+      return this.millisecond() * 100;
+    });
+    addFormatToken(0, ['SSSSSS', 6], 0, function() {
+      return this.millisecond() * 1000;
+    });
+    addFormatToken(0, ['SSSSSSS', 7], 0, function() {
+      return this.millisecond() * 10000;
+    });
+    addFormatToken(0, ['SSSSSSSS', 8], 0, function() {
+      return this.millisecond() * 100000;
+    });
+    addFormatToken(0, ['SSSSSSSSS', 9], 0, function() {
+      return this.millisecond() * 1000000;
+    });
+    addUnitAlias('millisecond', 'ms');
+    addRegexToken('S', match1to3, match1);
+    addRegexToken('SS', match1to3, match2);
+    addRegexToken('SSS', match1to3, match3);
+    var token;
+    for (token = 'SSSS'; token.length <= 9; token += 'S') {
+      addRegexToken(token, matchUnsigned);
+    }
+    function parseMs(input, array) {
+      array[MILLISECOND] = toInt(('0.' + input) * 1000);
+    }
+    for (token = 'S'; token.length <= 9; token += 'S') {
+      addParseToken(token, parseMs);
+    }
+    var getSetMillisecond = makeGetSet('Milliseconds', false);
+    addFormatToken('z', 0, 0, 'zoneAbbr');
+    addFormatToken('zz', 0, 0, 'zoneName');
+    function getZoneAbbr() {
+      return this._isUTC ? 'UTC' : '';
+    }
+    function getZoneName() {
+      return this._isUTC ? 'Coordinated Universal Time' : '';
+    }
+    var momentPrototype__proto = Moment.prototype;
+    momentPrototype__proto.add = add_subtract__add;
+    momentPrototype__proto.calendar = moment_calendar__calendar;
+    momentPrototype__proto.clone = clone;
+    momentPrototype__proto.diff = diff;
+    momentPrototype__proto.endOf = endOf;
+    momentPrototype__proto.format = format;
+    momentPrototype__proto.from = from;
+    momentPrototype__proto.fromNow = fromNow;
+    momentPrototype__proto.to = to;
+    momentPrototype__proto.toNow = toNow;
+    momentPrototype__proto.get = getSet;
+    momentPrototype__proto.invalidAt = invalidAt;
+    momentPrototype__proto.isAfter = isAfter;
+    momentPrototype__proto.isBefore = isBefore;
+    momentPrototype__proto.isBetween = isBetween;
+    momentPrototype__proto.isSame = isSame;
+    momentPrototype__proto.isSameOrAfter = isSameOrAfter;
+    momentPrototype__proto.isSameOrBefore = isSameOrBefore;
+    momentPrototype__proto.isValid = moment_valid__isValid;
+    momentPrototype__proto.lang = lang;
+    momentPrototype__proto.locale = locale;
+    momentPrototype__proto.localeData = localeData;
+    momentPrototype__proto.max = prototypeMax;
+    momentPrototype__proto.min = prototypeMin;
+    momentPrototype__proto.parsingFlags = parsingFlags;
+    momentPrototype__proto.set = getSet;
+    momentPrototype__proto.startOf = startOf;
+    momentPrototype__proto.subtract = add_subtract__subtract;
+    momentPrototype__proto.toArray = toArray;
+    momentPrototype__proto.toObject = toObject;
+    momentPrototype__proto.toDate = toDate;
+    momentPrototype__proto.toISOString = moment_format__toISOString;
+    momentPrototype__proto.toJSON = toJSON;
+    momentPrototype__proto.toString = toString;
+    momentPrototype__proto.unix = unix;
+    momentPrototype__proto.valueOf = to_type__valueOf;
+    momentPrototype__proto.creationData = creationData;
+    momentPrototype__proto.year = getSetYear;
+    momentPrototype__proto.isLeapYear = getIsLeapYear;
+    momentPrototype__proto.weekYear = getSetWeekYear;
+    momentPrototype__proto.isoWeekYear = getSetISOWeekYear;
+    momentPrototype__proto.quarter = momentPrototype__proto.quarters = getSetQuarter;
+    momentPrototype__proto.month = getSetMonth;
+    momentPrototype__proto.daysInMonth = getDaysInMonth;
+    momentPrototype__proto.week = momentPrototype__proto.weeks = getSetWeek;
+    momentPrototype__proto.isoWeek = momentPrototype__proto.isoWeeks = getSetISOWeek;
+    momentPrototype__proto.weeksInYear = getWeeksInYear;
+    momentPrototype__proto.isoWeeksInYear = getISOWeeksInYear;
+    momentPrototype__proto.date = getSetDayOfMonth;
+    momentPrototype__proto.day = momentPrototype__proto.days = getSetDayOfWeek;
+    momentPrototype__proto.weekday = getSetLocaleDayOfWeek;
+    momentPrototype__proto.isoWeekday = getSetISODayOfWeek;
+    momentPrototype__proto.dayOfYear = getSetDayOfYear;
+    momentPrototype__proto.hour = momentPrototype__proto.hours = getSetHour;
+    momentPrototype__proto.minute = momentPrototype__proto.minutes = getSetMinute;
+    momentPrototype__proto.second = momentPrototype__proto.seconds = getSetSecond;
+    momentPrototype__proto.millisecond = momentPrototype__proto.milliseconds = getSetMillisecond;
+    momentPrototype__proto.utcOffset = getSetOffset;
+    momentPrototype__proto.utc = setOffsetToUTC;
+    momentPrototype__proto.local = setOffsetToLocal;
+    momentPrototype__proto.parseZone = setOffsetToParsedOffset;
+    momentPrototype__proto.hasAlignedHourOffset = hasAlignedHourOffset;
+    momentPrototype__proto.isDST = isDaylightSavingTime;
+    momentPrototype__proto.isDSTShifted = isDaylightSavingTimeShifted;
+    momentPrototype__proto.isLocal = isLocal;
+    momentPrototype__proto.isUtcOffset = isUtcOffset;
+    momentPrototype__proto.isUtc = isUtc;
+    momentPrototype__proto.isUTC = isUtc;
+    momentPrototype__proto.zoneAbbr = getZoneAbbr;
+    momentPrototype__proto.zoneName = getZoneName;
+    momentPrototype__proto.dates = deprecate('dates accessor is deprecated. Use date instead.', getSetDayOfMonth);
+    momentPrototype__proto.months = deprecate('months accessor is deprecated. Use month instead', getSetMonth);
+    momentPrototype__proto.years = deprecate('years accessor is deprecated. Use year instead', getSetYear);
+    momentPrototype__proto.zone = deprecate('moment().zone is deprecated, use moment().utcOffset instead. https://github.com/moment/moment/issues/1779', getSetZone);
+    var momentPrototype = momentPrototype__proto;
+    function moment__createUnix(input) {
+      return local__createLocal(input * 1000);
+    }
+    function moment__createInZone() {
+      return local__createLocal.apply(null, arguments).parseZone();
+    }
+    var defaultCalendar = {
+      sameDay: '[Today at] LT',
+      nextDay: '[Tomorrow at] LT',
+      nextWeek: 'dddd [at] LT',
+      lastDay: '[Yesterday at] LT',
+      lastWeek: '[Last] dddd [at] LT',
+      sameElse: 'L'
+    };
+    function locale_calendar__calendar(key, mom, now) {
+      var output = this._calendar[key];
+      return isFunction(output) ? output.call(mom, now) : output;
+    }
+    var defaultLongDateFormat = {
+      LTS: 'h:mm:ss A',
+      LT: 'h:mm A',
+      L: 'MM/DD/YYYY',
+      LL: 'MMMM D, YYYY',
+      LLL: 'MMMM D, YYYY h:mm A',
+      LLLL: 'dddd, MMMM D, YYYY h:mm A'
+    };
+    function longDateFormat(key) {
+      var format = this._longDateFormat[key],
+          formatUpper = this._longDateFormat[key.toUpperCase()];
+      if (format || !formatUpper) {
+        return format;
+      }
+      this._longDateFormat[key] = formatUpper.replace(/MMMM|MM|DD|dddd/g, function(val) {
+        return val.slice(1);
+      });
+      return this._longDateFormat[key];
+    }
+    var defaultInvalidDate = 'Invalid date';
+    function invalidDate() {
+      return this._invalidDate;
+    }
+    var defaultOrdinal = '%d';
+    var defaultOrdinalParse = /\d{1,2}/;
+    function ordinal(number) {
+      return this._ordinal.replace('%d', number);
+    }
+    function preParsePostFormat(string) {
+      return string;
+    }
+    var defaultRelativeTime = {
+      future: 'in %s',
+      past: '%s ago',
+      s: 'a few seconds',
+      m: 'a minute',
+      mm: '%d minutes',
+      h: 'an hour',
+      hh: '%d hours',
+      d: 'a day',
+      dd: '%d days',
+      M: 'a month',
+      MM: '%d months',
+      y: 'a year',
+      yy: '%d years'
+    };
+    function relative__relativeTime(number, withoutSuffix, string, isFuture) {
+      var output = this._relativeTime[string];
+      return (isFunction(output)) ? output(number, withoutSuffix, string, isFuture) : output.replace(/%d/i, number);
+    }
+    function pastFuture(diff, output) {
+      var format = this._relativeTime[diff > 0 ? 'future' : 'past'];
+      return isFunction(format) ? format(output) : format.replace(/%s/i, output);
+    }
+    function locale_set__set(config) {
+      var prop,
+          i;
+      for (i in config) {
+        prop = config[i];
+        if (isFunction(prop)) {
+          this[i] = prop;
+        } else {
+          this['_' + i] = prop;
+        }
+      }
+      this._ordinalParseLenient = new RegExp(this._ordinalParse.source + '|' + (/\d{1,2}/).source);
+    }
+    var prototype__proto = Locale.prototype;
+    prototype__proto._calendar = defaultCalendar;
+    prototype__proto.calendar = locale_calendar__calendar;
+    prototype__proto._longDateFormat = defaultLongDateFormat;
+    prototype__proto.longDateFormat = longDateFormat;
+    prototype__proto._invalidDate = defaultInvalidDate;
+    prototype__proto.invalidDate = invalidDate;
+    prototype__proto._ordinal = defaultOrdinal;
+    prototype__proto.ordinal = ordinal;
+    prototype__proto._ordinalParse = defaultOrdinalParse;
+    prototype__proto.preparse = preParsePostFormat;
+    prototype__proto.postformat = preParsePostFormat;
+    prototype__proto._relativeTime = defaultRelativeTime;
+    prototype__proto.relativeTime = relative__relativeTime;
+    prototype__proto.pastFuture = pastFuture;
+    prototype__proto.set = locale_set__set;
+    prototype__proto.months = localeMonths;
+    prototype__proto._months = defaultLocaleMonths;
+    prototype__proto.monthsShort = localeMonthsShort;
+    prototype__proto._monthsShort = defaultLocaleMonthsShort;
+    prototype__proto.monthsParse = localeMonthsParse;
+    prototype__proto._monthsRegex = defaultMonthsRegex;
+    prototype__proto.monthsRegex = monthsRegex;
+    prototype__proto._monthsShortRegex = defaultMonthsShortRegex;
+    prototype__proto.monthsShortRegex = monthsShortRegex;
+    prototype__proto.week = localeWeek;
+    prototype__proto._week = defaultLocaleWeek;
+    prototype__proto.firstDayOfYear = localeFirstDayOfYear;
+    prototype__proto.firstDayOfWeek = localeFirstDayOfWeek;
+    prototype__proto.weekdays = localeWeekdays;
+    prototype__proto._weekdays = defaultLocaleWeekdays;
+    prototype__proto.weekdaysMin = localeWeekdaysMin;
+    prototype__proto._weekdaysMin = defaultLocaleWeekdaysMin;
+    prototype__proto.weekdaysShort = localeWeekdaysShort;
+    prototype__proto._weekdaysShort = defaultLocaleWeekdaysShort;
+    prototype__proto.weekdaysParse = localeWeekdaysParse;
+    prototype__proto.isPM = localeIsPM;
+    prototype__proto._meridiemParse = defaultLocaleMeridiemParse;
+    prototype__proto.meridiem = localeMeridiem;
+    function lists__get(format, index, field, setter) {
+      var locale = locale_locales__getLocale();
+      var utc = create_utc__createUTC().set(setter, index);
+      return locale[field](utc, format);
+    }
+    function list(format, index, field, count, setter) {
+      if (typeof format === 'number') {
+        index = format;
+        format = undefined;
+      }
+      format = format || '';
+      if (index != null) {
+        return lists__get(format, index, field, setter);
+      }
+      var i;
+      var out = [];
+      for (i = 0; i < count; i++) {
+        out[i] = lists__get(format, i, field, setter);
+      }
+      return out;
+    }
+    function lists__listMonths(format, index) {
+      return list(format, index, 'months', 12, 'month');
+    }
+    function lists__listMonthsShort(format, index) {
+      return list(format, index, 'monthsShort', 12, 'month');
+    }
+    function lists__listWeekdays(format, index) {
+      return list(format, index, 'weekdays', 7, 'day');
+    }
+    function lists__listWeekdaysShort(format, index) {
+      return list(format, index, 'weekdaysShort', 7, 'day');
+    }
+    function lists__listWeekdaysMin(format, index) {
+      return list(format, index, 'weekdaysMin', 7, 'day');
+    }
+    locale_locales__getSetGlobalLocale('en', {
+      ordinalParse: /\d{1,2}(th|st|nd|rd)/,
+      ordinal: function(number) {
+        var b = number % 10,
+            output = (toInt(number % 100 / 10) === 1) ? 'th' : (b === 1) ? 'st' : (b === 2) ? 'nd' : (b === 3) ? 'rd' : 'th';
+        return number + output;
+      }
+    });
+    utils_hooks__hooks.lang = deprecate('moment.lang is deprecated. Use moment.locale instead.', locale_locales__getSetGlobalLocale);
+    utils_hooks__hooks.langData = deprecate('moment.langData is deprecated. Use moment.localeData instead.', locale_locales__getLocale);
+    var mathAbs = Math.abs;
+    function duration_abs__abs() {
+      var data = this._data;
+      this._milliseconds = mathAbs(this._milliseconds);
+      this._days = mathAbs(this._days);
+      this._months = mathAbs(this._months);
+      data.milliseconds = mathAbs(data.milliseconds);
+      data.seconds = mathAbs(data.seconds);
+      data.minutes = mathAbs(data.minutes);
+      data.hours = mathAbs(data.hours);
+      data.months = mathAbs(data.months);
+      data.years = mathAbs(data.years);
+      return this;
+    }
+    function duration_add_subtract__addSubtract(duration, input, value, direction) {
+      var other = create__createDuration(input, value);
+      duration._milliseconds += direction * other._milliseconds;
+      duration._days += direction * other._days;
+      duration._months += direction * other._months;
+      return duration._bubble();
+    }
+    function duration_add_subtract__add(input, value) {
+      return duration_add_subtract__addSubtract(this, input, value, 1);
+    }
+    function duration_add_subtract__subtract(input, value) {
+      return duration_add_subtract__addSubtract(this, input, value, -1);
+    }
+    function absCeil(number) {
+      if (number < 0) {
+        return Math.floor(number);
+      } else {
+        return Math.ceil(number);
+      }
+    }
+    function bubble() {
+      var milliseconds = this._milliseconds;
+      var days = this._days;
+      var months = this._months;
+      var data = this._data;
+      var seconds,
+          minutes,
+          hours,
+          years,
+          monthsFromDays;
+      if (!((milliseconds >= 0 && days >= 0 && months >= 0) || (milliseconds <= 0 && days <= 0 && months <= 0))) {
+        milliseconds += absCeil(monthsToDays(months) + days) * 864e5;
+        days = 0;
+        months = 0;
+      }
+      data.milliseconds = milliseconds % 1000;
+      seconds = absFloor(milliseconds / 1000);
+      data.seconds = seconds % 60;
+      minutes = absFloor(seconds / 60);
+      data.minutes = minutes % 60;
+      hours = absFloor(minutes / 60);
+      data.hours = hours % 24;
+      days += absFloor(hours / 24);
+      monthsFromDays = absFloor(daysToMonths(days));
+      months += monthsFromDays;
+      days -= absCeil(monthsToDays(monthsFromDays));
+      years = absFloor(months / 12);
+      months %= 12;
+      data.days = days;
+      data.months = months;
+      data.years = years;
+      return this;
+    }
+    function daysToMonths(days) {
+      return days * 4800 / 146097;
+    }
+    function monthsToDays(months) {
+      return months * 146097 / 4800;
+    }
+    function as(units) {
+      var days;
+      var months;
+      var milliseconds = this._milliseconds;
+      units = normalizeUnits(units);
+      if (units === 'month' || units === 'year') {
+        days = this._days + milliseconds / 864e5;
+        months = this._months + daysToMonths(days);
+        return units === 'month' ? months : months / 12;
+      } else {
+        days = this._days + Math.round(monthsToDays(this._months));
+        switch (units) {
+          case 'week':
+            return days / 7 + milliseconds / 6048e5;
+          case 'day':
+            return days + milliseconds / 864e5;
+          case 'hour':
+            return days * 24 + milliseconds / 36e5;
+          case 'minute':
+            return days * 1440 + milliseconds / 6e4;
+          case 'second':
+            return days * 86400 + milliseconds / 1000;
+          case 'millisecond':
+            return Math.floor(days * 864e5) + milliseconds;
+          default:
+            throw new Error('Unknown unit ' + units);
+        }
+      }
+    }
+    function duration_as__valueOf() {
+      return (this._milliseconds + this._days * 864e5 + (this._months % 12) * 2592e6 + toInt(this._months / 12) * 31536e6);
+    }
+    function makeAs(alias) {
+      return function() {
+        return this.as(alias);
+      };
+    }
+    var asMilliseconds = makeAs('ms');
+    var asSeconds = makeAs('s');
+    var asMinutes = makeAs('m');
+    var asHours = makeAs('h');
+    var asDays = makeAs('d');
+    var asWeeks = makeAs('w');
+    var asMonths = makeAs('M');
+    var asYears = makeAs('y');
+    function duration_get__get(units) {
+      units = normalizeUnits(units);
+      return this[units + 's']();
+    }
+    function makeGetter(name) {
+      return function() {
+        return this._data[name];
+      };
+    }
+    var milliseconds = makeGetter('milliseconds');
+    var seconds = makeGetter('seconds');
+    var minutes = makeGetter('minutes');
+    var hours = makeGetter('hours');
+    var days = makeGetter('days');
+    var months = makeGetter('months');
+    var years = makeGetter('years');
+    function weeks() {
+      return absFloor(this.days() / 7);
+    }
+    var round = Math.round;
+    var thresholds = {
+      s: 45,
+      m: 45,
+      h: 22,
+      d: 26,
+      M: 11
+    };
+    function substituteTimeAgo(string, number, withoutSuffix, isFuture, locale) {
+      return locale.relativeTime(number || 1, !!withoutSuffix, string, isFuture);
+    }
+    function duration_humanize__relativeTime(posNegDuration, withoutSuffix, locale) {
+      var duration = create__createDuration(posNegDuration).abs();
+      var seconds = round(duration.as('s'));
+      var minutes = round(duration.as('m'));
+      var hours = round(duration.as('h'));
+      var days = round(duration.as('d'));
+      var months = round(duration.as('M'));
+      var years = round(duration.as('y'));
+      var a = seconds < thresholds.s && ['s', seconds] || minutes <= 1 && ['m'] || minutes < thresholds.m && ['mm', minutes] || hours <= 1 && ['h'] || hours < thresholds.h && ['hh', hours] || days <= 1 && ['d'] || days < thresholds.d && ['dd', days] || months <= 1 && ['M'] || months < thresholds.M && ['MM', months] || years <= 1 && ['y'] || ['yy', years];
+      a[2] = withoutSuffix;
+      a[3] = +posNegDuration > 0;
+      a[4] = locale;
+      return substituteTimeAgo.apply(null, a);
+    }
+    function duration_humanize__getSetRelativeTimeThreshold(threshold, limit) {
+      if (thresholds[threshold] === undefined) {
+        return false;
+      }
+      if (limit === undefined) {
+        return thresholds[threshold];
+      }
+      thresholds[threshold] = limit;
+      return true;
+    }
+    function humanize(withSuffix) {
+      var locale = this.localeData();
+      var output = duration_humanize__relativeTime(this, !withSuffix, locale);
+      if (withSuffix) {
+        output = locale.pastFuture(+this, output);
+      }
+      return locale.postformat(output);
+    }
+    var iso_string__abs = Math.abs;
+    function iso_string__toISOString() {
+      var seconds = iso_string__abs(this._milliseconds) / 1000;
+      var days = iso_string__abs(this._days);
+      var months = iso_string__abs(this._months);
+      var minutes,
+          hours,
+          years;
+      minutes = absFloor(seconds / 60);
+      hours = absFloor(minutes / 60);
+      seconds %= 60;
+      minutes %= 60;
+      years = absFloor(months / 12);
+      months %= 12;
+      var Y = years;
+      var M = months;
+      var D = days;
+      var h = hours;
+      var m = minutes;
+      var s = seconds;
+      var total = this.asSeconds();
+      if (!total) {
+        return 'P0D';
+      }
+      return (total < 0 ? '-' : '') + 'P' + (Y ? Y + 'Y' : '') + (M ? M + 'M' : '') + (D ? D + 'D' : '') + ((h || m || s) ? 'T' : '') + (h ? h + 'H' : '') + (m ? m + 'M' : '') + (s ? s + 'S' : '');
+    }
+    var duration_prototype__proto = Duration.prototype;
+    duration_prototype__proto.abs = duration_abs__abs;
+    duration_prototype__proto.add = duration_add_subtract__add;
+    duration_prototype__proto.subtract = duration_add_subtract__subtract;
+    duration_prototype__proto.as = as;
+    duration_prototype__proto.asMilliseconds = asMilliseconds;
+    duration_prototype__proto.asSeconds = asSeconds;
+    duration_prototype__proto.asMinutes = asMinutes;
+    duration_prototype__proto.asHours = asHours;
+    duration_prototype__proto.asDays = asDays;
+    duration_prototype__proto.asWeeks = asWeeks;
+    duration_prototype__proto.asMonths = asMonths;
+    duration_prototype__proto.asYears = asYears;
+    duration_prototype__proto.valueOf = duration_as__valueOf;
+    duration_prototype__proto._bubble = bubble;
+    duration_prototype__proto.get = duration_get__get;
+    duration_prototype__proto.milliseconds = milliseconds;
+    duration_prototype__proto.seconds = seconds;
+    duration_prototype__proto.minutes = minutes;
+    duration_prototype__proto.hours = hours;
+    duration_prototype__proto.days = days;
+    duration_prototype__proto.weeks = weeks;
+    duration_prototype__proto.months = months;
+    duration_prototype__proto.years = years;
+    duration_prototype__proto.humanize = humanize;
+    duration_prototype__proto.toISOString = iso_string__toISOString;
+    duration_prototype__proto.toString = iso_string__toISOString;
+    duration_prototype__proto.toJSON = iso_string__toISOString;
+    duration_prototype__proto.locale = locale;
+    duration_prototype__proto.localeData = localeData;
+    duration_prototype__proto.toIsoString = deprecate('toIsoString() is deprecated. Please use toISOString() instead (notice the capitals)', iso_string__toISOString);
+    duration_prototype__proto.lang = lang;
+    addFormatToken('X', 0, 0, 'unix');
+    addFormatToken('x', 0, 0, 'valueOf');
+    addRegexToken('x', matchSigned);
+    addRegexToken('X', matchTimestamp);
+    addParseToken('X', function(input, array, config) {
+      config._d = new Date(parseFloat(input, 10) * 1000);
+    });
+    addParseToken('x', function(input, array, config) {
+      config._d = new Date(toInt(input));
+    });
+    utils_hooks__hooks.version = '2.11.2';
+    setHookCallback(local__createLocal);
+    utils_hooks__hooks.fn = momentPrototype;
+    utils_hooks__hooks.min = min;
+    utils_hooks__hooks.max = max;
+    utils_hooks__hooks.now = now;
+    utils_hooks__hooks.utc = create_utc__createUTC;
+    utils_hooks__hooks.unix = moment__createUnix;
+    utils_hooks__hooks.months = lists__listMonths;
+    utils_hooks__hooks.isDate = isDate;
+    utils_hooks__hooks.locale = locale_locales__getSetGlobalLocale;
+    utils_hooks__hooks.invalid = valid__createInvalid;
+    utils_hooks__hooks.duration = create__createDuration;
+    utils_hooks__hooks.isMoment = isMoment;
+    utils_hooks__hooks.weekdays = lists__listWeekdays;
+    utils_hooks__hooks.parseZone = moment__createInZone;
+    utils_hooks__hooks.localeData = locale_locales__getLocale;
+    utils_hooks__hooks.isDuration = isDuration;
+    utils_hooks__hooks.monthsShort = lists__listMonthsShort;
+    utils_hooks__hooks.weekdaysMin = lists__listWeekdaysMin;
+    utils_hooks__hooks.defineLocale = defineLocale;
+    utils_hooks__hooks.weekdaysShort = lists__listWeekdaysShort;
+    utils_hooks__hooks.normalizeUnits = normalizeUnits;
+    utils_hooks__hooks.relativeTimeThreshold = duration_humanize__getSetRelativeTimeThreshold;
+    utils_hooks__hooks.prototype = momentPrototype;
+    var _moment = utils_hooks__hooks;
+    return _moment;
+  }));
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.set.to-json", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_collection-to-json"], true, function(require, exports, module) {
+System.registerDynamic("npm:moment@2.11.2", ["npm:moment@2.11.2/moment"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.P + $export.R, 'Set', {toJSON: require("npm:core-js@2.1.0/library/modules/_collection-to-json")('Set')});
+  module.exports = require("npm:moment@2.11.2/moment");
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.string.at", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_string-at"], true, function(require, exports, module) {
+System.registerDynamic("npm:numeral@1.5.3/numeral", [], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $at = require("npm:core-js@2.1.0/library/modules/_string-at")(true);
-  $export($export.P, 'String', {at: function at(pos) {
-      return $at(this, pos);
-    }});
+  "format cjs";
+  (function() {
+    var numeral,
+        VERSION = '1.5.3',
+        languages = {},
+        currentLanguage = 'en',
+        zeroFormat = null,
+        defaultFormat = '0,0',
+        hasModule = (typeof module !== 'undefined' && module.exports);
+    function Numeral(number) {
+      this._value = number;
+    }
+    function toFixed(value, precision, roundingFunction, optionals) {
+      var power = Math.pow(10, precision),
+          optionalsRegExp,
+          output;
+      output = (roundingFunction(value * power) / power).toFixed(precision);
+      if (optionals) {
+        optionalsRegExp = new RegExp('0{1,' + optionals + '}$');
+        output = output.replace(optionalsRegExp, '');
+      }
+      return output;
+    }
+    function formatNumeral(n, format, roundingFunction) {
+      var output;
+      if (format.indexOf('$') > -1) {
+        output = formatCurrency(n, format, roundingFunction);
+      } else if (format.indexOf('%') > -1) {
+        output = formatPercentage(n, format, roundingFunction);
+      } else if (format.indexOf(':') > -1) {
+        output = formatTime(n, format);
+      } else {
+        output = formatNumber(n._value, format, roundingFunction);
+      }
+      return output;
+    }
+    function unformatNumeral(n, string) {
+      var stringOriginal = string,
+          thousandRegExp,
+          millionRegExp,
+          billionRegExp,
+          trillionRegExp,
+          suffixes = ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+          bytesMultiplier = false,
+          power;
+      if (string.indexOf(':') > -1) {
+        n._value = unformatTime(string);
+      } else {
+        if (string === zeroFormat) {
+          n._value = 0;
+        } else {
+          if (languages[currentLanguage].delimiters.decimal !== '.') {
+            string = string.replace(/\./g, '').replace(languages[currentLanguage].delimiters.decimal, '.');
+          }
+          thousandRegExp = new RegExp('[^a-zA-Z]' + languages[currentLanguage].abbreviations.thousand + '(?:\\)|(\\' + languages[currentLanguage].currency.symbol + ')?(?:\\))?)?$');
+          millionRegExp = new RegExp('[^a-zA-Z]' + languages[currentLanguage].abbreviations.million + '(?:\\)|(\\' + languages[currentLanguage].currency.symbol + ')?(?:\\))?)?$');
+          billionRegExp = new RegExp('[^a-zA-Z]' + languages[currentLanguage].abbreviations.billion + '(?:\\)|(\\' + languages[currentLanguage].currency.symbol + ')?(?:\\))?)?$');
+          trillionRegExp = new RegExp('[^a-zA-Z]' + languages[currentLanguage].abbreviations.trillion + '(?:\\)|(\\' + languages[currentLanguage].currency.symbol + ')?(?:\\))?)?$');
+          for (power = 0; power <= suffixes.length; power++) {
+            bytesMultiplier = (string.indexOf(suffixes[power]) > -1) ? Math.pow(1024, power + 1) : false;
+            if (bytesMultiplier) {
+              break;
+            }
+          }
+          n._value = ((bytesMultiplier) ? bytesMultiplier : 1) * ((stringOriginal.match(thousandRegExp)) ? Math.pow(10, 3) : 1) * ((stringOriginal.match(millionRegExp)) ? Math.pow(10, 6) : 1) * ((stringOriginal.match(billionRegExp)) ? Math.pow(10, 9) : 1) * ((stringOriginal.match(trillionRegExp)) ? Math.pow(10, 12) : 1) * ((string.indexOf('%') > -1) ? 0.01 : 1) * (((string.split('-').length + Math.min(string.split('(').length - 1, string.split(')').length - 1)) % 2) ? 1 : -1) * Number(string.replace(/[^0-9\.]+/g, ''));
+          n._value = (bytesMultiplier) ? Math.ceil(n._value) : n._value;
+        }
+      }
+      return n._value;
+    }
+    function formatCurrency(n, format, roundingFunction) {
+      var symbolIndex = format.indexOf('$'),
+          openParenIndex = format.indexOf('('),
+          minusSignIndex = format.indexOf('-'),
+          space = '',
+          spliceIndex,
+          output;
+      if (format.indexOf(' $') > -1) {
+        space = ' ';
+        format = format.replace(' $', '');
+      } else if (format.indexOf('$ ') > -1) {
+        space = ' ';
+        format = format.replace('$ ', '');
+      } else {
+        format = format.replace('$', '');
+      }
+      output = formatNumber(n._value, format, roundingFunction);
+      if (symbolIndex <= 1) {
+        if (output.indexOf('(') > -1 || output.indexOf('-') > -1) {
+          output = output.split('');
+          spliceIndex = 1;
+          if (symbolIndex < openParenIndex || symbolIndex < minusSignIndex) {
+            spliceIndex = 0;
+          }
+          output.splice(spliceIndex, 0, languages[currentLanguage].currency.symbol + space);
+          output = output.join('');
+        } else {
+          output = languages[currentLanguage].currency.symbol + space + output;
+        }
+      } else {
+        if (output.indexOf(')') > -1) {
+          output = output.split('');
+          output.splice(-1, 0, space + languages[currentLanguage].currency.symbol);
+          output = output.join('');
+        } else {
+          output = output + space + languages[currentLanguage].currency.symbol;
+        }
+      }
+      return output;
+    }
+    function formatPercentage(n, format, roundingFunction) {
+      var space = '',
+          output,
+          value = n._value * 100;
+      if (format.indexOf(' %') > -1) {
+        space = ' ';
+        format = format.replace(' %', '');
+      } else {
+        format = format.replace('%', '');
+      }
+      output = formatNumber(value, format, roundingFunction);
+      if (output.indexOf(')') > -1) {
+        output = output.split('');
+        output.splice(-1, 0, space + '%');
+        output = output.join('');
+      } else {
+        output = output + space + '%';
+      }
+      return output;
+    }
+    function formatTime(n) {
+      var hours = Math.floor(n._value / 60 / 60),
+          minutes = Math.floor((n._value - (hours * 60 * 60)) / 60),
+          seconds = Math.round(n._value - (hours * 60 * 60) - (minutes * 60));
+      return hours + ':' + ((minutes < 10) ? '0' + minutes : minutes) + ':' + ((seconds < 10) ? '0' + seconds : seconds);
+    }
+    function unformatTime(string) {
+      var timeArray = string.split(':'),
+          seconds = 0;
+      if (timeArray.length === 3) {
+        seconds = seconds + (Number(timeArray[0]) * 60 * 60);
+        seconds = seconds + (Number(timeArray[1]) * 60);
+        seconds = seconds + Number(timeArray[2]);
+      } else if (timeArray.length === 2) {
+        seconds = seconds + (Number(timeArray[0]) * 60);
+        seconds = seconds + Number(timeArray[1]);
+      }
+      return Number(seconds);
+    }
+    function formatNumber(value, format, roundingFunction) {
+      var negP = false,
+          signed = false,
+          optDec = false,
+          abbr = '',
+          abbrK = false,
+          abbrM = false,
+          abbrB = false,
+          abbrT = false,
+          abbrForce = false,
+          bytes = '',
+          ord = '',
+          abs = Math.abs(value),
+          suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
+          min,
+          max,
+          power,
+          w,
+          precision,
+          thousands,
+          d = '',
+          neg = false;
+      if (value === 0 && zeroFormat !== null) {
+        return zeroFormat;
+      } else {
+        if (format.indexOf('(') > -1) {
+          negP = true;
+          format = format.slice(1, -1);
+        } else if (format.indexOf('+') > -1) {
+          signed = true;
+          format = format.replace(/\+/g, '');
+        }
+        if (format.indexOf('a') > -1) {
+          abbrK = format.indexOf('aK') >= 0;
+          abbrM = format.indexOf('aM') >= 0;
+          abbrB = format.indexOf('aB') >= 0;
+          abbrT = format.indexOf('aT') >= 0;
+          abbrForce = abbrK || abbrM || abbrB || abbrT;
+          if (format.indexOf(' a') > -1) {
+            abbr = ' ';
+            format = format.replace(' a', '');
+          } else {
+            format = format.replace('a', '');
+          }
+          if (abs >= Math.pow(10, 12) && !abbrForce || abbrT) {
+            abbr = abbr + languages[currentLanguage].abbreviations.trillion;
+            value = value / Math.pow(10, 12);
+          } else if (abs < Math.pow(10, 12) && abs >= Math.pow(10, 9) && !abbrForce || abbrB) {
+            abbr = abbr + languages[currentLanguage].abbreviations.billion;
+            value = value / Math.pow(10, 9);
+          } else if (abs < Math.pow(10, 9) && abs >= Math.pow(10, 6) && !abbrForce || abbrM) {
+            abbr = abbr + languages[currentLanguage].abbreviations.million;
+            value = value / Math.pow(10, 6);
+          } else if (abs < Math.pow(10, 6) && abs >= Math.pow(10, 3) && !abbrForce || abbrK) {
+            abbr = abbr + languages[currentLanguage].abbreviations.thousand;
+            value = value / Math.pow(10, 3);
+          }
+        }
+        if (format.indexOf('b') > -1) {
+          if (format.indexOf(' b') > -1) {
+            bytes = ' ';
+            format = format.replace(' b', '');
+          } else {
+            format = format.replace('b', '');
+          }
+          for (power = 0; power <= suffixes.length; power++) {
+            min = Math.pow(1024, power);
+            max = Math.pow(1024, power + 1);
+            if (value >= min && value < max) {
+              bytes = bytes + suffixes[power];
+              if (min > 0) {
+                value = value / min;
+              }
+              break;
+            }
+          }
+        }
+        if (format.indexOf('o') > -1) {
+          if (format.indexOf(' o') > -1) {
+            ord = ' ';
+            format = format.replace(' o', '');
+          } else {
+            format = format.replace('o', '');
+          }
+          ord = ord + languages[currentLanguage].ordinal(value);
+        }
+        if (format.indexOf('[.]') > -1) {
+          optDec = true;
+          format = format.replace('[.]', '.');
+        }
+        w = value.toString().split('.')[0];
+        precision = format.split('.')[1];
+        thousands = format.indexOf(',');
+        if (precision) {
+          if (precision.indexOf('[') > -1) {
+            precision = precision.replace(']', '');
+            precision = precision.split('[');
+            d = toFixed(value, (precision[0].length + precision[1].length), roundingFunction, precision[1].length);
+          } else {
+            d = toFixed(value, precision.length, roundingFunction);
+          }
+          w = d.split('.')[0];
+          if (d.split('.')[1].length) {
+            d = languages[currentLanguage].delimiters.decimal + d.split('.')[1];
+          } else {
+            d = '';
+          }
+          if (optDec && Number(d.slice(1)) === 0) {
+            d = '';
+          }
+        } else {
+          w = toFixed(value, null, roundingFunction);
+        }
+        if (w.indexOf('-') > -1) {
+          w = w.slice(1);
+          neg = true;
+        }
+        if (thousands > -1) {
+          w = w.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + languages[currentLanguage].delimiters.thousands);
+        }
+        if (format.indexOf('.') === 0) {
+          w = '';
+        }
+        return ((negP && neg) ? '(' : '') + ((!negP && neg) ? '-' : '') + ((!neg && signed) ? '+' : '') + w + d + ((ord) ? ord : '') + ((abbr) ? abbr : '') + ((bytes) ? bytes : '') + ((negP && neg) ? ')' : '');
+      }
+    }
+    numeral = function(input) {
+      if (numeral.isNumeral(input)) {
+        input = input.value();
+      } else if (input === 0 || typeof input === 'undefined') {
+        input = 0;
+      } else if (!Number(input)) {
+        input = numeral.fn.unformat(input);
+      }
+      return new Numeral(Number(input));
+    };
+    numeral.version = VERSION;
+    numeral.isNumeral = function(obj) {
+      return obj instanceof Numeral;
+    };
+    numeral.language = function(key, values) {
+      if (!key) {
+        return currentLanguage;
+      }
+      if (key && !values) {
+        if (!languages[key]) {
+          throw new Error('Unknown language : ' + key);
+        }
+        currentLanguage = key;
+      }
+      if (values || !languages[key]) {
+        loadLanguage(key, values);
+      }
+      return numeral;
+    };
+    numeral.languageData = function(key) {
+      if (!key) {
+        return languages[currentLanguage];
+      }
+      if (!languages[key]) {
+        throw new Error('Unknown language : ' + key);
+      }
+      return languages[key];
+    };
+    numeral.language('en', {
+      delimiters: {
+        thousands: ',',
+        decimal: '.'
+      },
+      abbreviations: {
+        thousand: 'k',
+        million: 'm',
+        billion: 'b',
+        trillion: 't'
+      },
+      ordinal: function(number) {
+        var b = number % 10;
+        return (~~(number % 100 / 10) === 1) ? 'th' : (b === 1) ? 'st' : (b === 2) ? 'nd' : (b === 3) ? 'rd' : 'th';
+      },
+      currency: {symbol: '$'}
+    });
+    numeral.zeroFormat = function(format) {
+      zeroFormat = typeof(format) === 'string' ? format : null;
+    };
+    numeral.defaultFormat = function(format) {
+      defaultFormat = typeof(format) === 'string' ? format : '0.0';
+    };
+    function loadLanguage(key, values) {
+      languages[key] = values;
+    }
+    if ('function' !== typeof Array.prototype.reduce) {
+      Array.prototype.reduce = function(callback, opt_initialValue) {
+        'use strict';
+        if (null === this || 'undefined' === typeof this) {
+          throw new TypeError('Array.prototype.reduce called on null or undefined');
+        }
+        if ('function' !== typeof callback) {
+          throw new TypeError(callback + ' is not a function');
+        }
+        var index,
+            value,
+            length = this.length >>> 0,
+            isValueSet = false;
+        if (1 < arguments.length) {
+          value = opt_initialValue;
+          isValueSet = true;
+        }
+        for (index = 0; length > index; ++index) {
+          if (this.hasOwnProperty(index)) {
+            if (isValueSet) {
+              value = callback(value, this[index], index, this);
+            } else {
+              value = this[index];
+              isValueSet = true;
+            }
+          }
+        }
+        if (!isValueSet) {
+          throw new TypeError('Reduce of empty array with no initial value');
+        }
+        return value;
+      };
+    }
+    function multiplier(x) {
+      var parts = x.toString().split('.');
+      if (parts.length < 2) {
+        return 1;
+      }
+      return Math.pow(10, parts[1].length);
+    }
+    function correctionFactor() {
+      var args = Array.prototype.slice.call(arguments);
+      return args.reduce(function(prev, next) {
+        var mp = multiplier(prev),
+            mn = multiplier(next);
+        return mp > mn ? mp : mn;
+      }, -Infinity);
+    }
+    numeral.fn = Numeral.prototype = {
+      clone: function() {
+        return numeral(this);
+      },
+      format: function(inputString, roundingFunction) {
+        return formatNumeral(this, inputString ? inputString : defaultFormat, (roundingFunction !== undefined) ? roundingFunction : Math.round);
+      },
+      unformat: function(inputString) {
+        if (Object.prototype.toString.call(inputString) === '[object Number]') {
+          return inputString;
+        }
+        return unformatNumeral(this, inputString ? inputString : defaultFormat);
+      },
+      value: function() {
+        return this._value;
+      },
+      valueOf: function() {
+        return this._value;
+      },
+      set: function(value) {
+        this._value = Number(value);
+        return this;
+      },
+      add: function(value) {
+        var corrFactor = correctionFactor.call(null, this._value, value);
+        function cback(accum, curr, currI, O) {
+          return accum + corrFactor * curr;
+        }
+        this._value = [this._value, value].reduce(cback, 0) / corrFactor;
+        return this;
+      },
+      subtract: function(value) {
+        var corrFactor = correctionFactor.call(null, this._value, value);
+        function cback(accum, curr, currI, O) {
+          return accum - corrFactor * curr;
+        }
+        this._value = [value].reduce(cback, this._value * corrFactor) / corrFactor;
+        return this;
+      },
+      multiply: function(value) {
+        function cback(accum, curr, currI, O) {
+          var corrFactor = correctionFactor(accum, curr);
+          return (accum * corrFactor) * (curr * corrFactor) / (corrFactor * corrFactor);
+        }
+        this._value = [this._value, value].reduce(cback, 1);
+        return this;
+      },
+      divide: function(value) {
+        function cback(accum, curr, currI, O) {
+          var corrFactor = correctionFactor(accum, curr);
+          return (accum * corrFactor) / (curr * corrFactor);
+        }
+        this._value = [this._value, value].reduce(cback);
+        return this;
+      },
+      difference: function(value) {
+        return Math.abs(numeral(this._value).subtract(value).value());
+      }
+    };
+    if (hasModule) {
+      module.exports = numeral;
+    }
+    if (typeof ender === 'undefined') {
+      this['numeral'] = numeral;
+    }
+    if (typeof define === 'function' && define.amd) {
+      define([], function() {
+        return numeral;
+      });
+    }
+  }).call(this);
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/library/modules/_string-pad", ["npm:core-js@2.1.0/library/modules/_to-length", "npm:core-js@2.1.0/library/modules/_string-repeat", "npm:core-js@2.1.0/library/modules/_defined"], true, function(require, exports, module) {
+System.registerDynamic("npm:numeral@1.5.3", ["npm:numeral@1.5.3/numeral"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
-  var toLength = require("npm:core-js@2.1.0/library/modules/_to-length"),
-      repeat = require("npm:core-js@2.1.0/library/modules/_string-repeat"),
-      defined = require("npm:core-js@2.1.0/library/modules/_defined");
-  module.exports = function(that, maxLength, fillString, left) {
-    var S = String(defined(that)),
-        stringLength = S.length,
-        fillStr = fillString === undefined ? ' ' : String(fillString),
-        intMaxLength = toLength(maxLength);
-    if (intMaxLength <= stringLength)
-      return S;
-    if (fillStr == '')
-      fillStr = ' ';
-    var fillLen = intMaxLength - stringLength,
-        stringFiller = repeat.call(fillStr, Math.ceil(fillLen / fillStr.length));
-    if (stringFiller.length > fillLen)
-      stringFiller = stringFiller.slice(0, fillLen);
-    return left ? stringFiller + S : S + stringFiller;
+  module.exports = require("npm:numeral@1.5.3/numeral");
+  global.define = __define;
+  return module.exports;
+});
+
+System.registerDynamic("github:systemjs/plugin-text@0.0.4/text", [], true, function(require, exports, module) {
+  ;
+  var global = this,
+      __define = global.define;
+  global.define = undefined;
+  exports.translate = function(load) {
+    load.metadata.format = 'amd';
+    return 'def' + 'ine(function() {\nreturn "' + load.source.replace(/(["\\])/g, '\\$1').replace(/[\f]/g, "\\f").replace(/[\b]/g, "\\b").replace(/[\n]/g, "\\n").replace(/[\t]/g, "\\t").replace(/[\r]/g, "\\r").replace(/[\u2028]/g, "\\u2028").replace(/[\u2029]/g, "\\u2029") + '";\n});';
   };
   global.define = __define;
   return module.exports;
 });
 
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.string.pad-end", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_string-pad"], true, function(require, exports, module) {
+System.registerDynamic("github:systemjs/plugin-text@0.0.4", ["github:systemjs/plugin-text@0.0.4/text"], true, function(require, exports, module) {
   ;
   var global = this,
       __define = global.define;
   global.define = undefined;
+  module.exports = require("github:systemjs/plugin-text@0.0.4/text");
+  global.define = __define;
+  return module.exports;
+});
+
+System.register("zzzzzzzzzzzzz", ["npm:aurelia-binding@1.0.0-beta.1.1.3", "npm:aurelia-bootstrapper@1.0.0-beta.1.1.2", "npm:aurelia-dependency-injection@1.0.0-beta.1.1.3", "npm:aurelia-event-aggregator@1.0.0-beta.1.1.1", "npm:aurelia-fetch-client@1.0.0-beta.1.1.0", "npm:aurelia-framework@1.0.0-beta.1.1.3", "npm:aurelia-history@1.0.0-beta.1.1.1", "npm:aurelia-history-browser@1.0.0-beta.1.1.2", "npm:aurelia-http-client@1.0.0-beta.1.1.1", "npm:aurelia-loader@1.0.0-beta.1.1.1", "npm:aurelia-loader-default@1.0.0-beta.1.1.2", "npm:aurelia-logging@1.0.0-beta.1.1.1", "npm:aurelia-logging-console@1.0.0-beta.1.1.4", "npm:aurelia-metadata@1.0.0-beta.1.1.4", "npm:aurelia-path@1.0.0-beta.1.1.0", "npm:aurelia-route-recognizer@1.0.0-beta.1.1.1", "npm:aurelia-router@1.0.0-beta.1.1.1", "npm:aurelia-task-queue@1.0.0-beta.1.1.1", "npm:aurelia-templating@1.0.0-beta.1.1.1", "npm:aurelia-templating-binding@1.0.0-beta.1.1.1", "npm:aurelia-templating-resources@1.0.0-beta.1.1.1", "npm:aurelia-templating-router@1.0.0-beta.1.1.1", "npm:core-js@2.1.0", "npm:core-js@2.1.0/client/shim.min", "github:systemjs/plugin-css@0.1.20", "github:github/fetch@0.11.0", "npm:moment@2.11.2", "npm:numeral@1.5.3", "github:systemjs/plugin-text@0.0.4"], function(_export) {
   'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $pad = require("npm:core-js@2.1.0/library/modules/_string-pad");
-  $export($export.P, 'String', {padEnd: function padEnd(maxLength) {
-      return $pad(this, maxLength, arguments.length > 1 ? arguments[1] : undefined, false);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.string.pad-start", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_string-pad"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $pad = require("npm:core-js@2.1.0/library/modules/_string-pad");
-  $export($export.P, 'String', {padStart: function padStart(maxLength) {
-      return $pad(this, maxLength, arguments.length > 1 ? arguments[1] : undefined, true);
-    }});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.string.trim-left", ["npm:core-js@2.1.0/library/modules/_string-trim"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/library/modules/_string-trim")('trimLeft', function($trim) {
-    return function trimLeft() {
-      return $trim(this, 1);
-    };
-  }, 'trimStart');
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.string.trim-right", ["npm:core-js@2.1.0/library/modules/_string-trim"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  'use strict';
-  require("npm:core-js@2.1.0/library/modules/_string-trim")('trimRight', function($trim) {
-    return function trimRight() {
-      return $trim(this, 2);
-    };
-  }, 'trimEnd');
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/es7.system.global", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_global"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export");
-  $export($export.S, 'System', {global: require("npm:core-js@2.1.0/library/modules/_global")});
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/web.dom.iterable", ["npm:core-js@2.1.0/library/modules/es6.array.iterator", "npm:core-js@2.1.0/library/modules/_global", "npm:core-js@2.1.0/library/modules/_hide", "npm:core-js@2.1.0/library/modules/_iterators", "npm:core-js@2.1.0/library/modules/_wks"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  require("npm:core-js@2.1.0/library/modules/es6.array.iterator");
-  var global = require("npm:core-js@2.1.0/library/modules/_global"),
-      hide = require("npm:core-js@2.1.0/library/modules/_hide"),
-      Iterators = require("npm:core-js@2.1.0/library/modules/_iterators"),
-      TO_STRING_TAG = require("npm:core-js@2.1.0/library/modules/_wks")('toStringTag');
-  for (var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList', 'CSSRuleList'],
-      i = 0; i < 5; i++) {
-    var NAME = collections[i],
-        Collection = global[NAME],
-        proto = Collection && Collection.prototype;
-    if (proto && !proto[TO_STRING_TAG])
-      hide(proto, TO_STRING_TAG, NAME);
-    Iterators[NAME] = Iterators.Array;
-  }
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/web.immediate", ["npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_task"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      $task = require("npm:core-js@2.1.0/library/modules/_task");
-  $export($export.G + $export.B, {
-    setImmediate: $task.set,
-    clearImmediate: $task.clear
-  });
-  global.define = __define;
-  return module.exports;
-});
-
-System.registerDynamic("npm:core-js@2.1.0/library/modules/web.timers", ["npm:core-js@2.1.0/library/modules/_global", "npm:core-js@2.1.0/library/modules/_export", "npm:core-js@2.1.0/library/modules/_invoke", "npm:core-js@2.1.0/library/modules/_partial"], true, function(require, exports, module) {
-  ;
-  var global = this,
-      __define = global.define;
-  global.define = undefined;
-  var global = require("npm:core-js@2.1.0/library/modules/_global"),
-      $export = require("npm:core-js@2.1.0/library/modules/_export"),
-      invoke = require("npm:core-js@2.1.0/library/modules/_invoke"),
-      partial = require("npm:core-js@2.1.0/library/modules/_partial"),
-      navigator = global.navigator,
-      MSIE = !!navigator && /MSIE .\./.test(navigator.userAgent);
-  var wrap = function(set) {
-    return MSIE ? function(fn, time) {
-      return set(invoke(partial, [].slice.call(arguments, 2), typeof fn == 'function' ? fn : Function(fn)), time);
-    } : set;
+  return {
+    setters: [function(_aureliaBinding) {}, function(_aureliaBootstrapper) {}, function(_aureliaDependencyInjection) {}, function(_aureliaEventAggregator) {}, function(_aureliaFetchClient) {}, function(_aureliaFramework) {}, function(_aureliaHistory) {}, function(_aureliaHistoryBrowser) {}, function(_aureliaHttpClient) {}, function(_aureliaLoader) {}, function(_aureliaLoaderDefault) {}, function(_aureliaLogging) {}, function(_aureliaLoggingConsole) {}, function(_aureliaMetadata) {}, function(_aureliaPath) {}, function(_aureliaRouteRecognizer) {}, function(_aureliaRouter) {}, function(_aureliaTaskQueue) {}, function(_aureliaTemplating) {}, function(_aureliaTemplatingBinding) {}, function(_aureliaTemplatingResources) {}, function(_aureliaTemplatingRouter) {}, function(_coreJs) {}, function(_coreJsClientShimMin) {}, function(_css) {}, function(_fetch) {}, function(_moment) {}, function(_numeral) {}, function(_text) {}],
+    execute: function() {}
   };
-  $export($export.G + $export.B + $export.F * MSIE, {
-    setTimeout: wrap(global.setTimeout),
-    setInterval: wrap(global.setInterval)
-  });
-  global.define = __define;
-  return module.exports;
 });
 
 //# sourceMappingURL=aurelia-bundle.js.map
