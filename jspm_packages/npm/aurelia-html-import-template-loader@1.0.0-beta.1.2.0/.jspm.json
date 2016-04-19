@@ -1,0 +1,103 @@
+{
+  "name": "aurelia-html-import-template-loader",
+  "version": "1.0.0-beta.1.2.0",
+  "description": "Use HTMLImport technology to load views.",
+  "keywords": [
+    "aurelia",
+    "loader",
+    "modules"
+  ],
+  "homepage": "http://aurelia.io",
+  "bugs": {
+    "url": "https://github.com/aurelia/html-import-template-loader/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Rob Eisenberg",
+    "email": "rob@bluespire.com",
+    "url": "http://robeisenberg.com/"
+  },
+  "main": "html-import-template-loader",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/aurelia/html-import-template-loader"
+  },
+  "jspm": {
+    "registry": "npm",
+    "jspmPackage": true,
+    "main": "html-import-template-loader",
+    "format": "amd",
+    "directories": {
+      "dist": "dist/amd"
+    },
+    "peerDependencies": {
+      "aurelia-loader": "^1.0.0-beta.1.1.0",
+      "aurelia-pal": "^1.0.0-beta.1.1.1",
+      "webcomponentsjs": "webcomponents/webcomponentsjs"
+    },
+    "dependencies": {
+      "aurelia-loader": "^1.0.0-beta.1.1.0",
+      "aurelia-pal": "^1.0.0-beta.1.1.1",
+      "webcomponentsjs": "webcomponents/webcomponentsjs"
+    },
+    "devDependencies": {
+      "babel": "babel-core@^5.8.24",
+      "babel-runtime": "^5.8.24",
+      "core-js": "^2.0.3"
+    }
+  },
+  "devDependencies": {
+    "babel": "babel-core@^5.8.24",
+    "babel-runtime": "^5.8.24",
+    "core-js": "^2.0.3"
+  },
+  "aurelia": {
+    "documentation": {
+      "articles": []
+    }
+  },
+  "gitHead": "7dd06e71849d1154c0f8be958460cf5d94fc66bb",
+  "_id": "aurelia-html-import-template-loader@1.0.0-beta.1.2.0",
+  "scripts": {},
+  "_shasum": "d549542b378ae25c3751ecdb024b5aece1e6127d",
+  "_from": ".",
+  "_npmVersion": "3.3.12",
+  "_nodeVersion": "5.2.0",
+  "_npmUser": {
+    "name": "aureliaeffect",
+    "email": "info@durandal.io"
+  },
+  "dist": {
+    "shasum": "d549542b378ae25c3751ecdb024b5aece1e6127d",
+    "tarball": "https://registry.npmjs.org/aurelia-html-import-template-loader/-/aurelia-html-import-template-loader-1.0.0-beta.1.2.0.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "aureliaeffect",
+      "email": "info@durandal.io"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-13-west.internal.npmjs.com",
+    "tmp": "tmp/aurelia-html-import-template-loader-1.0.0-beta.1.2.0.tgz_1458704626831_0.31660097441636026"
+  },
+  "directories": {
+    "dist": "dist/amd"
+  },
+  "registry": "npm",
+  "jspmPackage": true,
+  "format": "amd",
+  "peerDependencies": {
+    "aurelia-loader": "^1.0.0-beta.1.1.0",
+    "aurelia-pal": "^1.0.0-beta.1.1.1",
+    "webcomponentsjs": "webcomponents/webcomponentsjs"
+  },
+  "ignore": [
+    "node_modules"
+  ],
+  "dependencies": {
+    "aurelia-loader": "aurelia-loader@^1.0.0-beta.1.1.0",
+    "aurelia-pal": "aurelia-pal@^1.0.0-beta.1.1.1",
+    "webcomponentsjs": "github:webcomponents/webcomponentsjs@*"
+  }
+}

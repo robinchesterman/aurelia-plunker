@@ -1,0 +1,106 @@
+{
+  "name": "aurelia-history-browser",
+  "version": "1.0.0-beta.1.1.2",
+  "description": "An implementation of the Aurelia history interface based on standard browser hash change and push state mechanisms.",
+  "keywords": [
+    "aurelia",
+    "history",
+    "router"
+  ],
+  "homepage": "http://aurelia.io",
+  "bugs": {
+    "url": "https://github.com/aurelia/history-browser/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Rob Eisenberg",
+    "email": "rob@bluespire.com",
+    "url": "http://robeisenberg.com/"
+  },
+  "main": "aurelia-history-browser",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/aurelia/history-browser"
+  },
+  "scripts": {
+    "test": "gulp test",
+    "ci": "gulp ci"
+  },
+  "jspm": {
+    "registry": "npm",
+    "jspmPackage": true,
+    "main": "aurelia-history-browser",
+    "format": "amd",
+    "directories": {
+      "dist": "dist/amd"
+    },
+    "peerDependencies": {
+      "aurelia-history": "^1.0.0-beta.1.1.1",
+      "aurelia-pal": "^1.0.0-beta.1.1.1",
+      "core-js": "^2.0.3"
+    },
+    "dependencies": {
+      "aurelia-history": "^1.0.0-beta.1.1.1",
+      "aurelia-pal": "^1.0.0-beta.1.1.1",
+      "core-js": "^2.0.3"
+    },
+    "devDependencies": {
+      "babel": "babel-core@^5.1.13",
+      "babel-runtime": "^5.1.13",
+      "core-js": "^2.0.3"
+    }
+  },
+  "devDependencies": {
+    "babel": "babel-core@^5.1.13",
+    "babel-runtime": "^5.1.13",
+    "core-js": "^2.0.3"
+  },
+  "aurelia": {
+    "documentation": {
+      "articles": []
+    }
+  },
+  "gitHead": "a6bfb28fbc5427bfb68b57adb3d5b52f161c29c2",
+  "_id": "aurelia-history-browser@1.0.0-beta.1.1.2",
+  "_shasum": "b50154d549a1240d0983a18d58bad751e3c5f448",
+  "_from": ".",
+  "_npmVersion": "3.3.12",
+  "_nodeVersion": "5.2.0",
+  "_npmUser": {
+    "name": "aureliaeffect",
+    "email": "info@durandal.io"
+  },
+  "dist": {
+    "shasum": "b50154d549a1240d0983a18d58bad751e3c5f448",
+    "tarball": "https://registry.npmjs.org/aurelia-history-browser/-/aurelia-history-browser-1.0.0-beta.1.1.2.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "aureliaeffect",
+      "email": "info@durandal.io"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-9-west.internal.npmjs.com",
+    "tmp": "tmp/aurelia-history-browser-1.0.0-beta.1.1.2.tgz_1454958010225_0.21819542301818728"
+  },
+  "directories": {
+    "dist": "dist/amd"
+  },
+  "registry": "npm",
+  "jspmPackage": true,
+  "format": "amd",
+  "peerDependencies": {
+    "aurelia-history": "^1.0.0-beta.1.1.1",
+    "aurelia-pal": "^1.0.0-beta.1.1.1",
+    "core-js": "^2.0.3"
+  },
+  "ignore": [
+    "node_modules"
+  ],
+  "dependencies": {
+    "aurelia-history": "aurelia-history@^1.0.0-beta.1.1.1",
+    "aurelia-pal": "aurelia-pal@^1.0.0-beta.1.1.1",
+    "core-js": "core-js@^2.0.3"
+  }
+}

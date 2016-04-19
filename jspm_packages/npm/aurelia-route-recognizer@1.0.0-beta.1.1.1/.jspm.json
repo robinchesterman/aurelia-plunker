@@ -1,0 +1,101 @@
+{
+  "name": "aurelia-route-recognizer",
+  "version": "1.0.0-beta.1.1.1",
+  "description": "A lightweight JavaScript library that matches paths against registered routes. It includes support for dynamic and star segments and nested handlers.",
+  "keywords": [
+    "aurelia",
+    "route"
+  ],
+  "homepage": "http://aurelia.io",
+  "bugs": {
+    "url": "https://github.com/aurelia/route-recognizer/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Rob Eisenberg",
+    "email": "rob@bluespire.com",
+    "url": "http://robeisenberg.com/"
+  },
+  "main": "aurelia-route-recognizer",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/aurelia/route-recognizer"
+  },
+  "scripts": {
+    "test": "gulp test",
+    "ci": "gulp ci"
+  },
+  "jspm": {
+    "registry": "npm",
+    "jspmPackage": true,
+    "main": "aurelia-route-recognizer",
+    "format": "amd",
+    "directories": {
+      "dist": "dist/amd"
+    },
+    "peerDependencies": {
+      "aurelia-path": "^1.0.0-beta.1.1.0",
+      "core-js": "^2.0.3"
+    },
+    "dependencies": {
+      "aurelia-path": "^1.0.0-beta.1.1.0",
+      "core-js": "^2.0.3"
+    },
+    "devDependencies": {
+      "babel": "babel-core@^5.8.24",
+      "babel-runtime": "^5.8.24",
+      "core-js": "^2.0.3"
+    }
+  },
+  "devDependencies": {
+    "babel": "babel-core@^5.8.24",
+    "babel-runtime": "^5.8.24",
+    "core-js": "^2.0.3"
+  },
+  "aurelia": {
+    "documentation": {
+      "articles": []
+    }
+  },
+  "gitHead": "4d18463f8a95f9b2ef301d568cf4fbcafae8a4be",
+  "_id": "aurelia-route-recognizer@1.0.0-beta.1.1.1",
+  "_shasum": "8f3fbde8277c9b69a9ac83a5edf5a974e3a60efa",
+  "_from": ".",
+  "_npmVersion": "3.3.12",
+  "_nodeVersion": "5.2.0",
+  "_npmUser": {
+    "name": "aureliaeffect",
+    "email": "info@durandal.io"
+  },
+  "dist": {
+    "shasum": "8f3fbde8277c9b69a9ac83a5edf5a974e3a60efa",
+    "tarball": "https://registry.npmjs.org/aurelia-route-recognizer/-/aurelia-route-recognizer-1.0.0-beta.1.1.1.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "aureliaeffect",
+      "email": "info@durandal.io"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-6-west.internal.npmjs.com",
+    "tmp": "tmp/aurelia-route-recognizer-1.0.0-beta.1.1.1.tgz_1454959537378_0.944759309059009"
+  },
+  "directories": {
+    "dist": "dist/amd"
+  },
+  "registry": "npm",
+  "jspmPackage": true,
+  "format": "amd",
+  "peerDependencies": {
+    "aurelia-path": "^1.0.0-beta.1.1.0",
+    "core-js": "^2.0.3"
+  },
+  "ignore": [
+    "node_modules"
+  ],
+  "dependencies": {
+    "aurelia-path": "aurelia-path@^1.0.0-beta.1.1.0",
+    "core-js": "core-js@^2.0.3"
+  }
+}

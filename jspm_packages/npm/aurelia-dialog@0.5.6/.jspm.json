@@ -1,0 +1,134 @@
+{
+  "name": "aurelia-dialog",
+  "version": "0.5.6",
+  "description": "A dialog plugin for Aurelia.",
+  "keywords": [
+    "aurelia",
+    "plugin",
+    "dialog",
+    "modal"
+  ],
+  "homepage": "http://aurelia.io",
+  "bugs": {
+    "url": "https://github.com/aurelia/dialog/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Rob Eisenberg",
+    "email": "rob@bluespire.com",
+    "url": "http://robeisenberg.com/"
+  },
+  "main": "index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aurelia/dialog"
+  },
+  "jspm": {
+    "registry": "npm",
+    "jspmPackage": true,
+    "main": "index",
+    "format": "amd",
+    "directories": {
+      "dist": "dist/amd"
+    },
+    "peerDependencies": {
+      "aurelia-dependency-injection": "^1.0.0-beta.1.1.2",
+      "aurelia-framework": "^1.0.0-beta.1.1.0",
+      "aurelia-metadata": "^1.0.0-beta.1.1.3",
+      "aurelia-pal": "^1.0.0-beta.1.1.1",
+      "aurelia-templating": "^1.0.0-beta.1.1.0"
+    },
+    "dependencies": {
+      "aurelia-dependency-injection": "^1.0.0-beta.1.1.2",
+      "aurelia-framework": "^1.0.0-beta.1.1.0",
+      "aurelia-metadata": "^1.0.0-beta.1.1.3",
+      "aurelia-pal": "^1.0.0-beta.1.1.1",
+      "aurelia-templating": "^1.0.0-beta.1.1.0"
+    },
+    "devDependencies": {
+      "aurelia-pal-browser": "^1.0.0-beta.1.1.2",
+      "babel": "babel-core@^5.8.24",
+      "babel-runtime": "^5.8.24",
+      "core-js": "^2.0.3"
+    }
+  },
+  "devDependencies": {
+    "aurelia-pal-browser": "^1.0.0-beta.1.1.2",
+    "babel": "babel-core@^5.8.24",
+    "babel-runtime": "^5.8.24",
+    "core-js": "^2.0.3"
+  },
+  "aurelia": {
+    "usedBy": [],
+    "documentation": {
+      "links": [
+        {
+          "rel": "license",
+          "mediaType": "text/plain",
+          "title": "The MIT License (MIT)",
+          "href": "LICENSE"
+        },
+        {
+          "rel": "describedby",
+          "mediaType": "application/aurelia-doc+json",
+          "title": "API",
+          "href": "doc/api.json"
+        },
+        {
+          "rel": "version-history",
+          "mediaType": "text/markdown",
+          "title": "Change Log",
+          "href": "doc/CHANGELOG.md"
+        }
+      ]
+    }
+  },
+  "gitHead": "ac93eeb1e3331d3f28785bef88db2770c2e17b08",
+  "_id": "aurelia-dialog@0.5.6",
+  "scripts": {},
+  "_shasum": "d8e163008464877f412ef3d401c01476d0827486",
+  "_from": ".",
+  "_npmVersion": "3.3.12",
+  "_nodeVersion": "5.2.0",
+  "_npmUser": {
+    "name": "aureliaeffect",
+    "email": "info@durandal.io"
+  },
+  "dist": {
+    "shasum": "d8e163008464877f412ef3d401c01476d0827486",
+    "tarball": "https://registry.npmjs.org/aurelia-dialog/-/aurelia-dialog-0.5.6.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "aureliaeffect",
+      "email": "info@durandal.io"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-6-west.internal.npmjs.com",
+    "tmp": "tmp/aurelia-dialog-0.5.6.tgz_1455032771089_0.6850509578362107"
+  },
+  "directories": {
+    "dist": "dist/amd"
+  },
+  "registry": "npm",
+  "jspmPackage": true,
+  "format": "amd",
+  "peerDependencies": {
+    "aurelia-dependency-injection": "^1.0.0-beta.1.1.2",
+    "aurelia-framework": "^1.0.0-beta.1.1.0",
+    "aurelia-metadata": "^1.0.0-beta.1.1.3",
+    "aurelia-pal": "^1.0.0-beta.1.1.1",
+    "aurelia-templating": "^1.0.0-beta.1.1.0"
+  },
+  "ignore": [
+    "node_modules"
+  ],
+  "dependencies": {
+    "aurelia-dependency-injection": "aurelia-dependency-injection@^1.0.0-beta.1.1.2",
+    "aurelia-framework": "aurelia-framework@^1.0.0-beta.1.1.0",
+    "aurelia-metadata": "aurelia-metadata@^1.0.0-beta.1.1.3",
+    "aurelia-pal": "aurelia-pal@^1.0.0-beta.1.1.1",
+    "aurelia-templating": "aurelia-templating@^1.0.0-beta.1.1.0"
+  }
+}

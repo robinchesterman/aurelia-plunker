@@ -1,0 +1,137 @@
+{
+  "name": "aurelia-validation",
+  "version": "0.6.2",
+  "description": "A validation plugin for Aurelia.",
+  "keywords": [
+    "aurelia",
+    "validation",
+    "plugin"
+  ],
+  "homepage": "http://aurelia.io",
+  "bugs": {
+    "url": "https://github.com/aurelia/validation/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Rob Eisenberg",
+    "email": "rob@bluespire.com",
+    "url": "http://robeisenberg.com/"
+  },
+  "main": "index",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aurelia/validation"
+  },
+  "jspm": {
+    "registry": "npm",
+    "jspmPackage": true,
+    "main": "index",
+    "format": "amd",
+    "directories": {
+      "dist": "dist/amd"
+    },
+    "peerDependencies": {
+      "aurelia-binding": "^1.0.0-beta.1.1.0",
+      "aurelia-dependency-injection": "^1.0.0-beta.1.1.2",
+      "aurelia-logging": "^1.0.0-beta.1.1.1",
+      "aurelia-metadata": "^1.0.0-beta.1.1.3",
+      "aurelia-templating": "^1.0.0-beta.1.1.0"
+    },
+    "dependencies": {
+      "aurelia-binding": "^1.0.0-beta.1.1.0",
+      "aurelia-dependency-injection": "^1.0.0-beta.1.1.2",
+      "aurelia-logging": "^1.0.0-beta.1.1.1",
+      "aurelia-metadata": "^1.0.0-beta.1.1.3",
+      "aurelia-templating": "^1.0.0-beta.1.1.0"
+    },
+    "devDependencies": {
+      "aurelia-pal-browser": "^1.0.0-beta.1.1.2",
+      "babel": "babel-core@^5.8.24",
+      "babel-runtime": "^5.8.24",
+      "core-js": "^2.0.3"
+    }
+  },
+  "devDependencies": {
+    "aurelia-pal-browser": "^1.0.0-beta.1.1.2",
+    "babel": "babel-core@^5.8.24",
+    "babel-runtime": "^5.8.24",
+    "core-js": "^2.0.3"
+  },
+  "aurelia": {
+    "usedBy": [],
+    "documentation": {
+      "links": [
+        {
+          "rel": "license",
+          "mediaType": "text/plain",
+          "title": "The MIT License (MIT)",
+          "href": "LICENSE"
+        },
+        {
+          "rel": "describedby",
+          "mediaType": "application/aurelia-doc+json",
+          "title": "API",
+          "href": "doc/api.json"
+        },
+        {
+          "rel": "version-history",
+          "mediaType": "text/markdown",
+          "title": "Change Log",
+          "href": "doc/CHANGELOG.md"
+        }
+      ]
+    }
+  },
+  "gitHead": "12f80669d920720bce0e5b1c854d90b7588e4248",
+  "_id": "aurelia-validation@0.6.2",
+  "scripts": {},
+  "_shasum": "4b5d93c5d0bcac1fd0bb2c993c848bb03edcb447",
+  "_from": ".",
+  "_npmVersion": "3.3.12",
+  "_nodeVersion": "5.2.0",
+  "_npmUser": {
+    "name": "aureliaeffect",
+    "email": "info@durandal.io"
+  },
+  "dist": {
+    "shasum": "4b5d93c5d0bcac1fd0bb2c993c848bb03edcb447",
+    "tarball": "https://registry.npmjs.org/aurelia-validation/-/aurelia-validation-0.6.2.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "aureliaeffect",
+      "email": "info@durandal.io"
+    },
+    {
+      "name": "janvanderhaegen",
+      "email": "van.der.haegen.j@gmail.com"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-9-west.internal.npmjs.com",
+    "tmp": "tmp/aurelia-validation-0.6.2.tgz_1454962604109_0.5912814582698047"
+  },
+  "directories": {
+    "dist": "dist/amd"
+  },
+  "registry": "npm",
+  "jspmPackage": true,
+  "format": "amd",
+  "peerDependencies": {
+    "aurelia-binding": "^1.0.0-beta.1.1.0",
+    "aurelia-dependency-injection": "^1.0.0-beta.1.1.2",
+    "aurelia-logging": "^1.0.0-beta.1.1.1",
+    "aurelia-metadata": "^1.0.0-beta.1.1.3",
+    "aurelia-templating": "^1.0.0-beta.1.1.0"
+  },
+  "ignore": [
+    "node_modules"
+  ],
+  "dependencies": {
+    "aurelia-binding": "aurelia-binding@^1.0.0-beta.1.1.0",
+    "aurelia-dependency-injection": "aurelia-dependency-injection@^1.0.0-beta.1.1.2",
+    "aurelia-logging": "aurelia-logging@^1.0.0-beta.1.1.1",
+    "aurelia-metadata": "aurelia-metadata@^1.0.0-beta.1.1.3",
+    "aurelia-templating": "aurelia-templating@^1.0.0-beta.1.1.0"
+  }
+}

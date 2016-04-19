@@ -1,0 +1,83 @@
+{
+  "name": "aurelia-pal",
+  "version": "1.0.0-beta.1.2.0",
+  "description": "Aurelia's platform abstraction layer (PAL).",
+  "keywords": [
+    "aurelia",
+    "pal"
+  ],
+  "homepage": "http://aurelia.io",
+  "bugs": {
+    "url": "https://github.com/aurelia/pal/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Rob Eisenberg",
+    "email": "rob@bluespire.com",
+    "url": "http://robeisenberg.com/"
+  },
+  "main": "aurelia-pal",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/aurelia/pal"
+  },
+  "jspm": {
+    "registry": "npm",
+    "jspmPackage": true,
+    "main": "aurelia-pal",
+    "format": "amd",
+    "directories": {
+      "dist": "dist/amd"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.22",
+      "babel-runtime": "npm:babel-runtime@^5.8.20",
+      "core-js": "npm:core-js@^2.0.3"
+    }
+  },
+  "devDependencies": {
+    "babel": "npm:babel-core@^5.8.22",
+    "babel-runtime": "npm:babel-runtime@^5.8.20",
+    "core-js": "npm:core-js@^2.0.3"
+  },
+  "aurelia": {
+    "documentation": {
+      "articles": []
+    }
+  },
+  "gitHead": "e77e8cb7813c08b38069f852d9d6fb25e4bf0111",
+  "_id": "aurelia-pal@1.0.0-beta.1.2.0",
+  "scripts": {},
+  "_shasum": "fe51042f01b5dd35a8ac88892fde752e888da8c1",
+  "_from": ".",
+  "_npmVersion": "3.3.12",
+  "_nodeVersion": "5.2.0",
+  "_npmUser": {
+    "name": "aureliaeffect",
+    "email": "info@durandal.io"
+  },
+  "dist": {
+    "shasum": "fe51042f01b5dd35a8ac88892fde752e888da8c1",
+    "tarball": "http://registry.npmjs.org/aurelia-pal/-/aurelia-pal-1.0.0-beta.1.2.0.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "aureliaeffect",
+      "email": "info@durandal.io"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/aurelia-pal-1.0.0-beta.1.2.0.tgz_1458703482150_0.262946313014254"
+  },
+  "directories": {
+    "dist": "dist/amd"
+  },
+  "registry": "npm",
+  "jspmPackage": true,
+  "format": "amd",
+  "ignore": [
+    "node_modules"
+  ],
+  "dependencies": {}
+}

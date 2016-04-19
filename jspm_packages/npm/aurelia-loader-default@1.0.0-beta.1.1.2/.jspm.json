@@ -1,0 +1,105 @@
+{
+  "name": "aurelia-loader-default",
+  "version": "1.0.0-beta.1.1.2",
+  "description": "A default implementation of the loader interface compatible with system.js and require-based loaders.",
+  "keywords": [
+    "aurelia",
+    "loader",
+    "modules"
+  ],
+  "homepage": "http://aurelia.io",
+  "bugs": {
+    "url": "https://github.com/aurelia/loader-default/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Rob Eisenberg",
+    "email": "rob@bluespire.com",
+    "url": "http://robeisenberg.com/"
+  },
+  "main": "aurelia-loader-default",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/aurelia/loader-default"
+  },
+  "jspm": {
+    "registry": "npm",
+    "jspmPackage": true,
+    "main": "aurelia-loader-default",
+    "format": "amd",
+    "directories": {
+      "dist": "dist/amd"
+    },
+    "peerDependencies": {
+      "aurelia-loader": "^1.0.0-beta.1.1.0",
+      "aurelia-metadata": "^1.0.0-beta.1.1.3",
+      "aurelia-pal": "^1.0.0-beta.1.1.1"
+    },
+    "dependencies": {
+      "aurelia-loader": "^1.0.0-beta.1.1.0",
+      "aurelia-metadata": "^1.0.0-beta.1.1.3",
+      "aurelia-pal": "^1.0.0-beta.1.1.1"
+    },
+    "devDependencies": {
+      "aurelia-pal-browser": "^1.0.0-beta.1.1.2",
+      "babel": "babel-core@^5.1.13",
+      "babel-runtime": "^5.1.13",
+      "core-js": "^2.0.3"
+    }
+  },
+  "devDependencies": {
+    "aurelia-pal-browser": "^1.0.0-beta.1.1.2",
+    "babel": "babel-core@^5.1.13",
+    "babel-runtime": "^5.1.13",
+    "core-js": "^2.0.3"
+  },
+  "aurelia": {
+    "documentation": {
+      "articles": []
+    }
+  },
+  "gitHead": "8e20a6650bbef48b511564daaf45384eac514b5c",
+  "_id": "aurelia-loader-default@1.0.0-beta.1.1.2",
+  "scripts": {},
+  "_shasum": "2d318dc11b148763a8825610277991b0912d14af",
+  "_from": ".",
+  "_npmVersion": "3.3.12",
+  "_nodeVersion": "5.2.0",
+  "_npmUser": {
+    "name": "aureliaeffect",
+    "email": "info@durandal.io"
+  },
+  "dist": {
+    "shasum": "2d318dc11b148763a8825610277991b0912d14af",
+    "tarball": "https://registry.npmjs.org/aurelia-loader-default/-/aurelia-loader-default-1.0.0-beta.1.1.2.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "aureliaeffect",
+      "email": "info@durandal.io"
+    }
+  ],
+  "_npmOperationalInternal": {
+    "host": "packages-5-east.internal.npmjs.com",
+    "tmp": "tmp/aurelia-loader-default-1.0.0-beta.1.1.2.tgz_1454958943205_0.7335623728577048"
+  },
+  "directories": {
+    "dist": "dist/amd"
+  },
+  "registry": "npm",
+  "jspmPackage": true,
+  "format": "amd",
+  "peerDependencies": {
+    "aurelia-loader": "^1.0.0-beta.1.1.0",
+    "aurelia-metadata": "^1.0.0-beta.1.1.3",
+    "aurelia-pal": "^1.0.0-beta.1.1.1"
+  },
+  "ignore": [
+    "node_modules"
+  ],
+  "dependencies": {
+    "aurelia-loader": "aurelia-loader@^1.0.0-beta.1.1.0",
+    "aurelia-metadata": "aurelia-metadata@^1.0.0-beta.1.1.3",
+    "aurelia-pal": "aurelia-pal@^1.0.0-beta.1.1.1"
+  }
+}
